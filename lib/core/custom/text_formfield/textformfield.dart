@@ -10,7 +10,10 @@ class TextfieldWidget extends StatelessWidget {
     this.validator,
     this.maxlines,
     this.minlines,
-    this.labelText, required this.style, this.hintText,
+    this.labelText,
+    required this.style,
+    this.hintText,
+    this.textInputAction
   });
   final TextEditingController? controller;
   final bool? readOnly;
@@ -21,10 +24,12 @@ class TextfieldWidget extends StatelessWidget {
   final String? labelText;
   final String? hintText;
   final TextStyle style;
+  final TextInputAction? textInputAction;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       child: TextFormField(
+        textInputAction: textInputAction,
         textCapitalization: TextCapitalization.words,
         minLines: maxlines,
         maxLines: maxlines,
@@ -36,7 +41,7 @@ class TextfieldWidget extends StatelessWidget {
         style: style,
         decoration: InputDecoration(
           labelStyle: Theme.of(context).textTheme.labelMedium,
-          hintStyle:  Theme.of(context).textTheme.labelMedium,
+          hintStyle: Theme.of(context).textTheme.labelMedium,
           hintText: hintText,
           labelText: labelText,
           contentPadding: const EdgeInsets.all(16),

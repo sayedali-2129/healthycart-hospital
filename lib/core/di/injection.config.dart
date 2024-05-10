@@ -15,17 +15,25 @@ import 'package:get_it/get_it.dart' as _i1;
 import 'package:injectable/injectable.dart' as _i2;
 
 import '../../features/authenthication/application/auth_cubit/authenication_cubit.dart'
-    as _i16;
-import '../../features/authenthication/domain/i_auth_facade.dart' as _i13;
-import '../../features/authenthication/infrastrucure/i_auth_impl.dart' as _i14;
-import '../../features/doctor_page/application/provider/doctor_provider.dart'
-    as _i12;
-import '../../features/doctor_page/domain/i_doctor_facade.dart' as _i8;
-import '../../features/doctor_page/infrastructure/i_doctor_impl.dart' as _i9;
+    as _i19;
+import '../../features/authenthication/domain/i_auth_facade.dart' as _i12;
+import '../../features/authenthication/infrastrucure/i_auth_impl.dart' as _i13;
 import '../../features/form_field/application/provider/hospital_form_provider.dart'
-    as _i15;
-import '../../features/form_field/domain/i_form_facade.dart' as _i10;
-import '../../features/form_field/infrastructure/i_form_impl.dart' as _i11;
+    as _i18;
+import '../../features/form_field/domain/i_form_facade.dart' as _i14;
+import '../../features/form_field/infrastructure/i_form_impl.dart' as _i15;
+import '../../features/hospital_app/banner_page/application/add_banner_provider.dart'
+    as _i17;
+import '../../features/hospital_app/banner_page/domain/i_banner_facade.dart'
+    as _i8;
+import '../../features/hospital_app/banner_page/infrastrucuture/i_banner_impl.dart'
+    as _i9;
+import '../../features/hospital_app/doctor_page/application/doctor_provider.dart'
+    as _i16;
+import '../../features/hospital_app/doctor_page/domain/i_doctor_facade.dart'
+    as _i10;
+import '../../features/hospital_app/doctor_page/infrastructure/i_doctor_impl.dart'
+    as _i11;
 import '../services/image_picker.dart' as _i7;
 import 'firebase_injectable_module.dart' as _i3;
 
@@ -50,22 +58,30 @@ Future<_i1.GetIt> init(
   gh.lazySingleton<_i6.FirebaseFirestore>(() => firebaseInjecatbleModule.repo);
   gh.lazySingleton<_i7.ImageService>(
       () => _i7.ImageService(gh<_i5.FirebaseStorage>()));
-  gh.lazySingleton<_i8.IDoctorFacade>(() => _i9.IDoctorImpl(
+  gh.lazySingleton<_i8.IBannerFacade>(() => _i9.IBannerImpl(
         gh<_i6.FirebaseFirestore>(),
         gh<_i7.ImageService>(),
       ));
-  gh.lazySingleton<_i10.IFormFeildFacade>(
-      () => _i11.IFormFieldImpl(gh<_i6.FirebaseFirestore>()));
-  gh.factory<_i12.DoctorProvider>(
-      () => _i12.DoctorProvider(gh<_i8.IDoctorFacade>()));
-  gh.lazySingleton<_i13.IAuthFacade>(() => _i14.IAuthImpl(
+  gh.lazySingleton<_i10.IDoctorFacade>(() => _i11.IDoctorImpl(
+        gh<_i6.FirebaseFirestore>(),
+        gh<_i7.ImageService>(),
+      ));
+  gh.lazySingleton<_i12.IAuthFacade>(() => _i13.IAuthImpl(
         gh<_i4.FirebaseAuth>(),
         gh<_i6.FirebaseFirestore>(),
       ));
-  gh.factory<_i15.HosptialFormProvider>(
-      () => _i15.HosptialFormProvider(gh<_i10.IFormFeildFacade>()));
-  gh.factory<_i16.AuthenicationCubit>(
-      () => _i16.AuthenicationCubit(gh<_i13.IAuthFacade>()));
+  gh.lazySingleton<_i14.IFormFeildFacade>(() => _i15.IFormFieldImpl(
+        gh<_i6.FirebaseFirestore>(),
+        gh<_i7.ImageService>(),
+      ));
+  gh.factory<_i16.DoctorProvider>(
+      () => _i16.DoctorProvider(gh<_i10.IDoctorFacade>()));
+  gh.factory<_i17.AddBannerProvider>(
+      () => _i17.AddBannerProvider(gh<_i8.IBannerFacade>()));
+  gh.factory<_i18.HosptialFormProvider>(
+      () => _i18.HosptialFormProvider(gh<_i14.IFormFeildFacade>()));
+  gh.factory<_i19.AuthenicationCubit>(
+      () => _i19.AuthenicationCubit(gh<_i12.IAuthFacade>()));
   return getIt;
 }
 

@@ -6,8 +6,8 @@ import 'package:healthycart/utils/constants/enums.dart';
 
 class Admin {
   Admin({
-     this.adminType,
-     this.phoneNo,
+    this.adminType,
+    this.phoneNo,
     this.id,
     this.placemark,
   });

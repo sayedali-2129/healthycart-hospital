@@ -61,7 +61,7 @@ class _OTPScreenState extends State<OTPScreen> {
              (failureOrSuccess) {
                   failureOrSuccess.fold((l) {
                     Navigator.pop(context);
-                    errorToast(text: l.errMsg);
+                    CustomToast.errorToast(text: l.errMsg);
                     context.read<AuthenicationCubit>().clearFailureOrSuccess();
                   }, (r) {
                     Navigator.pop(context);
@@ -148,7 +148,7 @@ class _OTPScreenState extends State<OTPScreen> {
                       otpController.text.trim(), widget.verificationId);
                 },
                 text: 'Verify code',
-                buttonColor: BColors.buttonLightColor!,
+                buttonColor: BColors.buttonLightColor,
                 style: Theme.of(context)
                     .textTheme
                     .labelLarge!

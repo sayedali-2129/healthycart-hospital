@@ -7,14 +7,16 @@ import 'package:healthycart/utils/constants/enums.dart';
 class HospitalModel extends Admin {
   HospitalModel({
     super.adminType,
+    super.id,
+    super.placemark,
     super.phoneNo,
+    this.listOfCategory,
     this.hospitalName,
     this.address,
     this.ownerName,
     this.uploadLicense,
     this.image,
-    super.id,
-    super.placemark,
+
   });
 
   final String? hospitalName;
@@ -22,7 +24,7 @@ class HospitalModel extends Admin {
   final String? ownerName;
   final String? uploadLicense;
   final String? image;
-
+  final List<String>? listOfCategory;
   @override
   Map<String, dynamic> toMap() {
     return {
@@ -31,6 +33,7 @@ class HospitalModel extends Admin {
       'ownerName': ownerName,
       'uploadLicense': uploadLicense,
       'image': image,
+      'listOfCategory':listOfCategory,
       ...super.toMap()
     };
   }
@@ -54,6 +57,10 @@ class HospitalModel extends Admin {
       ownerName: map['ownerName'] as String?,
       uploadLicense: map['uploadLicense'] as String?,
       image: map['image'] as String?,
+      listOfCategory: map['purchaseDetails'] != null
+            ? List<String>.from(map['listOfCategory'] as List<dynamic>)   // check heree
+            : null,
+      
     );
   }
 
@@ -67,6 +74,7 @@ class HospitalModel extends Admin {
     Placemark? placemark,
     String? phoneNo,
     String? id,
+    List<String>? listOfCategory,
   }) {
     return HospitalModel(
       id: id ?? super.id,
@@ -78,6 +86,7 @@ class HospitalModel extends Admin {
       ownerName: ownerName ?? this.ownerName,
       uploadLicense: uploadLicense ?? this.uploadLicense,
       image: image ?? this.image,
+      listOfCategory: listOfCategory ?? this.listOfCategory,
     );
   }
 }

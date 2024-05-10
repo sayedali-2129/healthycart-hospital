@@ -2,7 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:healthycart/utils/constants/colors/colors.dart';
 
-void sucessToast({required String text}) {
+class CustomToast {
+  // final BuildContext context;
+  // static BuildContext? currentContext;
+  // CustomToast(this.context) {
+  //   currentContext = context;
+  // }
+
+
+static void sucessToast({required String text}) {
   Fluttertoast.showToast(
       msg: text,
       toastLength: Toast.LENGTH_SHORT,
@@ -13,7 +21,7 @@ void sucessToast({required String text}) {
       fontSize: 16.0);
 }
 
-void errorToast({required String text}) {
+static void errorToast({required String text}) {
   Fluttertoast.showToast(
       msg: text,
       toastLength: Toast.LENGTH_SHORT,
@@ -23,3 +31,7 @@ void errorToast({required String text}) {
       textColor: Colors.white,
       fontSize: 16.0);
 }
+
+
+}
+

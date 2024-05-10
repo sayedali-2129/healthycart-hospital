@@ -22,7 +22,7 @@ class LoginScreen extends StatelessWidget {
         state.failureOrSuccessOption.fold(() => null, (failureOrSuccess) {
           failureOrSuccess.fold((l) {
             Navigator.pop(context);
-            errorToast(text: l.errMsg);
+           CustomToast.errorToast(text: l.errMsg);
             context.read<AuthenicationCubit>().clearFailureOrSuccess();
           }, (r) {
             Navigator.pop(context);
@@ -104,7 +104,7 @@ class LoginScreen extends StatelessWidget {
                       
                     },
                     text: 'Skip login',
-                    buttonColor: BColors.buttonLightColor!,
+                    buttonColor: BColors.buttonLightColor,
                     style: Theme.of(context)
                         .textTheme
                         .labelLarge!

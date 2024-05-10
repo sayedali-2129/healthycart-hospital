@@ -26,17 +26,17 @@ class LocationPage extends StatelessWidget {
                     context: context, text: 'Getting location...');
               }
               state.failureOrSuccessOption.fold(() => null, (failureOrSucess) {
-                failureOrSucess.fold((l) {
+                failureOrSucess.fold((failure) {
                   Navigator.pop(context);
-                  errorToast(text: l.errMsg);
+                  CustomToast.errorToast(text: failure.errMsg);
                   context.read<LocationCubit>().clearFailureOrSuccess();
-                }, (r) {
+                }, (placemark) {
                   Navigator.pop(context);
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: ((context) => HospitalFormScreen(
-                                place: r,
+                                place: placemark,
                                 userId: userId, phoneNo: phoneNumber,
                               ))));
                   context.read<LocationCubit>().clearFailureOrSuccess();

@@ -22,6 +22,7 @@ class LocationService {
         // return const MainFailure.locationError(errMsg: 'Denied location permission');
       }
     }
+    
   }
 
   static Future<Either<MainFailure, Placemark>>

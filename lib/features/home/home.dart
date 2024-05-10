@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:healthycart/core/custom/bottom_navigation/bottom_nav_widget.dart';
-import 'package:healthycart/features/banner_page/application/view/banner_page.dart';
-import 'package:healthycart/features/doctor_page/presentation/doctor_category/doctor_page.dart';
-import 'package:healthycart/features/profile_page/application/view/profile_page.dart';
-import 'package:healthycart/features/request_page/application/view/request_page.dart';
+import 'package:healthycart/features/hospital_app/banner_page/presentation/banner_page.dart';
+import 'package:healthycart/features/hospital_app/doctor_page/presentation/doctor_category/doctor_page.dart';
+import 'package:healthycart/features/hospital_app/profile_page/presentation/profile_page.dart';
+import 'package:healthycart/features/hospital_app/request_page/application/view/request_page.dart';
 import 'package:healthycart/utils/constants/image/icon.dart';
 
 class HomeScreen extends StatelessWidget {

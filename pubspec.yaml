@@ -66,6 +66,10 @@ dependencies:
   lite_rolling_switch: ^1.0.1
   cached_network_image: ^3.3.1
   shimmer: ^3.0.0
+  intrinsic_size_overflow_box: ^0.1.1
+  intl: ^0.18.0
+  popover: ^0.3.0
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter

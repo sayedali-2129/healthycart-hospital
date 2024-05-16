@@ -16,8 +16,6 @@ class AdSlider extends StatefulWidget {
 class _AdSliderState extends State<AdSlider> {
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {});
-
     super.initState();
   }
 

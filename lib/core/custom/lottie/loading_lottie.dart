@@ -8,15 +8,19 @@ class LoadingLottie {
     showDialog(
         context: context,
         builder: (context) {
-          return AlertDialog(
-            backgroundColor: Colors.white70,
-            surfaceTintColor: Colors.transparent,
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Lottie.asset(BImage.lottieLoading2,fit: BoxFit.fill, height: 144, width: 200),
-                Text(text)
-              ],
+          return PopScope(
+            canPop: false,
+            child: AlertDialog(
+              contentPadding: const EdgeInsets.only(bottom: 16),
+              backgroundColor: Colors.white70,
+              surfaceTintColor: Colors.transparent,
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Lottie.asset(BImage.lottieLoading2,fit: BoxFit.fill, height: 144, width: 200),
+                  Text(text)
+                ],
+              ),
             ),
           );
         });

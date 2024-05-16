@@ -11,7 +11,7 @@ class CustomCachedNetworkImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return CachedNetworkImage(
       imageUrl: image,
-      fit: BoxFit.cover,
+      fit: BoxFit.fill,
       imageBuilder: (context, imageProvider) => Container(
         decoration: BoxDecoration(
             image: DecorationImage(image: imageProvider, fit: BoxFit.cover)),

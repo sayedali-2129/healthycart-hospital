@@ -12,11 +12,15 @@ class EasyNavigation {
       PageTransition(
         child: page,
         type: type,
-        duration: const Duration(microseconds: 100),
-        reverseDuration: const Duration(microseconds: 100),
+        duration: const Duration(milliseconds: 300),
+        reverseDuration: const Duration(milliseconds: 300),
       ),
     );
   }
+
+  static Future<void> pop({
+    required BuildContext context,
+  }) async{
+     Navigator.of(context).pop();
+  }
 }
-
-

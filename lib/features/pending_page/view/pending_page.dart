@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:healthycart/features/home/home.dart';
+import 'package:healthycart/features/home/presentation/home.dart';
 import 'package:healthycart/utils/constants/colors/colors.dart';
 import 'package:healthycart/utils/constants/image/image.dart';
 import 'package:lottie/lottie.dart';

@@ -9,7 +9,7 @@ import 'package:healthycart/core/custom/lottie/loading_lottie.dart';
 import 'package:healthycart/core/custom/toast/toast.dart';
 import 'package:healthycart/features/authenthication/application/auth_cubit/authenication_cubit.dart';
 import 'package:healthycart/features/authenthication/application/presentation/widget/pinput.dart';
-import 'package:healthycart/features/location_page/application/pages/location.dart';
+import 'package:healthycart/features/hospital_form_field/presentation/hospital_form.dart';
 import 'package:healthycart/utils/constants/colors/colors.dart';
 import 'package:healthycart/utils/constants/image/image.dart';
 
@@ -59,27 +59,30 @@ class _OTPScreenState extends State<OTPScreen> {
         state.otpFailureOrSucess.fold(
             () => null,
              (failureOrSuccess) {
-                  failureOrSuccess.fold((l) {
+                  failureOrSuccess.fold((failure) {
                     Navigator.pop(context);
-                    CustomToast.errorToast(text: l.errMsg);
+                    CustomToast.errorToast(text: failure.errMsg);
                     context.read<AuthenicationCubit>().clearFailureOrSuccess();
-                  }, (r) {
+                  }, (userId) {
                     Navigator.pop(context);
                     Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
-                          builder: ((context) =>  LocationPage(userId: r, phoneNumber: widget.phoneNumber,))),
+                          builder: ((context) =>  HospitalFormScreen( userId: userId, phoneNo: widget.phoneNumber)
+                          )),
                       (Route<dynamic> route) =>
-                          route is LocationPage && route.currentResult != null,
+                          route is HospitalFormScreen && route.currentResult != null,
                     );
                     context.read<AuthenicationCubit>().clearFailureOrSuccess();
                   });
                 });
       },
       child: Scaffold(
+            resizeToAvoidBottomInset: true,
           body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
+                  padding: const EdgeInsets.only(top: 16,right: 16, left: 16),
+                  child: SingleChildScrollView(
+                  
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -194,8 +197,8 @@ class _OTPScreenState extends State<OTPScreen> {
               )
             ],
           ),
-        ),
-      )),
+                  ),
+                )),
     );
   }
 }

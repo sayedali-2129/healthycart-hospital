@@ -4,9 +4,10 @@ import 'package:healthycart/utils/constants/colors/colors.dart';
 class SliverCustomAppbar extends StatelessWidget {
   const SliverCustomAppbar({
     super.key,
-    required this.title,
+    required this.title, required this.onBackTap,
   });
   final String title;
+  final VoidCallback onBackTap;
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
@@ -15,9 +16,7 @@ class SliverCustomAppbar extends StatelessWidget {
       forceElevated: true,
       toolbarHeight: 80,
       leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          onPressed:onBackTap,
           icon: const Icon(Icons.arrow_back_ios)),
       title: Text(title,
           style: Theme.of(context)

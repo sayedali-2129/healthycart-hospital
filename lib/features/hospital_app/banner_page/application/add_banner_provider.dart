@@ -69,8 +69,8 @@ class AddBannerProvider extends ChangeNotifier {
   }
 
   Future<void> getBanner() async {
-    fetchLoading = true;
     if (bannerList.isNotEmpty) return;
+    fetchLoading = true;
     notifyListeners();
     final result = await iBannerFacade.getHospitalBanner();
     result.fold((failure) {

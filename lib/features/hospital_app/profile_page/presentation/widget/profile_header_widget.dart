@@ -1,7 +1,8 @@
-
-
 import 'package:flutter/material.dart';
+import 'package:healthycart/core/general/cached_network_image.dart';
+import 'package:healthycart/features/home/application/main_provider.dart';
 import 'package:healthycart/utils/constants/colors/colors.dart';
+import 'package:provider/provider.dart';
 
 class ProfileHeaderWidget extends StatelessWidget {
   const ProfileHeaderWidget({
@@ -10,6 +11,8 @@ class ProfileHeaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final mainProviderHospitalDetails =
+        context.read<MainProvider>().hospitalDetails;
     return SizedBox(
       height: 200,
       width: double.infinity,
@@ -17,24 +20,22 @@ class ProfileHeaderWidget extends StatelessWidget {
         alignment: Alignment.bottomLeft,
         children: [
           Positioned.fill(
-            child: Container(
-              decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(16),
-                    bottomRight: Radius.circular(16),
-                  ),
-                  image: DecorationImage(
-                      image: AssetImage(
-                          'assets/image/medical-concept-hospital-building-doctor-260nw-588196298.webp'),
-                      fit: BoxFit.fill)),
+            
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: ClipRRect(
+                  child: CustomCachedNetworkImage(
+                      image: mainProviderHospitalDetails!.image ?? ''),
+                ),
+              ),
             ),
-          ),
+
           Positioned.fill(
               child: Container(
             color: Colors.white.withOpacity(.4),
           )),
           Positioned(
-            bottom: 48,
+            bottom: 40,
             child: Container(
               width: 280,
               decoration: BoxDecoration(
@@ -44,13 +45,15 @@ class ProfileHeaderWidget extends StatelessWidget {
                     bottomRight: Radius.circular(16)),
               ),
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.only(left: 8,right: 8, top: 16, bottom: 16),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'St. George Hospital todupuzha'.toUpperCase(),
+                      (mainProviderHospitalDetails.hospitalName ??
+                              'Unkown Hospital Name')
+                          .toUpperCase(),
                       style: Theme.of(context)
                           .textTheme
                           .headlineSmall!
@@ -62,7 +65,7 @@ class ProfileHeaderWidget extends StatelessWidget {
                       // textAlign: TextAlign.center,
                     ),
                     Text(
-                      '${'Proprietor :'} ${'Venkatesh Kumar'}',
+                      '${'Proprietor :'} ${mainProviderHospitalDetails.ownerName}',
                       style: Theme.of(context).textTheme.labelLarge!.copyWith(
                           color: BColors.darkblue, fontWeight: FontWeight.w700),
                       maxLines: 2,

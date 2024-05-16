@@ -1,6 +1,5 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:healthycart/core/custom/app_bar/custom_appbar_curve.dart';
 import 'package:healthycart/core/services/easy_navigation.dart';
@@ -22,8 +21,9 @@ class ProfileScreen extends StatelessWidget {
       child: Column(
         children: [
           const CustomCurveAppBarWidget(),
+          const Gap(6),
           const ProfileHeaderWidget(),
-          const Gap(4),
+          const Gap(8),
           ProfileMainContainer(
             text: 'Hospital On / Off',
             sideChild: LiteRollingSwitch(

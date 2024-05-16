@@ -8,7 +8,7 @@ class BColors {
   static const Color textWhite = Colors.white;
   static const Color buttonDarkColor = Color(0xFF11334E);
   static const Color white = Colors.white;
-  static Color red = Colors.red.shade700;
+  static Color red = Colors.red.shade900;
   static Color green = Colors.green.shade700;
   static Color lightGrey = Colors.grey.shade300;
   static const Color grey = Colors.grey;

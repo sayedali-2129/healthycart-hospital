@@ -13,7 +13,8 @@ class TextfieldWidget extends StatelessWidget {
     this.labelText,
     required this.style,
     this.hintText,
-    this.textInputAction
+    this.textInputAction,
+    this.onChanged,
   });
   final TextEditingController? controller;
   final bool? readOnly;
@@ -25,12 +26,14 @@ class TextfieldWidget extends StatelessWidget {
   final String? hintText;
   final TextStyle style;
   final TextInputAction? textInputAction;
+  final void Function(String)? onChanged;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       child: TextFormField(
+        onChanged: onChanged,
         textInputAction: textInputAction,
-        textCapitalization: TextCapitalization.words,
+        textCapitalization: TextCapitalization.sentences,
         minLines: maxlines,
         maxLines: maxlines,
         validator: validator,

@@ -13,8 +13,11 @@ class DoctorProfileList extends StatelessWidget {
     return Scaffold(
         body: CustomScrollView(
       slivers: [
-        const SliverCustomAppbar(
+         SliverCustomAppbar(
           title: 'Doctor List',
+          onBackTap: (){
+            Navigator.pop(context);
+          },
         ),
         SliverPadding(
             padding: const EdgeInsets.all(16),

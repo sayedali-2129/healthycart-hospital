@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:healthycart/core/custom/divider/divider.dart';
 import 'package:healthycart/features/hospital_app/banner_page/application/add_banner_provider.dart';
 import 'package:healthycart/features/hospital_app/banner_page/presentation/widget/add_new_banner.dart';
-import 'package:healthycart/features/hospital_app/doctor_page/application/doctor_provider.dart';
+
 
 import 'package:healthycart/utils/constants/colors/colors.dart';
 import 'package:provider/provider.dart';
@@ -52,6 +53,7 @@ class AddBannerAlertWidget extends StatelessWidget {
           value.clearBannerDetails();
         },
         child: AlertDialog(
+          contentPadding:const EdgeInsets.only(bottom: 16, left: 12, right: 12,top: 8),
           surfaceTintColor: Colors.white,
           backgroundColor: Colors.white,
           content: SizedBox(
@@ -62,29 +64,33 @@ class AddBannerAlertWidget extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Center(
-                    child: (value.imageFile == null)
+                    child:  (value.imageFile == null && value.imageUrl == null)
                         ? AddNewBannerWidget(
                             onTap: onAddTap,
                             height: 120,
                             width: 120,
                             child: const Center(child: Icon(Icons.add)),
-                          )
-                        : AddNewBannerWidget(
+                          ):(value.imageFile != null)?
+                         AddNewBannerWidget(
                             height: 200,
                             width: 260,
                             onTap: onAddTap,
                             child: Image.file(
                               value.imageFile!,
                             ),
-                          ),
+                          ):AddNewBannerWidget(
+                            height: 200,
+                            width: 260,
+                            onTap: onAddTap,
+                            child: Image.network(
+                              value.imageUrl!,
+                            ),
+                          )
                   ),
-                  const Gap(24),
+                
+                  const Gap(16),
                   Column(children: [
-                    Padding(
-                      padding: const EdgeInsets.all(6),
-                      child: Text(nameTitle,
-                          style: Theme.of(context).textTheme.labelLarge),
-                    ),
+                    DividerWidget(text: nameTitle,),
                     const Gap(16),
                     SizedBox(
                       height: 48,
@@ -111,7 +117,8 @@ class AddBannerAlertWidget extends StatelessWidget {
                                       .labelLarge!
                                       .copyWith(color: Colors.white))),
                     )
-                  ])
+                  ]),
+                 const Gap(8)
                 ],
               ),
             ),

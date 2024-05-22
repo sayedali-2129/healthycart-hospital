@@ -54,7 +54,8 @@ class IDoctorImpl implements IDoctorFacade {
 
 //////////////// getting the list of hospital selected categories here
   @override
-  Future<Either<MainFailure, List<DoctorCategoryModel>>> getHospitalDoctorCategory({required List<String> categoryIdList}) async {
+  Future<Either<MainFailure, List<DoctorCategoryModel>>>
+      getHospitalDoctorCategory({required List<String> categoryIdList}) async {
     try {
       List<Future<DocumentSnapshot<Map<String, dynamic>>>> futures = [];
 
@@ -99,7 +100,10 @@ class IDoctorImpl implements IDoctorFacade {
             const MainFailure.firebaseException(errMsg: 'check userid'));
       }
       log('User id for updating category');
-      await _repo.collection(FirebaseCollections.hospitals).doc(hospitalId).update({
+      await _repo
+          .collection(FirebaseCollections.hospitals)
+          .doc(hospitalId)
+          .update({
         'selectedCategoryId': FieldValue.arrayUnion([category.id])
       });
       return right(category);
@@ -145,8 +149,9 @@ class IDoctorImpl implements IDoctorFacade {
   }) async {
     try {
       final snapshot = await _repo
-          .collection(FirebaseCollections.doctors).where('categoryId', isEqualTo: categoryId).where('hospitalId', isEqualTo: hospitalId)
-          
+          .collection(FirebaseCollections.doctors)
+          .where('categoryId', isEqualTo: categoryId)
+          .where('hospitalId', isEqualTo: hospitalId)
           .get();
       return right(snapshot.docs.isNotEmpty);
     } on FirebaseException catch (e) {
@@ -160,7 +165,7 @@ class IDoctorImpl implements IDoctorFacade {
 
   //////////////////////// doctor add section------------------------------------------
   @override
-  Future<Either<MainFailure, DoctorAddModel>> addDoctor({
+  Future<Either<MainFailure, DoctorAddModel>> addDoctorDetails({
     required DoctorAddModel doctorData,
   }) async {
     try {
@@ -180,16 +185,65 @@ class IDoctorImpl implements IDoctorFacade {
   }
 
   @override
-  Future<Either<MainFailure, List<DoctorAddModel>>> getDoctor(
-      {required String categoryId}) async {
+  Future<Either<MainFailure, List<DoctorAddModel>>> getDoctorDetails({
+    required String categoryId,
+    required String hospitalId,
+  }) async {
     try {
       final snapshot = await _repo
           .collection(FirebaseCollections.doctors)
+          .orderBy('createdAt')
           .where('categoryId', isEqualTo: categoryId)
+          .where('hospitalId', isEqualTo: hospitalId)
           .get();
       log(' Implementation of get doctor called  :::: ');
-      return right(
-          snapshot.docs.map((e) => DoctorAddModel.fromMap(e.data())).toList());
+      return right(snapshot.docs
+          .map((e) => DoctorAddModel.fromMap(e.data()).copyWith(id: e.id))
+          .toList());
+    } on FirebaseException catch (e) {
+      log(e.code);
+      log(e.message!);
+      return left(MainFailure.firebaseException(errMsg: e.message.toString()));
+    } catch (e) {
+      return left(MainFailure.generalException(errMsg: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<MainFailure, DoctorAddModel>> deleteDoctorDetails({
+    required String doctorId,
+    required DoctorAddModel doctorData,
+  }) async {
+    try {
+      await _repo
+          .collection(FirebaseCollections.doctors)
+          .doc(doctorId)
+          .delete();
+
+      log(' Deletion of doctor called  :::: ');
+      return right(doctorData);
+    } on FirebaseException catch (e) {
+      log(e.code);
+      log(e.message!);
+      return left(MainFailure.firebaseException(errMsg: e.message.toString()));
+    } catch (e) {
+      return left(MainFailure.generalException(errMsg: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<MainFailure, DoctorAddModel>> updateDoctorDetails({
+    required String doctorId,
+    required DoctorAddModel doctorData,
+  }) async {
+    try {
+      await _repo
+          .collection(FirebaseCollections.doctors)
+          .doc(doctorId)
+          .update(doctorData.toMap());
+
+      log(' Updating  of get doctor called  :::: ');
+      return right(doctorData);
     } on FirebaseException catch (e) {
       log(e.code);
       log(e.message!);

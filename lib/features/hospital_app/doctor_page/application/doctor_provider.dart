@@ -11,7 +11,6 @@ import 'package:healthycart/features/hospital_app/doctor_page/domain/i_doctor_fa
 import 'package:healthycart/features/hospital_app/doctor_page/domain/model/add_doctor_model.dart';
 import 'package:healthycart/features/hospital_app/doctor_page/domain/model/doctor_category_model.dart';
 import 'package:injectable/injectable.dart';
-import 'package:uuid/uuid.dart';
 
 @injectable
 class DoctorProvider extends ChangeNotifier {
@@ -34,6 +33,7 @@ class DoctorProvider extends ChangeNotifier {
   }
 
   Future<Either<MainFailure, File>> getImage() async {
+    imageUrl = null;// when editing we
     final result = await _iDoctorFacade.getImage();
     notifyListeners();
     return result;
@@ -74,8 +74,7 @@ class DoctorProvider extends ChangeNotifier {
   }
 
   List<DoctorCategoryModel> doctorCategoryAllList = [];
-  List<String> doctorCategoryIdList =
-      []; // to get id of category from the doctors list
+  List<String> doctorCategoryIdList =  []; // to get id of category from the doctors list
   List<DoctorCategoryModel> doctorCategoryList = [];
   DoctorCategoryModel? doctorCategory;
   List<DoctorCategoryModel> doctorCategoryUniqueList = [];
@@ -119,7 +118,7 @@ class DoctorProvider extends ChangeNotifier {
   }
 
   void removingFromUniqueCategoryList() {
-    for (var element in doctorCategoryList) {
+    for (var element in doctorCategoryList) { // removing selected category
       doctorCategoryUniqueList.removeWhere((cat) {
         return cat.id == element.id;
       });
@@ -147,7 +146,7 @@ class DoctorProvider extends ChangeNotifier {
   }
 
 ///////////////////////
-  /// Deleting doctor category-----------------------
+//////// Deleting doctor category-----------------------
   Future<void> deleteCategory(
       {required int index, required DoctorCategoryModel category}) async {
     // check if there is any doctors inside category that is going to be deleted
@@ -186,10 +185,14 @@ class DoctorProvider extends ChangeNotifier {
   /// these both are used in the category also to check wheather the user
   String? categoryId;
   String? selectedDoctorCategoryText;
+
+  final GlobalKey<FormState> formKey =
+      GlobalKey<FormState>(); // formkey for the user
   final TextEditingController aboutController = TextEditingController();
   final TextEditingController doctorNameController = TextEditingController();
   final TextEditingController doctorFeeController = TextEditingController();
-  final TextEditingController specializationController = TextEditingController();
+  final TextEditingController specializationController =
+      TextEditingController();
   final TextEditingController experienceController = TextEditingController();
   final TextEditingController qualificationController = TextEditingController();
   final TextEditingController aboutDoctorController = TextEditingController();
@@ -247,7 +250,8 @@ class DoctorProvider extends ChangeNotifier {
     fetchLoading = true;
     notifyListeners();
     doctorDataList();
-    final result = await _iDoctorFacade.addDoctor(doctorData: doctorDetails!);
+    final result =
+        await _iDoctorFacade.addDoctorDetails(doctorData: doctorDetails!);
     result.fold((failure) {
       log(failure.errMsg);
       CustomToast.errorToast(
@@ -273,7 +277,6 @@ class DoctorProvider extends ChangeNotifier {
     doctorDetails = DoctorAddModel(
         categoryId: categoryId,
         hospitalId: hospitalId,
-        id: const Uuid().v4(),
         doctorImage: imageUrl,
         doctorName: doctorNameController.text,
         doctorTotalTime: availableTotalTime,
@@ -311,13 +314,85 @@ class DoctorProvider extends ChangeNotifier {
     fetchLoading = true;
     notifyListeners();
     doctorList.clear();
-    final result = await _iDoctorFacade.getDoctor(categoryId: categoryId!);
+    final result = await _iDoctorFacade.getDoctorDetails(
+        categoryId: categoryId!, hospitalId: hospitalId!);
     result.fold((failure) {
       log(failure.errMsg);
       CustomToast.errorToast(text: "Couldn't able to fetch doctor's");
     }, (doctors) {
       doctorList.addAll(doctors); //// here we are assigning the doctor
       log('Doctors list Number ::::${doctorList.toString()}');
+    });
+    fetchLoading = false;
+    notifyListeners();
+  }
+/////////////////////////// 3.) deleting the doctor field
+
+  Future<void> deleteDoctorDetails(
+      {required int index, required DoctorAddModel doctorData}) async {
+    final result = await _iDoctorFacade.deleteDoctorDetails(
+        doctorId: doctorData.id ?? '', doctorData: doctorData);
+    result.fold((failure) {
+      log(failure.errMsg);
+      CustomToast.errorToast(
+          text: "Couldn't able to delete doctor details, please try again.");
+    }, (doctorsData) {
+      CustomToast.sucessToast(text: "Removed doctor sucessfully");
+      doctorList.removeAt(index); //// here we are assigning the doctor
+      log('Doctors list Number ::::${doctorList.toString()}');
+    });
+    notifyListeners();
+  }
+
+/////////////////////////// 3.) update the doctor field
+  void setDoctorEditData({required DoctorAddModel doctorEditData}) {
+    imageUrl = doctorEditData.doctorImage;
+    doctorNameController.text = doctorEditData.doctorName ?? 'Unknown Name';
+    availableTotalTime = doctorEditData.doctorTotalTime;
+    timeSlotListElementList = doctorEditData.doctorTimeList;
+    doctorFeeController.text = doctorEditData.doctorFee.toString();
+    specializationController.text =
+        doctorEditData.doctorSpecialization ?? 'Unknown Specialization';
+    experienceController.text = doctorEditData.doctorExperience.toString();
+    qualificationController.text =
+        doctorEditData.doctorQualification ?? 'Unknown qualification';
+    aboutController.text = doctorEditData.doctorAbout ?? 'Unknown About';
+    notifyListeners();
+  }
+
+  Future<void> updateDoctorDetails(
+      {required int index, required DoctorAddModel doctorData}) async {
+    fetchLoading = true;
+    notifyListeners();
+    doctorDetails = DoctorAddModel(
+        id: doctorData.id,
+        categoryId: doctorData.categoryId,
+        hospitalId: doctorData.hospitalId,
+        doctorImage: imageUrl,
+        doctorName: doctorNameController.text,
+        doctorTotalTime: availableTotalTime,
+        doctorTimeList: timeSlotListElementList,
+        doctorFee: int.parse(doctorFeeController.text),
+        doctorSpecialization: specializationController.text,
+        doctorExperience: int.parse(experienceController.text),
+        doctorQualification: qualificationController.text,
+        doctorAbout: aboutController.text,
+        createdAt: doctorData.createdAt,
+        keywords: keywordDoctorBuilder());
+    final result = await _iDoctorFacade.updateDoctorDetails(
+        doctorId: doctorData.id ?? '', doctorData: doctorDetails!);
+    result.fold((failure) {
+      log(failure.errMsg);
+      CustomToast.errorToast(
+          text: "Couldn't able to delete doctor details, please try again.");
+    }, (doctorsData) {
+      CustomToast.sucessToast(text: "Edited doctor details sucessfully");
+      doctorList.removeAt(index);
+      doctorList.insert(
+          index, doctorsData); //// here we are assigning the doctor
+      log('Doctors list Number ::::${doctorsData.id}');
+      clearDoctorDetails();
+      notifyListeners();
     });
     fetchLoading = false;
     notifyListeners();

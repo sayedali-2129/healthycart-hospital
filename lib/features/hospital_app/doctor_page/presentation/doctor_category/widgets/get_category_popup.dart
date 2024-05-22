@@ -62,12 +62,12 @@ class _AddDoctorsCategoryDilogueState extends State<AddDoctorsCategoryDilogue> {
   Widget build(BuildContext context) {
     return Consumer<DoctorProvider>(builder: (context, value, _) {
       return AlertDialog(
-        contentPadding: const EdgeInsets.all(12),
+        contentPadding: const EdgeInsets.all(16),
         scrollable: true,
         surfaceTintColor: Colors.white,
         backgroundColor: BColors.lightGrey,
         title: Text('Add prefered category',
-            style: Theme.of(context).textTheme.bodyLarge),
+            style: Theme.of(context).textTheme.labelLarge!.copyWith(fontSize: 18)),
         content: (value.fetchAlertLoading)
 
             /// loading is done here
@@ -183,7 +183,7 @@ class _AddDoctorsCategoryDilogueState extends State<AddDoctorsCategoryDilogue> {
     });
   }
 
-  void _removeSelectedDocter() {
+  void _removeSelectedDocter() { 
     context.read<DoctorProvider>().removingFromUniqueCategoryList();
   }
 }

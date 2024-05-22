@@ -3,9 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:healthycart/core/custom/app_bar/main_logo_appbar.dart';
 import 'package:healthycart/core/custom/button/common_button.dart';
-import 'package:healthycart/features/authenthication/application/auth_cubit/authenication_cubit.dart';
-import 'package:healthycart/features/authenthication/application/presentation/login_ui.dart';
-import 'package:healthycart/features/hospital_form_field/application/hospital_form_provider.dart';
+import 'package:healthycart/features/authenthication/presentation/login_ui.dart';
+import 'package:healthycart/features/add_hospital_form/application/hospital_form_provider.dart';
 import 'package:healthycart/utils/constants/colors/colors.dart';
 import 'package:healthycart/utils/constants/enums.dart';
 import 'package:healthycart/utils/constants/image/image.dart';
@@ -41,9 +40,7 @@ class AdminScreen extends StatelessWidget {
                   height: 48,
                   onTap: () {
                     provider.adminType = AdminType.hospital;
-                    context.read<AuthenicationCubit>().setAdminType(
-                          AdminType.hospital,
-                        );
+
                     Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -65,9 +62,7 @@ class AdminScreen extends StatelessWidget {
                   height: 48,
                   onTap: () {
                     provider.adminType = AdminType.pharmacy;
-                    context
-                        .read<AuthenicationCubit>()
-                        .setAdminType(AdminType.pharmacy);
+
                     Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -89,9 +84,7 @@ class AdminScreen extends StatelessWidget {
                   height: 48,
                   onTap: () {
                     provider.adminType = AdminType.laboratory;
-                     context
-                        .read<AuthenicationCubit>()
-                        .setAdminType(AdminType.laboratory);
+
                     Navigator.push(
                         context,
                         MaterialPageRoute(

@@ -1,3 +1,4 @@
+
 import 'package:dartz/dartz.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -6,16 +7,15 @@ import 'package:injectable/injectable.dart';
 
 @LazySingleton()
 class LocationService {
-  
-   Future<void> getPermission() async {
+  Future<void> getPermission() async {
     bool isServiceEnabled;
     LocationPermission permission;
     isServiceEnabled = await Geolocator.isLocationServiceEnabled();
+    await Geolocator.requestPermission();
 
     if (!isServiceEnabled) {
       permission = await Geolocator.requestPermission();
     }
-
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
@@ -25,20 +25,18 @@ class LocationService {
         // return const MainFailure.locationError(errMsg: 'Denied location permission');
       }
     }
-    
   }
 
-   Future<Either<MainFailure, Placemark>>
-      getCurrentLocationAddress() async {
+  Future<Either<MainFailure, Placemark>> getCurrentLocationAddress() async {
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.bestForNavigation);
 
     List<Placemark>? place = await GeocodingPlatform.instance
         ?.placemarkFromCoordinates(position.latitude, position.longitude);
     if (place == null) {
-      return left(const MainFailure.locationError(errMsg: 'Location not found'));
+      return left(
+          const MainFailure.locationError(errMsg: 'Location not found'));
     }
     return right(place.first);
   }
 }
- 

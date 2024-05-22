@@ -15,6 +15,7 @@ class TextfieldWidget extends StatelessWidget {
     this.hintText,
     this.textInputAction,
     this.onChanged,
+    this.onSubmit,
   });
   final TextEditingController? controller;
   final bool? readOnly;
@@ -27,6 +28,8 @@ class TextfieldWidget extends StatelessWidget {
   final TextStyle style;
   final TextInputAction? textInputAction;
   final void Function(String)? onChanged;
+  final void Function(String)? onSubmit;
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -41,6 +44,7 @@ class TextfieldWidget extends StatelessWidget {
         controller: controller,
         readOnly: readOnly!,
         cursorColor: BColors.black,
+        onFieldSubmitted: onSubmit,
         style: style,
         decoration: InputDecoration(
           labelStyle: Theme.of(context).textTheme.labelMedium,

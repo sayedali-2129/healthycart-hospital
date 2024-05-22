@@ -13,6 +13,7 @@ class PopUpAddDoctorBottomSheet {
   void showBottomSheet({
     required BuildContext context,
     required VoidCallback addImageTap,
+    required VoidCallback saveButtonTap,
   }) async {
     await showModalBottomSheet(
         isScrollControlled: true,
@@ -23,7 +24,7 @@ class PopUpAddDoctorBottomSheet {
         context: context,
         builder: (context) {
           return   
-             DoctorAddForm(addImageTap: addImageTap,);
+             DoctorAddForm(addImageTap: addImageTap,saveButtonTap:saveButtonTap,);
           
         });
   }

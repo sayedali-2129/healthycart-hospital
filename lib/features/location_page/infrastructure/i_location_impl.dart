@@ -2,23 +2,37 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
-import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:healthycart/core/failures/main_failure.dart';
+import 'package:healthycart/core/general/firebase_collection.dart';
+import 'package:healthycart/core/general/typdef.dart';
 import 'package:healthycart/core/services/location_service.dart';
+import 'package:healthycart/core/services/open_street_map/open_sctrict_map_services.dart';
 import 'package:healthycart/features/location_page/domain/i_location_facde.dart';
 import 'package:healthycart/features/location_page/domain/model/location_model.dart';
 import 'package:injectable/injectable.dart';
 
 @LazySingleton(as: ILocationFacade)
 class ILocationImpl implements ILocationFacade {
-  ILocationImpl(this._locationService, this.firebaseFirestore);
+  ILocationImpl(
+    this._locationService,
+    this._firebaseFirestore,
+  );
 
   final LocationService _locationService;
-  final FirebaseFirestore firebaseFirestore;
+  final FirebaseFirestore _firebaseFirestore;
   @override
-  Future<Either<MainFailure, Placemark>> getCurrentLocationAddress() async {
-    final result = await _locationService.getCurrentLocationAddress();
-    return result;
+  Future<Either<MainFailure, PlaceMark?>> getCurrentLocationAddress() async {
+    try {
+      final getCurrentPosition = await Geolocator.getCurrentPosition();
+
+      final getCurrentLocation = await OpenStritMapServices.fetchCurrentLocaion(
+          latitude: getCurrentPosition.latitude.toString(),
+          longitude: getCurrentPosition.longitude.toString());
+      return right(getCurrentLocation);
+    } catch (ex) {
+      return left(MainFailure.locationError(errMsg: ex.toString()));
+    }
   }
 
   @override
@@ -27,11 +41,12 @@ class ILocationImpl implements ILocationFacade {
   }
 
   @override
-  Future<Either<MainFailure, Unit>> setLocationByHospital(PlaceMark placeMark) async{
+  Future<Either<MainFailure, Unit>> setLocationByHospital(
+      PlaceMark placeMark) async {
     try {
       // add Local area
-      final district = await firebaseFirestore
-          .collection('sellLocation')
+      final district = await _firebaseFirestore
+          .collection(FirebaseCollections.hospitalLocations)
           .doc(placeMark.country)
           .collection(placeMark.state)
           .doc(placeMark.state)
@@ -40,8 +55,9 @@ class ILocationImpl implements ILocationFacade {
           .get();
       if (district.exists) {
         // Get LocalArea Map List // [{Nilambur: Instance of 'GeoPoint'}]
-        final localAreaList =(district.data()?['localArea'] as List<dynamic>?) ?? [];
-        // map convert localArea key then convert 
+        final localAreaList =
+            (district.data()?['localArea'] as List<dynamic>?) ?? [];
+        // map convert localArea key then convert
         final localAreaKeysList = <String>[];
         for (final localArea in localAreaList) {
           final localAreaMap = localArea as Map<String, dynamic>;
@@ -51,10 +67,9 @@ class ILocationImpl implements ILocationFacade {
           });
         }
 
-       
         if (!localAreaKeysList.contains(placeMark.localArea)) {
-          await firebaseFirestore
-              .collection('sellLocation')
+          await _firebaseFirestore
+              .collection(FirebaseCollections.hospitalLocations)
               .doc(placeMark.country)
               .collection(placeMark.state)
               .doc(placeMark.state)
@@ -75,19 +90,18 @@ class ILocationImpl implements ILocationFacade {
       }
 
       // add district
-      final state = await firebaseFirestore
-          .collection('sellLocation')
+      final state = await _firebaseFirestore
+          .collection(FirebaseCollections.hospitalLocations)
           .doc(placeMark.country)
           .collection(placeMark.state)
           .doc(placeMark.state)
           .get();
 
       if (state.exists) {
-       
-
-          // Get LocalArea Map List // [{Malappuram: Instance of 'GeoPoint'}]
-        final districtList = (state.data()?['district'] as List<dynamic>?) ?? [];
-        // map convert district key then convert 
+        // Get LocalArea Map List // [{Malappuram: Instance of 'GeoPoint'}]
+        final districtList =
+            (state.data()?['district'] as List<dynamic>?) ?? [];
+        // map convert district key then convert
         final districtKeysList = <String>[];
         for (final district in districtList) {
           final districtMap = district as Map<String, dynamic>;
@@ -98,13 +112,12 @@ class ILocationImpl implements ILocationFacade {
         }
 
         log(districtKeysList.toString());
-           
 
-        final batch = firebaseFirestore.batch();
+        final batch = _firebaseFirestore.batch();
         if (!districtKeysList.contains(placeMark.district)) {
           batch.update(
-            firebaseFirestore
-                .collection('sellLocation')
+            _firebaseFirestore
+                .collection(FirebaseCollections.hospitalLocations)
                 .doc(placeMark.country)
                 .collection(placeMark.state)
                 .doc(placeMark.state),
@@ -121,8 +134,8 @@ class ILocationImpl implements ILocationFacade {
           );
         }
         batch.set(
-          firebaseFirestore
-              .collection('sellLocation')
+          _firebaseFirestore
+              .collection(FirebaseCollections.hospitalLocations)
               .doc(placeMark.country)
               .collection(placeMark.state)
               .doc(placeMark.state)
@@ -145,18 +158,15 @@ class ILocationImpl implements ILocationFacade {
       }
 
       // add state
-      final country = await firebaseFirestore
-          .collection('sellLocation')
+      final country = await _firebaseFirestore
+          .collection(FirebaseCollections.hospitalLocations)
           .doc(placeMark.country)
           .get();
       if (country.exists) {
         // Get LocalArea Map List // [{Kerala: Instance of 'GeoPoint'}]
         final stateList = (country.data()?['state'] as List<dynamic>?) ?? [];
 
-
-            
-       
-        // map convert state key then convert 
+        // map convert state key then convert
         final stateKeysList = <String>[];
         for (final state in stateList) {
           final stateMap = state as Map<String, dynamic>;
@@ -166,13 +176,13 @@ class ILocationImpl implements ILocationFacade {
           });
         }
 
-
-
-        final batch = firebaseFirestore.batch();
+        final batch = _firebaseFirestore.batch();
         if (!stateKeysList.contains(placeMark.state)) {
           batch.update(
             // update
-            firebaseFirestore.collection('sellLocation').doc(placeMark.country),
+            _firebaseFirestore
+                .collection(FirebaseCollections.hospitalLocations)
+                .doc(placeMark.country),
             {
               'state': FieldValue.arrayUnion([
                 {
@@ -187,8 +197,8 @@ class ILocationImpl implements ILocationFacade {
         }
         batch
           ..set(
-            firebaseFirestore
-                .collection('sellLocation')
+            _firebaseFirestore
+                .collection(FirebaseCollections.hospitalLocations)
                 .doc(placeMark.country)
                 .collection(placeMark.state)
                 .doc(placeMark.state),
@@ -204,8 +214,8 @@ class ILocationImpl implements ILocationFacade {
             },
           )
           ..set(
-            firebaseFirestore
-                .collection('sellLocation')
+            _firebaseFirestore
+                .collection(FirebaseCollections.hospitalLocations)
                 .doc(placeMark.country)
                 .collection(placeMark.state)
                 .doc(placeMark.state)
@@ -228,10 +238,12 @@ class ILocationImpl implements ILocationFacade {
       }
 
       // add country
-      final batch = firebaseFirestore.batch()
+      final batch = _firebaseFirestore.batch()
         ..set(
           // set
-          firebaseFirestore.collection('sellLocation').doc(placeMark.country),
+          _firebaseFirestore
+              .collection(FirebaseCollections.hospitalLocations)
+              .doc(placeMark.country),
           {
             'state': FieldValue.arrayUnion([
               {
@@ -244,8 +256,8 @@ class ILocationImpl implements ILocationFacade {
           },
         )
         ..set(
-          firebaseFirestore
-              .collection('sellLocation')
+          _firebaseFirestore
+              .collection(FirebaseCollections.hospitalLocations)
               .doc(placeMark.country)
               .collection(placeMark.state)
               .doc(placeMark.state),
@@ -261,8 +273,8 @@ class ILocationImpl implements ILocationFacade {
           },
         )
         ..set(
-          firebaseFirestore
-              .collection('sellLocation')
+          _firebaseFirestore
+              .collection(FirebaseCollections.hospitalLocations)
               .doc(placeMark.country)
               .collection(placeMark.state)
               .doc(placeMark.state)
@@ -296,5 +308,29 @@ class ILocationImpl implements ILocationFacade {
       );
     }
   }
-  
+
+  @override
+  FutureResult<List<PlaceMark>?> getSearchPlaces(String query) async {
+    try {
+      final getPlaces = await OpenStritMapServices.searchPlaces(input: query);
+      return right(getPlaces);
+    } catch (ex) {
+      return left(MainFailure.locationError(errMsg: ex.toString()));
+    }
+  }
+
+  @override
+  Future<Either<MainFailure, Unit>> updateUserLocation(
+      PlaceMark placeMark, String userId) async {
+    try{
+        await _firebaseFirestore
+        .collection(FirebaseCollections.hospitals)
+        .doc(userId)
+        .update({'placemark': placeMark.toMap()});
+        return right(unit);
+    }catch(e){
+         return left(MainFailure.locationError(errMsg: e.toString())); 
+    }    
+
+  }
 }

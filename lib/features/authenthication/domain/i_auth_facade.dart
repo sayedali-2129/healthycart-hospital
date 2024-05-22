@@ -1,13 +1,18 @@
 import 'package:dartz/dartz.dart';
 import 'package:healthycart/core/failures/main_failure.dart';
-import 'package:healthycart/utils/constants/enums.dart';
+import 'package:healthycart/features/add_hospital_form/domain/model/hospital_model.dart';
+
 
 abstract class IAuthFacade {
   //factory IAuthFacade() => IAuthImpl(FirebaseAuth.instance);
-  Stream<Either<MainFailure, String>> verifyPhoneNumber(String phoneNumber);
+  Stream<Either<MainFailure, bool>> verifyPhoneNumber(String phoneNumber);
   Future<Either<MainFailure, String>> verifySmsCode({
     required String smsCode,
-    required String verificationId,
-    required AdminType adminType,
   });
+
+  Stream<Either<MainFailure, HospitalModel>> hospitalStreamFetchData(
+      String userId);
+
+ Future<Either<MainFailure, String>> hospitalLogOut();     
+  void cancelStream();
 }

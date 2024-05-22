@@ -31,11 +31,21 @@ abstract class IDoctorFacade {
     required String hospitalId, 
   });
 
-  Future<Either<MainFailure,DoctorAddModel>> addDoctor({
+  Future<Either<MainFailure,DoctorAddModel>> addDoctorDetails({
     required DoctorAddModel doctorData,
   });
 
-  Future<Either<MainFailure, List<DoctorAddModel>>> getDoctor({
-    required String categoryId,
+  Future<Either<MainFailure, List<DoctorAddModel>>> getDoctorDetails({
+    required String categoryId, required String hospitalId,
   });
+
+  
+  Future<Either<MainFailure, DoctorAddModel>> deleteDoctorDetails({
+    required String doctorId, required DoctorAddModel doctorData,
+  });
+
+  Future<Either<MainFailure, DoctorAddModel>> updateDoctorDetails({
+    required String doctorId, required DoctorAddModel doctorData,
+  });
+
 }

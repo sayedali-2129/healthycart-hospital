@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class ConfirmDeleteWidget{
 
- static void showAlertDeleteBox({required BuildContext context, required VoidCallback deleteButton}){
+ static void showAlertDeleteBox({required BuildContext context, required VoidCallback deleteButton, String? titleText, String? subText}){
     showDialog(
                 context: context,
                 builder: (context) {
@@ -11,9 +11,9 @@ class ConfirmDeleteWidget{
                     width: 260,
                     height: 300,
                     child: AlertDialog(
-                      title: Text('Confirm to delete',
+                      title: Text((titleText == null)?'Confirm to delete' : titleText,
                           style: Theme.of(context).textTheme.bodyLarge),
-                      content: Text('Are you sure you want to delete?',
+                      content: Text((subText == null)?'Are you sure you want to delete?': subText,
                           style: Theme.of(context).textTheme.labelLarge),
                       actions: [
                         TextButton(

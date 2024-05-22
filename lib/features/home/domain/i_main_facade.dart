@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:healthycart/core/failures/main_failure.dart';
-import 'package:healthycart/features/hospital_form_field/domain/model/hospital_model.dart';
+import 'package:healthycart/features/add_hospital_form/domain/model/hospital_model.dart';
 
 
 

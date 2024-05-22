@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:healthycart/core/custom/toast/toast.dart';
-import 'package:healthycart/features/hospital_form_field/domain/model/hospital_model.dart';
+import 'package:healthycart/features/add_hospital_form/domain/model/hospital_model.dart';
 import 'package:healthycart/features/home/domain/i_main_facade.dart';
 import 'package:injectable/injectable.dart';
 

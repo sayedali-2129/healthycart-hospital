@@ -2,11 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthycart/core/custom/divider/divider.dart';
-import 'package:healthycart/core/custom/lottie/loading_lottie.dart';
 import 'package:healthycart/core/custom/text_formfield/textformfield.dart';
-import 'package:healthycart/core/custom/toast/toast.dart';
 import 'package:healthycart/core/general/validator.dart';
-import 'package:healthycart/core/services/easy_navigation.dart';
 import 'package:healthycart/features/hospital_app/doctor_page/application/doctor_provider.dart';
 import 'package:healthycart/features/hospital_app/doctor_page/presentation/add_doctor/widgets/add_circular_image.dart';
 import 'package:healthycart/features/hospital_app/doctor_page/presentation/add_doctor/widgets/doctor_timeslot_selector.dart';
@@ -19,11 +16,13 @@ class DoctorAddForm extends StatelessWidget {
   const DoctorAddForm({
     super.key,
     required this.addImageTap,
+    required this.saveButtonTap,
   });
   final VoidCallback addImageTap;
+  final VoidCallback saveButtonTap;
+
   @override
   Widget build(BuildContext context) {
-    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
     return Consumer<DoctorProvider>(builder: (context, value, _) {
       return PopScope(
         onPopInvoked: (didPop) {
@@ -45,22 +44,33 @@ class DoctorAddForm extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Center(
-                            child: (value.imageFile == null)
+                            child: (value.imageFile == null &&
+                                    value.imageUrl == null)
                                 ? CircularAddImageWidget(
                                     addTap: addImageTap,
                                     iconSize: 48,
                                     height: 120,
                                     width: 120,
                                     radius: 120)
-                                : GestureDetector(
-                                    onTap: addImageTap,
-                                    child: CircleAvatar(
-                                      radius: 80,
-                                      backgroundImage: FileImage(
-                                        value.imageFile!,
+                                : (value.imageFile != null)
+                                    ? GestureDetector(
+                                        onTap: addImageTap,
+                                        child: CircleAvatar(
+                                          radius: 80,
+                                          backgroundImage: FileImage(
+                                            value.imageFile!,
+                                          ),
+                                        ),
+                                      )
+                                    : GestureDetector(
+                                        onTap: addImageTap,
+                                        child: CircleAvatar(
+                                          radius: 80,
+                                          backgroundImage: NetworkImage(
+                                            value.imageUrl!,
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
                           ),
                           const Gap(16),
                           const DividerWidget(text: 'Tap above to add photo'),
@@ -69,7 +79,7 @@ class DoctorAddForm extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Form(
-                                    key: formKey,
+                                    key: value.formKey,
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
@@ -195,7 +205,7 @@ class DoctorAddForm extends StatelessWidget {
                                         ),
                                         TextfieldWidget(
                                           keyboardType: TextInputType.number,
-                                           textInputAction: TextInputAction.next,
+                                          textInputAction: TextInputAction.next,
                                           hintText:
                                               'Enter the amount in rupees eg: 250 ',
                                           validator: BValidator.validate,
@@ -292,35 +302,7 @@ class DoctorAddForm extends StatelessWidget {
                                   height: 48,
                                   width: double.infinity,
                                   child: ElevatedButton(
-                                    onPressed: () async {
-                                      if (value.imageFile == null) {
-                                        CustomToast.errorToast(
-                                            text: "Pick doctor's image");
-                                        return;
-                                      }
-                                      if (!formKey.currentState!.validate()) {
-                                        formKey.currentState!.validate();
-                                        return;
-                                      }
-                                      if (value.timeSlotListElementList!
-                                              .isEmpty ||
-                                          value.availableTotalTime == null) {
-                                        CustomToast.errorToast(
-                                            text:
-                                                'No available time slot is added');
-                                        return;
-                                      }
-                                      LoadingLottie.showLoading(
-                                          context: context,
-                                          text: 'Adding doctor details...');
-                                      await value.saveImage();
-                                      await value.addDoctorDetail();
-
-                                      // ignore: use_build_context_synchronously
-                                      EasyNavigation.pop(context: context);
-                                      // ignore: use_build_context_synchronously
-                                      EasyNavigation.pop(context: context);
-                                    },
+                                    onPressed: saveButtonTap,
                                     style: ElevatedButton.styleFrom(
                                         backgroundColor: BColors.darkblue,
                                         shape: RoundedRectangleBorder(

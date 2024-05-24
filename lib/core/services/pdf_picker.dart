@@ -1,19 +1,16 @@
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:dartz/dartz.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:healthycart/core/failures/main_failure.dart';
 import 'package:healthycart/core/general/typdef.dart';
-import 'package:injectable/injectable.dart';
 
-@LazySingleton()
+
 class PdfPickerService {
   PdfPickerService(this._storage);
   final FirebaseStorage _storage;
 
-  
   FutureResult<File> getPdfFile() async {
     final FilePickerResult? pickedFile;
 
@@ -48,23 +45,27 @@ class PdfPickerService {
           .ref(pdfName)
           .putFile(pdfFile, SettableMetadata(contentType: 'file/pdf'));
       downloadPdfUrl = await _storage.ref(pdfName).getDownloadURL();
-      return  right(downloadPdfUrl);
+      return right(downloadPdfUrl);
     } catch (e) {
       return left(const MainFailure.generalException(
           errMsg: "Couldn't able to save PDF file"));
     }
-
   }
 
-  Future<void> deletePdfUrl({
+  FutureResult<String?> deletePdfUrl({
     required String? url,
   }) async {
-    if (url == null) return;
+    if (url == null) {
+      return left(const MainFailure.generalException(
+          errMsg: "Can't able to remove the PDF."));
+    }
     final pdfRef = _storage.refFromURL(url);
     try {
       await pdfRef.delete();
+      return right('PDF removed sucessfully');
     } catch (e) {
-
+      return left(const MainFailure.generalException(
+          errMsg: "Couldn't able to remove the PDF."));
     }
   }
 }

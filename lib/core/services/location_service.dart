@@ -1,11 +1,10 @@
-
 import 'package:dartz/dartz.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:healthycart/core/failures/main_failure.dart';
-import 'package:injectable/injectable.dart';
 
-@LazySingleton()
+
+
 class LocationService {
   Future<void> getPermission() async {
     bool isServiceEnabled;
@@ -29,7 +28,7 @@ class LocationService {
 
   Future<Either<MainFailure, Placemark>> getCurrentLocationAddress() async {
     Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.bestForNavigation);
+        desiredAccuracy: LocationAccuracy.high);
 
     List<Placemark>? place = await GeocodingPlatform.instance
         ?.placemarkFromCoordinates(position.latitude, position.longitude);

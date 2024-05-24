@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:healthycart/core/failures/main_failure.dart';
-import 'package:healthycart/features/add_hospital_form/domain/model/hospital_model.dart';
+import 'package:healthycart/features/add_hospital_form_page/domain/model/hospital_model.dart';
 
 
 abstract class IAuthFacade {
@@ -14,5 +14,5 @@ abstract class IAuthFacade {
       String userId);
 
  Future<Either<MainFailure, String>> hospitalLogOut();     
-  void cancelStream();
+  Future<void> cancelStream();
 }

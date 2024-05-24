@@ -1,15 +1,13 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:healthycart/core/custom/toast/toast.dart';
-
 import 'package:healthycart/core/services/easy_navigation.dart';
 import 'package:healthycart/features/authenthication/domain/i_auth_facade.dart';
 import 'package:healthycart/features/authenthication/presentation/otp_ui.dart';
 import 'package:healthycart/features/home/presentation/home.dart';
-import 'package:healthycart/features/add_hospital_form/domain/model/hospital_model.dart';
-import 'package:healthycart/features/add_hospital_form/presentation/hospital_form.dart';
-import 'package:healthycart/features/location_page/presentation/location.dart';
+import 'package:healthycart/features/add_hospital_form_page/domain/model/hospital_model.dart';
+import 'package:healthycart/features/add_hospital_form_page/presentation/hospital_form.dart';
+import 'package:healthycart/features/location_picker/presentation/location.dart';
 import 'package:healthycart/features/pending_page/presentation/pending_page.dart';
 import 'package:healthycart/features/splash_screen/splash_screen.dart';
 import 'package:injectable/injectable.dart';
@@ -26,11 +24,10 @@ class AuthenticationProvider extends ChangeNotifier {
   String? countryCode;
   String? phoneNumber;
   String? userId;
-  bool? isRequsetedPendingPage;
+  int? isRequsetedPendingPage;
 
   void setNumber() {
     phoneNumber = '$countryCode${phoneNumberController.text.trim()}';
-    log("Phone Number:::: $phoneNumber");
     notifyListeners();
   }
 
@@ -38,7 +35,6 @@ class AuthenticationProvider extends ChangeNotifier {
       {required String userId, required BuildContext context}) {
     iAuthFacade.hospitalStreamFetchData(userId).listen((event) {
       event.fold((failure) {
-        log("Error IN USER SNAPSHOT  $failure");
       }, (snapshot) {
         hospitalDataFetched = snapshot;
         isRequsetedPendingPage = snapshot.requested;
@@ -46,7 +42,8 @@ class AuthenticationProvider extends ChangeNotifier {
         if (snapshot.address == null ||
             snapshot.image == null ||
             snapshot.ownerName == null ||
-            snapshot.uploadLicense == null) {
+            snapshot.uploadLicense == null ||
+            snapshot.hospitalName == null) {
           EasyNavigation.pushReplacement(
             type: PageTransitionType.bottomToTop,
             context: context,
@@ -54,14 +51,15 @@ class AuthenticationProvider extends ChangeNotifier {
                 HospitalFormScreen(phoneNo: hospitalDataFetched?.phoneNo ?? ''),
           );
           notifyListeners();
-        } else if (snapshot.placemark == null && snapshot.requested == null) {
+        } else if (snapshot.placemark == null) {
           EasyNavigation.pushReplacement(
             type: PageTransitionType.bottomToTop,
             context: context,
             page: const LocationPage(),
           );
           notifyListeners();
-        } else if (snapshot.requested == false || snapshot.requested == null) {
+        } else if ((snapshot.requested == 0 || snapshot.requested == 1) &&
+            snapshot.placemark != null) {
           EasyNavigation.pushReplacement(
               type: PageTransitionType.bottomToTop,
               context: context,
@@ -84,7 +82,6 @@ class AuthenticationProvider extends ChangeNotifier {
         Navigator.pop(context);
         CustomToast.errorToast(text: failure.errMsg);
       }, (isVerified) {
-        log('VerificationId :::::$isVerified');
         Navigator.pop(context);
         Navigator.push(
             context,
@@ -105,11 +102,9 @@ class AuthenticationProvider extends ChangeNotifier {
       CustomToast.errorToast(text: failure.errMsg);
     }, (userId) {
       userId = userId;
-      log('UserId :::::$userId');
       Navigator.pop(context);
       EasyNavigation.pushReplacement(
-          context: context,
-          page: const SplashScreen());
+          context: context, page: const SplashScreen());
     });
   }
 
@@ -122,8 +117,7 @@ class AuthenticationProvider extends ChangeNotifier {
       Navigator.pop(context);
       CustomToast.sucessToast(text: sucess);
       EasyNavigation.pushReplacement(
-          context: context,
-          page: const SplashScreen());
+          context: context, page: const SplashScreen());
     });
   }
 }

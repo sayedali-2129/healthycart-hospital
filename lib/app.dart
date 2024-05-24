@@ -1,47 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:healthycart/core/di/injection.dart';
 import 'package:healthycart/features/authenthication/application/authenication_provider.dart';
-import 'package:healthycart/features/authenthication/domain/i_auth_facade.dart';
-import 'package:healthycart/features/home/application/main_provider.dart';
-import 'package:healthycart/features/home/domain/i_main_facade.dart';
-import 'package:healthycart/features/home/presentation/home.dart';
-import 'package:healthycart/features/hospital_app/banner_page/application/add_banner_provider.dart';
-import 'package:healthycart/features/hospital_app/banner_page/domain/i_banner_facade.dart';
-import 'package:healthycart/features/hospital_app/doctor_page/application/doctor_provider.dart';
-import 'package:healthycart/features/hospital_app/doctor_page/domain/i_doctor_facade.dart';
-import 'package:healthycart/features/add_hospital_form/application/hospital_form_provider.dart';
-import 'package:healthycart/features/add_hospital_form/domain/i_form_facade.dart';
-import 'package:healthycart/features/hospital_app/request_page/application/provider/request_doctor_provider.dart';
-import 'package:healthycart/features/location_page/application/location_provider.dart';
-import 'package:healthycart/features/location_page/presentation/location.dart';
+import 'package:healthycart/features/hospital_banner/application/add_banner_provider.dart';
+import 'package:healthycart/features/hospital_doctor/application/doctor_provider.dart';
+import 'package:healthycart/features/add_hospital_form_page/application/hospital_form_provider.dart';
+import 'package:healthycart/features/hospital_profile/application/profile_provider.dart';
+import 'package:healthycart/features/hospital_request_userside/application/provider/request_doctor_provider.dart';
+import 'package:healthycart/features/location_picker/application/location_provider.dart';
 import 'package:healthycart/features/pending_page/application/pending_provider.dart';
+import 'package:healthycart/features/pending_page/presentation/pending_page.dart';
 import 'package:healthycart/features/splash_screen/splash_screen.dart';
 import 'package:healthycart/main.dart';
 import 'package:healthycart/utils/theme/theme.dart';
 import 'package:provider/provider.dart';
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class App extends StatelessWidget {
+  const App({super.key});
 
   @override
   Widget build(BuildContext context) {
    
     return MultiProvider(
       providers: [
+        // ChangeNotifierProvider(
+        //   create: (context) => HomeProvider(sl<IHomeFacade>()),
+        // ),
         ChangeNotifierProvider(
-          create: (context) => MainProvider(sl<IMainFacade>()),
+          create: (context) => sl<HosptialFormProvider>(),
         ),
         ChangeNotifierProvider(
-          create: (context) => HosptialFormProvider(sl<IFormFeildFacade>()),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => DoctorProvider(sl<IDoctorFacade>()),
+          create: (context) => sl<DoctorProvider>(),
         ),
         ChangeNotifierProvider(
           create: (context) => RequestDoctorProvider(),
         ),
         ChangeNotifierProvider(
-          create: (context) => AddBannerProvider(sl<IBannerFacade>()),
+          create: (context) => sl<AddBannerProvider>(),
         ),
        ChangeNotifierProvider(
           create: (context) => sl<LocationProvider>(),
@@ -54,6 +48,9 @@ class MyApp extends StatelessWidget {
       ChangeNotifierProvider(
           create: (context) => sl<PendingProvider>(),
         ), 
+       ChangeNotifierProvider(
+          create: (context) => sl<ProfileProvider>(),
+        ),
       ],
         child: MaterialApp(
           navigatorKey: navigatorKey,

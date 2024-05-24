@@ -2,9 +2,10 @@ import 'dart:convert';
 import 'dart:developer';
 
 // ignore: depend_on_referenced_packages
+import 'package:geocoding/geocoding.dart';
 import 'package:healthycart/core/custom/toast/toast.dart';
 import 'package:healthycart/core/services/open_street_map/open_street_map_model.dart';
-import 'package:healthycart/features/location_page/domain/model/location_model.dart';
+import 'package:healthycart/features/location_picker/domain/model/location_model.dart';
 import 'package:http/http.dart' as http;
 
 class OpenStritMapServices {
@@ -18,20 +19,32 @@ class OpenStritMapServices {
     );
     final response = await http.get(url);
     if (response.statusCode == 200) {
-      final streatMap = OpentreetMapModel.fromMap(
+      final openStreetMap = OpentreetMapModel.fromMap(
         json.decode(response.body) as Map<String, dynamic>,
       );
-      log(streatMap.toString());
+
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+          double.tryParse(latitude)!, double.tryParse(longitude)!);
+      final placemark = placemarks[0];
+
+      log(placemark.toJson().toString());
+
+      final localArea = (placemark.locality ?? '').isNotEmpty
+          ? placemark.locality
+          : openStreetMap.localArea;
+      final subAdministrativeArea = (placemark.subAdministrativeArea ?? '').isNotEmpty
+          ? placemark.subAdministrativeArea
+          : openStreetMap.district;
       return PlaceMark(
-        country: streatMap.country ?? '',
-        district: streatMap.district ?? '',
+        country: openStreetMap.country ?? '',
+        district: subAdministrativeArea!,
         geoPoint: LandMark(
-          latitude: streatMap.latitude!,
-          longitude: streatMap.longitude!,
+          latitude: openStreetMap.latitude!,
+          longitude: openStreetMap.longitude!,
         ),
-        localArea: streatMap.localArea ?? '',
-        pincode: streatMap.pincode ?? '',
-        state: streatMap.state ?? '',
+        localArea: localArea,
+        pincode: openStreetMap.pincode ?? '',
+        state: openStreetMap.state ?? '',
       );
     } else {
       log('ERROR IN CONVERT TO ADRESS FUNCTION : ${response.statusCode}');
@@ -52,27 +65,28 @@ class OpenStritMapServices {
       final placeMarks = <PlaceMark>[];
       final data = json.decode(response.body) as List<dynamic>;
       for (final item in data) {
-        final streatMap = OpentreetMapModel.fromMap(
+        final openStreetMap = OpentreetMapModel.fromMap(
           item as Map<String, dynamic>,
         );
         placeMarks.add(
           PlaceMark(
-            country: streatMap.country ?? '',
-            district: streatMap.district ?? '',
+            country: openStreetMap.country ?? '',
+            district: openStreetMap.district ?? '',
             geoPoint: LandMark(
-              latitude: streatMap.latitude!,
-              longitude: streatMap.longitude!,
+              latitude: openStreetMap.latitude!,
+              longitude: openStreetMap.longitude!,
             ),
-            localArea: streatMap.localArea ?? '',
-            pincode: streatMap.pincode ?? '',
-            state: streatMap.state ?? '',
+            localArea: openStreetMap.localArea ?? '',
+            pincode: openStreetMap.pincode ?? '',
+            state: openStreetMap.state ?? '',
           ),
         );
       }
       return placeMarks;
     } else {
       log('ERROR IN CONVERT TO ADRESS FUNCTION : ${response.statusCode}');
-          CustomToast.errorToast(text:'ERROR IN CONVERT TO ADRESS FUNCTION : ${response.statusCode}');
+      CustomToast.errorToast(
+          text: 'ERROR IN CONVERT TO ADRESS FUNCTION : ${response.statusCode}');
 
       throw Exception('Failed to load album');
     }

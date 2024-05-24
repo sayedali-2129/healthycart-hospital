@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:healthycart/main.dart';
 import 'package:page_transition/page_transition.dart';
 
+
 class EasyNavigation {
   static Future<void> push({
     required BuildContext context,

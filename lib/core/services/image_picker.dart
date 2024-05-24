@@ -1,11 +1,11 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:healthycart/core/failures/main_failure.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:injectable/injectable.dart';
 
-@LazySingleton()
 class ImageService {
   ImageService(this._storage);
 
@@ -38,30 +38,43 @@ class ImageService {
         'healthycart/${DateTime.now().microsecondsSinceEpoch}.png';
     final String? downloadUrl;
     try {
+      final imageBytes = await imageFile.readAsBytes();
+
+      final resultImage = await FlutterImageCompress.compressWithList(
+        imageBytes,
+        quality: 70, // Lower quality for more aggressive compression
+        minHeight: 720, // Lower minimum height
+        minWidth: 1280, // Lower minimum width
+        // Increase downsampling for more aggressive compression
+      );
       await _storage
           .ref(imageName)
-          .putFile(imageFile, SettableMetadata(contentType: 'image/png'));
+          .putData(resultImage, SettableMetadata(contentType: 'image/png'));
       downloadUrl = await _storage.ref(imageName).getDownloadURL();
 
       return right(downloadUrl);
     } catch (e) {
-      return left(
-          const MainFailure.generalException(errMsg: 'Image is not picked'));
+      return left(const MainFailure.generalException(
+          errMsg: "Can't able to save image."));
     }
   }
 
 //delete Image
 
-//  Future<Either<MainFailure, void >> deleteUrl({
-//     required String? imageUrl,
-//   }) async {
-//     if (imageUrl == null) return right(none());
-//     final imageRef = _storage.refFromURL(imageUrl);
-//     try {
-//       await imageRef.delete();
-
-//     } catch (e) {
-//       onFailure.call(BText.imageDeleteError);
-//     }
-//   }
+  Future<Either<MainFailure, Unit>> deleteImageUrl({
+    required String? imageUrl,
+  }) async {
+    if (imageUrl == null) {
+      return left(const MainFailure.generalException(
+          errMsg: "Can't able to remove previous image."));
+    }
+    final imageRef = _storage.refFromURL(imageUrl);
+    try {
+      await imageRef.delete();
+      return right(unit);
+    } catch (e) {
+      return left(const MainFailure.generalException(
+          errMsg: "Can't able to remove previous image."));
+    }
+  }
 }

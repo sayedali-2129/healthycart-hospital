@@ -1,12 +1,11 @@
 import 'dart:async';
-import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:healthycart/core/failures/main_failure.dart';
 import 'package:healthycart/core/general/firebase_collection.dart';
 import 'package:healthycart/features/authenthication/domain/i_auth_facade.dart';
-import 'package:healthycart/features/add_hospital_form/domain/model/hospital_model.dart';
+import 'package:healthycart/features/add_hospital_form_page/domain/model/hospital_model.dart';
 import 'package:injectable/injectable.dart';
 
 @LazySingleton(as: IAuthFacade)
@@ -17,9 +16,7 @@ class IAuthImpl implements IAuthFacade {
 
   String? verificationId; // phone verification Id
   int? forceResendingToken;
-  final StreamController<Either<MainFailure, HospitalModel>>
-      hospitalStreamController =
-      StreamController<Either<MainFailure, HospitalModel>>();
+  late StreamSubscription _streamSubscription;
 
   @override
   Stream<Either<MainFailure, bool>> verifyPhoneNumber(
@@ -32,7 +29,6 @@ class IAuthImpl implements IAuthFacade {
       forceResendingToken: forceResendingToken,
       verificationCompleted: (PhoneAuthCredential credential) {},
       verificationFailed: (FirebaseAuthException e) {
-        log("VERIFICATION FAILD");
         if (e.code == 'invalid-phone-number') {
           controller.add(left(const MainFailure.invalidPhoneNumber(
               errMsg: 'Phone number is not valid')));
@@ -41,7 +37,6 @@ class IAuthImpl implements IAuthFacade {
         }
       },
       codeSent: (String verificationId, int? forceResendingToken) {
-        log("CODE SENT 111");
         //verification id is stored in the state
         this.verificationId = verificationId;
         this.forceResendingToken = forceResendingToken;
@@ -101,14 +96,16 @@ class IAuthImpl implements IAuthFacade {
   @override
   Stream<Either<MainFailure, HospitalModel>> hospitalStreamFetchData(
       String userId) async* {
+    final StreamController<Either<MainFailure, HospitalModel>>
+        hospitalStreamController =
+        StreamController<Either<MainFailure, HospitalModel>>();
     try {
-      _firestore
+   _streamSubscription =  _firestore
           .collection(FirebaseCollections.hospitals)
           .doc(userId)
           .snapshots()
           .listen((doc) {
         if (doc.exists) {
-          log("DATA:${doc.data()}");
           hospitalStreamController.add(
               right(HospitalModel.fromMap(doc.data() as Map<String, dynamic>)));
         }
@@ -124,8 +121,8 @@ class IAuthImpl implements IAuthFacade {
   }
 
   @override
-  void cancelStream() {
-    hospitalStreamController.close();
+  Future<void> cancelStream() async{
+    await _streamSubscription.cancel();
   }
 
   @override
@@ -135,7 +132,8 @@ class IAuthImpl implements IAuthFacade {
       await _firebaseAuth.signOut();
       return right('Sucessfully Logged Out');
     } catch (e) {
-      return left(const MainFailure.generalException(errMsg: "Couldn't able to log out"));
+      return left(const MainFailure.generalException(
+          errMsg: "Couldn't able to log out"));
     }
   }
 }

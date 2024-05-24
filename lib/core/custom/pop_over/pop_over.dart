@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:healthycart/core/custom/confirm_delete/confirm_delete_widget.dart';
+import 'package:healthycart/core/custom/confirm_alertbox/confirm_delete_widget.dart';
 import 'package:popover/popover.dart';
 
 //list of edit and delete of popover
@@ -40,8 +40,8 @@ class ListItems extends StatelessWidget {
           InkWell(
             onTap: () async {
               ///delete confirm alert box
-              ConfirmDeleteWidget.showAlertDeleteBox(
-                  context: context, deleteButton: deleteButton);
+              ConfirmAlertBoxWidget.showAlertConfirmBox(
+                  context: context, confirmButtonTap: deleteButton, titleText: 'Confirm to delete', subText: "Are you sure you want to delete?");
             },
             child: Padding(
               padding: const EdgeInsets.all(8.0),

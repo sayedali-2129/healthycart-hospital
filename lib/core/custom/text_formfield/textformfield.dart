@@ -34,6 +34,7 @@ class TextfieldWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       child: TextFormField(
+  
         onChanged: onChanged,
         textInputAction: textInputAction,
         textCapitalization: TextCapitalization.sentences,

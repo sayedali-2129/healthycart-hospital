@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:healthycart/utils/constants/colors/colors.dart';
 
 
 class ConfirmAlertBoxWidget{
@@ -14,13 +15,13 @@ class ConfirmAlertBoxWidget{
                       title: Text( titleText ,
                           style: Theme.of(context).textTheme.bodyLarge),
                       content: Text(subText,
-                          style: Theme.of(context).textTheme.labelLarge),
+                          style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 13, fontWeight: FontWeight.w600)),
                       actions: [
                         TextButton(
                             onPressed: () {
                               Navigator.pop(context);
                             },
-                            child: const Text('No')),
+                            child: const Text('No', style: TextStyle(color: BColors.darkblue),)),
                         ElevatedButton(
                           onPressed: () {
                             confirmButtonTap.call();
@@ -28,7 +29,7 @@ class ConfirmAlertBoxWidget{
                             Navigator.pop(context);
                           },
                           style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.lightBlue,
+                              backgroundColor: BColors.mainlightColor,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8))),
                           child: Text('Yes',

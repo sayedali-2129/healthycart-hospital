@@ -35,10 +35,10 @@ class CustomCurveAppBarWidget extends StatelessWidget {
                       'HEALTHYCART',
                       style: Theme.of(context)
                           .textTheme
-                          .headlineSmall!
-                          .copyWith(color: BColors.darkblue, fontWeight: FontWeight.w700),
+                          .headlineMedium!
+                          .copyWith(color: BColors.darkblue, fontWeight: FontWeight.bold, fontSize: 24),
                     ),
-                  const  Gap(24),
+                  const  Gap(32),
                   ],
                 ),
             ),

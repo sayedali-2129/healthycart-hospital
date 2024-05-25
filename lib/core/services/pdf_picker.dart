@@ -33,10 +33,10 @@ class PdfPickerService {
   }
 /// updloading pdf to  firebase firestore ------------
   FutureResult<String?> uploadPdf({
-    required File pdfFile,
+    required File pdfFile,required String folderName,
   }) async {
     final String pdfName =
-        'hospital_pdf/${DateTime.now().microsecondsSinceEpoch}.pdf';
+        '$folderName/${DateTime.now().microsecondsSinceEpoch}.pdf';
     final String? downloadPdfUrl;
     try {
       await _storage

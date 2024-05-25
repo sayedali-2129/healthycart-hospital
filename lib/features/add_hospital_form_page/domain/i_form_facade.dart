@@ -8,9 +8,7 @@ abstract class IFormFeildFacade {
     required HospitalModel hospitalDetails,
     required String hospitalId,
   });
-  FutureResult<HospitalModel>  getHospitalDetails({
-    required String userId,
-  });
+
   FutureResult<File> getImage();
   FutureResult<String> saveImage({
     required File imageFile,

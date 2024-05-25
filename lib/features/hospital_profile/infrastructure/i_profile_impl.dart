@@ -1,4 +1,4 @@
-import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:healthycart/core/failures/main_failure.dart';
@@ -20,13 +20,10 @@ class IProfileImpl implements IProfileFacade {
           .collection(FirebaseCollections.doctors)
           .orderBy('createdAt')
           .get();
-      log(' Implementation of get doctor called  :::: ');
       return right(snapshot.docs
           .map((e) => DoctorAddModel.fromMap(e.data()).copyWith(id: e.id))
           .toList());
     } on FirebaseException catch (e) {
-      log(e.code);
-      log(e.message!);
       return left(MainFailure.firebaseException(errMsg: e.message.toString()));
     } catch (e) {
       return left(MainFailure.generalException(errMsg: e.toString()));
@@ -41,14 +38,14 @@ class IProfileImpl implements IProfileFacade {
     final batch = _firebaseFirestore.batch();
 
     try {
-      log('Starting batch update :::::');
+
       batch.update(
           _firebaseFirestore
               .collection(FirebaseCollections.hospitals)
               .doc(hospitalId),
           {'ishospitalON': ishospitalON});
 
-      log('Updated hospital status :::::');
+   
 
       if (ishospitalON == true) {
         batch.update(
@@ -70,16 +67,14 @@ class IProfileImpl implements IProfileFacade {
             });
       }
 
-      log('About to commit batch :::::');
       await batch.commit();
-      log('Batch committed successfully :::::');
+ 
 
       return right('Successfully updated');
     } on FirebaseException catch (e) {
-      log('FirebaseException: ${e.code}');
+
       return left(MainFailure.firebaseException(errMsg: e.code));
     } catch (e) {
-      log('GeneralException: ${e.toString()}');
       return left(MainFailure.generalException(errMsg: e.toString()));
     }
   }

@@ -86,7 +86,7 @@ class HosptialFormProvider extends ChangeNotifier {
         adminType: adminType,
         id: hospitalId,
         isActive: true,
-        ishospitalON : false,
+        ishospitalON : null,
         requested: 1,);
 
     final result = await _iFormFeildFacade.addHospitalDetails(

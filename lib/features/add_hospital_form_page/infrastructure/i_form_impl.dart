@@ -43,22 +43,7 @@ class IFormFieldImpl implements IFormFeildFacade {
     }
   }
 
-  @override
-  FutureResult<HospitalModel> getHospitalDetails({
-    required String userId,
-  }) async {
-    try {
-      final snapshot = await _firebaseFirestore
-          .collection(FirebaseCollections.hospitals)
-          .doc(userId)
-          .get();
-      return right(HospitalModel.fromMap(snapshot.data()!));
-    } on FirebaseException catch (e) {
-      return left(MainFailure.firebaseException(errMsg: e.message.toString()));
-    } catch (e) {
-      return left(MainFailure.generalException(errMsg: e.toString()));
-    }
-  }
+
 
 //Image section -------------------------------------
   @override
@@ -69,7 +54,7 @@ class IFormFieldImpl implements IFormFeildFacade {
   @override
   Future<Either<MainFailure, String>> saveImage(
       {required File imageFile}) async {
-    return await _imageService.saveImage(imageFile: imageFile);
+    return await _imageService.saveImage(imageFile: imageFile, folderName: 'hospital');
   }
 
   @override
@@ -88,7 +73,7 @@ class IFormFieldImpl implements IFormFeildFacade {
   FutureResult<String?> savePDF({
     required File pdfFile,
   }) async {
-    return await _pdfService.uploadPdf(pdfFile: pdfFile);
+    return await _pdfService.uploadPdf(pdfFile: pdfFile, folderName: 'hospitalPDF');
   }
 
   @override

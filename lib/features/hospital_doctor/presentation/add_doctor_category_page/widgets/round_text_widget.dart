@@ -45,7 +45,7 @@ class VerticalImageText extends StatelessWidget {
                   child: Text(
                     title,
                     textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.labelMedium!.copyWith(color: Colors.black),
+                    style: Theme.of(context).textTheme.labelLarge!.copyWith(fontSize: 12),
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                   ),

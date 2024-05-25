@@ -18,7 +18,7 @@ class PopUpAddDoctorBottomSheet {
     await showModalBottomSheet(
         isScrollControlled: true,
         useSafeArea: true,
-        backgroundColor: BColors.white,
+        backgroundColor: BColors.white,  
         showDragHandle: true,
         enableDrag: true,
         context: context,

@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:healthycart/core/custom/divider/divider.dart';
 import 'package:healthycart/core/custom/text_formfield/textformfield.dart';
 import 'package:healthycart/core/general/validator.dart';
+import 'package:healthycart/features/add_hospital_form_page/presentation/widgets/text_above_form_widdget.dart';
 import 'package:healthycart/features/hospital_doctor/application/doctor_provider.dart';
 import 'package:healthycart/features/hospital_doctor/presentation/add_doctor_page/widgets/add_circular_image.dart';
 import 'package:healthycart/features/hospital_doctor/presentation/add_doctor_page/widgets/doctor_timeslot_selector.dart';
@@ -29,17 +30,17 @@ class DoctorAddForm extends StatelessWidget {
           value.clearDoctorDetails();
         },
         child: GestureDetector(
-          onTap: (){
+          onTap: () {
             FocusScope.of(context).unfocus();
           },
           child: Padding(
-            padding:
-                EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom),
             child: SizedBox(
               height: 640,
               child: SingleChildScrollView(
                 child: Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(15.0),
                   child: SizedBox(
                       width: double.infinity,
                       child: Padding(
@@ -76,7 +77,7 @@ class DoctorAddForm extends StatelessWidget {
                                           ),
                                         ),
                             ),
-                            const Gap(16),
+                            const Gap(15),
                             const DividerWidget(text: 'Tap above to add photo'),
                             const Gap(24),
                             Column(
@@ -89,10 +90,10 @@ class DoctorAddForm extends StatelessWidget {
                                             CrossAxisAlignment.start,
                                         children: [
                                           //doctor Name
-                                          const HeadingTextFieldWidget(
+                                          const TextAboveFormFieldWidget(
                                             text: "Doctor Name",
                                           ),
-          
+
                                           TextfieldWidget(
                                             hintText:
                                                 'Enter the name eg: Dr Meenakshi',
@@ -103,13 +104,13 @@ class DoctorAddForm extends StatelessWidget {
                                                 .textTheme
                                                 .labelLarge!
                                                 .copyWith(
-                                                  fontSize: 16,
+                                                  fontSize: 15,
                                                 ),
                                           ),
-          
+
                                           const Gap(8),
-          
-                                          const HeadingTextFieldWidget(
+
+                                          const TextAboveFormFieldWidget(
                                             text: "Total time available",
                                           ),
                                           Row(
@@ -117,9 +118,10 @@ class DoctorAddForm extends StatelessWidget {
                                                 MainAxisAlignment.spaceAround,
                                             children: [
                                               TimePickerSpinnerPopUp(
-                                                cancelTextStyle: Theme.of(context)
-                                                    .textTheme
-                                                    .labelLarge,
+                                                cancelTextStyle:
+                                                    Theme.of(context)
+                                                        .textTheme
+                                                        .labelLarge,
                                                 confirmTextStyle:
                                                     Theme.of(context)
                                                         .textTheme
@@ -127,8 +129,8 @@ class DoctorAddForm extends StatelessWidget {
                                                 iconSize: 24,
                                                 timeFormat: 'hh:mm a',
                                                 use24hFormat: false,
-                                                mode:
-                                                    CupertinoDatePickerMode.time,
+                                                mode: CupertinoDatePickerMode
+                                                    .time,
                                                 initTime: DateTime.now(),
                                                 onChange: (dateTime) {
                                                   value.availableTotalTimeSlot1 =
@@ -145,9 +147,10 @@ class DoctorAddForm extends StatelessWidget {
                                                     .labelLarge,
                                               ),
                                               TimePickerSpinnerPopUp(
-                                                cancelTextStyle: Theme.of(context)
-                                                    .textTheme
-                                                    .labelLarge,
+                                                cancelTextStyle:
+                                                    Theme.of(context)
+                                                        .textTheme
+                                                        .labelLarge,
                                                 confirmTextStyle:
                                                     Theme.of(context)
                                                         .textTheme
@@ -155,8 +158,8 @@ class DoctorAddForm extends StatelessWidget {
                                                 iconSize: 24,
                                                 timeFormat: 'hh:mm a',
                                                 use24hFormat: false,
-                                                mode:
-                                                    CupertinoDatePickerMode.time,
+                                                mode: CupertinoDatePickerMode
+                                                    .time,
                                                 initTime: DateTime.now(),
                                                 onChange: (dateTime) {
                                                   value.availableTotalTimeSlot2 =
@@ -179,7 +182,7 @@ class DoctorAddForm extends StatelessWidget {
                                                   shape: RoundedRectangleBorder(
                                                       borderRadius:
                                                           BorderRadius.circular(
-                                                              16)),
+                                                              15)),
                                                   title: Center(
                                                     child: Text(
                                                       value.availableTotalTime ??
@@ -195,35 +198,37 @@ class DoctorAddForm extends StatelessWidget {
                                                 ),
                                               ],
                                             ),
-          
+
                                           const Gap(8),
-                                          const HeadingTextFieldWidget(
+                                          const TextAboveFormFieldWidget(
                                             text: "Add available time slots",
                                           ),
                                           const TimeSlotChooserWidget(),
                                           ///////////hereeeeee
                                           const Gap(8),
-          
-                                          const HeadingTextFieldWidget(
+
+                                          const TextAboveFormFieldWidget(
                                             text: "Doctor Fee",
                                           ),
                                           TextfieldWidget(
                                             keyboardType: TextInputType.number,
-                                            textInputAction: TextInputAction.next,
+                                            textInputAction:
+                                                TextInputAction.next,
                                             hintText:
                                                 'Enter the amount in rupees eg: 250 ',
                                             validator: BValidator.validate,
-                                            controller: value.doctorFeeController,
+                                            controller:
+                                                value.doctorFeeController,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .labelLarge!
                                                 .copyWith(
-                                                  fontSize: 16,
+                                                  fontSize: 15,
                                                 ),
                                           ),
                                           const Gap(8),
-          
-                                          const HeadingTextFieldWidget(
+
+                                          const TextAboveFormFieldWidget(
                                             text: "Experience",
                                           ),
                                           TextfieldWidget(
@@ -237,12 +242,12 @@ class DoctorAddForm extends StatelessWidget {
                                                 .textTheme
                                                 .labelLarge!
                                                 .copyWith(
-                                                  fontSize: 16,
+                                                  fontSize: 15,
                                                 ),
                                           ),
                                           const Gap(8),
-          
-                                          const HeadingTextFieldWidget(
+
+                                          const TextAboveFormFieldWidget(
                                             text: "Specialization",
                                           ),
                                           TextfieldWidget(
@@ -256,17 +261,18 @@ class DoctorAddForm extends StatelessWidget {
                                                 .textTheme
                                                 .labelLarge!
                                                 .copyWith(
-                                                  fontSize: 16,
+                                                  fontSize: 15,
                                                 ),
                                           ),
-          
+
                                           const Gap(8),
-          
-                                          const HeadingTextFieldWidget(
+
+                                          const TextAboveFormFieldWidget(
                                             text: "Qualification",
                                           ),
                                           TextfieldWidget(
-                                            textInputAction: TextInputAction.next,
+                                            textInputAction:
+                                                TextInputAction.next,
                                             hintText:
                                                 'Enter the qualification eg: MBBS,FRCS, etc...',
                                             validator: BValidator.validate,
@@ -276,16 +282,17 @@ class DoctorAddForm extends StatelessWidget {
                                                 .textTheme
                                                 .labelLarge!
                                                 .copyWith(
-                                                  fontSize: 16,
+                                                  fontSize: 15,
                                                 ),
                                           ),
                                           const Gap(8),
-          
-                                          const HeadingTextFieldWidget(
+
+                                          const TextAboveFormFieldWidget(
                                             text: "About doctor",
                                           ),
                                           TextfieldWidget(
-                                            textInputAction: TextInputAction.done,
+                                            textInputAction:
+                                                TextInputAction.done,
                                             maxlines: 3,
                                             hintText:
                                                 'Enter the about the doctor.',
@@ -295,10 +302,10 @@ class DoctorAddForm extends StatelessWidget {
                                                 .textTheme
                                                 .labelLarge!
                                                 .copyWith(
-                                                  fontSize: 16,
+                                                  fontSize: 15,
                                                 ),
                                           ),
-                                          const Gap(16),
+                                          const Gap(15),
                                         ],
                                       )),
                                   const Gap(12),
@@ -311,12 +318,13 @@ class DoctorAddForm extends StatelessWidget {
                                           backgroundColor: BColors.darkblue,
                                           shape: RoundedRectangleBorder(
                                               borderRadius:
-                                                  BorderRadius.circular(16))),
+                                                  BorderRadius.circular(15))),
                                       child: (value.fetchLoading)
                                           ? const Center(
                                               child: Padding(
                                                 padding: EdgeInsets.all(4.0),
-                                                child: CircularProgressIndicator(
+                                                child:
+                                                    CircularProgressIndicator(
                                                   strokeWidth: 4,
                                                   color: Colors.white,
                                                 ),
@@ -344,24 +352,5 @@ class DoctorAddForm extends StatelessWidget {
         ),
       );
     });
-  }
-}
-
-class HeadingTextFieldWidget extends StatelessWidget {
-  const HeadingTextFieldWidget({
-    super.key,
-    required this.text,
-  });
-  final String text;
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(6.0),
-      child: Text(
-        text,
-        style: const TextStyle(
-            fontSize: 16, fontWeight: FontWeight.w600, color: BColors.black),
-      ),
-    );
   }
 }

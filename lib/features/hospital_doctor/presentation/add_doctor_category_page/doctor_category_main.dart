@@ -56,18 +56,19 @@ class DoctorScreen extends StatelessWidget {
                     icon: doctorProvider.onTapBool
                         ? Text(
                             'Cancel Edit',
-                            style: Theme.of(context).textTheme.labelLarge,
+                            style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 14, fontWeight: FontWeight.w600),
                           )
                         : Row(
                             children: [
                               Text(
                                 'Edit',
-                                style: Theme.of(context).textTheme.labelLarge,
+                                style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 14, fontWeight: FontWeight.w600),
                               ),
                               const Gap(4),
                               const Icon(
                                 Icons.edit_outlined,
                                 size: 18,
+                                color: Colors.black54,
                               ),
                             ],
                           ),

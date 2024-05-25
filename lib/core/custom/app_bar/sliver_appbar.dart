@@ -17,12 +17,12 @@ class SliverCustomAppbar extends StatelessWidget {
       toolbarHeight: 80,
       leading: IconButton(
           onPressed:onBackTap,
-          icon: const Icon(Icons.arrow_back_ios)),
+          icon: const Icon(Icons.arrow_back_ios, color: BColors.darkblue,)),
       title: Text(title,
           style: Theme.of(context)
               .textTheme
               .bodyLarge!
-              .copyWith(color: BColors.darkblue, fontWeight: FontWeight.w700)),
+              .copyWith(color: BColors.darkblue, fontWeight: FontWeight.w800, fontSize: 20)),
       flexibleSpace: FlexibleSpaceBar(
         expandedTitleScale: 1,
         background: Container(

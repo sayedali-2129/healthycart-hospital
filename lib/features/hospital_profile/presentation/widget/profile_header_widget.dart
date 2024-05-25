@@ -58,20 +58,20 @@ class ProfileHeaderWidget extends StatelessWidget {
                               .toUpperCase(),
                           style: Theme.of(context)
                               .textTheme
-                              .headlineSmall!
+                              .titleLarge!
                               .copyWith(
-                                  fontSize: 18,
+                                  fontSize: 20,
                                   color: BColors.darkblue,
                                   fontWeight: FontWeight.w700),
                           maxLines: 3,
-                          // textAlign: TextAlign.center,
+                         
                         ),
                         Text(
                           '${'Proprietor :'} ${authProviderHospitalDetails.hospitalDataFetched?.ownerName}',
                           style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                              color: BColors.darkblue, fontWeight: FontWeight.w700),
+                              color: BColors.darkblue, fontWeight: FontWeight.w700, fontSize: 14),
                           maxLines: 2,
-                          // textAlign: TextAlign.center,
+                         
                         ),
                       ],
                     ),

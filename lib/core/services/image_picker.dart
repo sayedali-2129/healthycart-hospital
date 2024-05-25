@@ -31,9 +31,10 @@ class ImageService {
 //save image
   Future<Either<MainFailure, String>> saveImage({
     required File imageFile,
+    required String folderName,
   }) async {
     final String imageName =
-        'healthycart/${DateTime.now().microsecondsSinceEpoch}.png';
+        '$folderName/${DateTime.now().microsecondsSinceEpoch}.png';
     final String? downloadUrl;
     try {
       final imageBytes = await imageFile.readAsBytes();

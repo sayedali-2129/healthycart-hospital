@@ -50,9 +50,9 @@ class _BottonNavTabState extends State<BottomNavigationWidget> {
                       ),),
               labelStyle:
                   Theme.of(context).textTheme.labelLarge!.copyWith(fontSize: 10,
-                  fontWeight: FontWeight.w600 ),
+                  fontWeight: FontWeight.w600,  ),
               labelColor: BColors.mainlightColor,
-              unselectedLabelColor: BColors.black,
+              unselectedLabelColor: Colors.black87,
               
               onTap: (index) {
                 setState(() {

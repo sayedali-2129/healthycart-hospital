@@ -25,7 +25,7 @@ class IDoctorImpl implements IDoctorFacade {
   @override
   FutureResult<String>saveImage(
       {required File imageFile}) async {
-    return await _imageService.saveImage(imageFile: imageFile);
+    return await _imageService.saveImage(imageFile: imageFile, folderName: 'doctor_image');
   }
 
   @override

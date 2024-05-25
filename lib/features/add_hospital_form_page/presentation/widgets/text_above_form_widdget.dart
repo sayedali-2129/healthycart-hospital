@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:healthycart/utils/constants/colors/colors.dart';
+
 
 class TextAboveFormFieldWidget extends StatelessWidget {
   const TextAboveFormFieldWidget({
@@ -13,8 +13,7 @@ class TextAboveFormFieldWidget extends StatelessWidget {
       padding: const EdgeInsets.all(6.0),
       child: Text(
         text,
-        style: const TextStyle(
-            fontSize: 14, fontWeight: FontWeight.w600, color: BColors.black),
+        style: Theme.of(context).textTheme.labelLarge,
       ),
     );
   }

@@ -1,79 +1,112 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class BTextTheme {
-  static TextTheme lightTextTheme = TextTheme(
-    headlineMedium: GoogleFonts.poppins(
-      fontSize: 32.0,
+  static TextTheme lightTextTheme = const TextTheme(
+    headlineMedium: TextStyle(
+      fontFamily: 'Poppins',
+      fontSize: 32,
       color: Colors.black,
       fontWeight: FontWeight.bold,
     ),
-    headlineSmall: GoogleFonts.poppins(
+    headlineSmall: TextStyle(
+      fontFamily: 'Poppins',
       color: Colors.black,
-      fontWeight: FontWeight.w500,
+      fontWeight: FontWeight.w900,
     ),
-    titleMedium: GoogleFonts.poppins(
+    titleMedium: TextStyle(
+      fontFamily: 'Poppins',
       color: Colors.black54,
       fontWeight: FontWeight.w600,
     ),
-    titleSmall: GoogleFonts.poppins(
-      color: Colors.black54,
-      fontWeight: FontWeight.w400,
-    ),
-    bodyLarge: GoogleFonts.poppins(
-      color: Colors.black,
-      fontWeight: FontWeight.w600,
-    ),
-    bodyMedium: GoogleFonts.poppins(
+    titleSmall: TextStyle(
+      fontFamily: 'Poppins',
       color: Colors.black54,
       fontWeight: FontWeight.w500,
     ),
-    bodySmall: GoogleFonts.poppins(
+    bodyLarge: TextStyle(
+      fontFamily: 'Poppins',
+      color: Colors.black,
+      fontWeight: FontWeight.w700,
+    ),
+    bodyMedium: TextStyle(
+      fontFamily: 'Poppins',
+      color: Colors.black54,
+      fontWeight: FontWeight.w600,
+    ),
+    bodySmall: TextStyle(
+      fontFamily: 'Poppins',
       color: Colors.black54,
       fontWeight: FontWeight.normal,
     ),
-    labelLarge: GoogleFonts.poppins(
+    labelLarge: TextStyle(
+      fontFamily: 'Poppins',
       color: Colors.black87,
-      fontWeight: FontWeight.w500,
+      fontWeight: FontWeight.w600,
     ),
-    labelMedium: GoogleFonts.poppins(
+    labelMedium: TextStyle(
+      fontFamily: 'Poppins',
+      color: Colors.black54,
+      fontWeight: FontWeight.w400,
+    ),
+    labelSmall: TextStyle(
+      fontFamily: 'Poppins',
       color: Colors.black54,
       fontWeight: FontWeight.w500,
     ),
-    labelSmall: GoogleFonts.poppins(
-      color: Colors.black54,
-      fontWeight: FontWeight.w500,
-    ),
-    titleLarge: GoogleFonts.poppins(
+    titleLarge: TextStyle(
+      fontFamily: 'Poppins',
       color: Colors.black87,
       fontWeight: FontWeight.w600,
     ),
   );
 
-  static TextTheme darkTextTheme = TextTheme(
-    headlineMedium: GoogleFonts.poppins(
+  static TextTheme darkTextTheme = const TextTheme(
+    headlineMedium: TextStyle(
+        fontFamily: 'Poppins',
         fontSize: 32.0,
-        color: const Color.fromARGB(255, 255, 255, 255),
+        color: Color.fromARGB(255, 255, 255, 255),
         fontWeight: FontWeight.bold),
-    headlineSmall:
-        GoogleFonts.poppins(color: Colors.white70, fontWeight: FontWeight.w500),
-    titleMedium: GoogleFonts.poppins(
-        color: const Color.fromARGB(255, 239, 236, 236),
+    headlineSmall: TextStyle(
+      fontFamily: 'Poppins',
+      color: Colors.white70,
+      fontWeight: FontWeight.w900,
+    ),
+    titleMedium: TextStyle(
+      fontFamily: 'Poppins',
+      color: Color.fromARGB(255, 239, 236, 236),
+      fontWeight: FontWeight.w600,
+    ),
+    titleSmall: TextStyle(
+      fontFamily: 'Poppins',
+      color: Colors.white,
+      fontWeight: FontWeight.w500,
+    ),
+    bodyLarge: TextStyle(
+        fontFamily: 'Poppins',
+        color: Colors.white,
+        fontWeight: FontWeight.w700),
+    bodyMedium: TextStyle(
+        fontFamily: 'Poppins',
+        color: Colors.white70,
         fontWeight: FontWeight.w600),
-    titleSmall:
-        GoogleFonts.poppins(color: Colors.white, fontWeight: FontWeight.w400),
-    bodyLarge:
-        GoogleFonts.poppins(color: Colors.white, fontWeight: FontWeight.w600),
-    bodyMedium:
-        GoogleFonts.poppins(color: Colors.white70, fontWeight: FontWeight.w500),
-    labelLarge:
-        GoogleFonts.poppins(color: Colors.white, fontWeight: FontWeight.w500),
-    labelMedium:
-        GoogleFonts.poppins(color: Colors.white60, fontWeight: FontWeight.w500),
-    labelSmall:
-        GoogleFonts.poppins(color: Colors.white60, fontWeight: FontWeight.w500),
-    titleLarge: GoogleFonts.poppins(
-        color: const Color.fromARGB(255, 207, 203, 203),
+    labelLarge: TextStyle(
+      fontFamily: 'Poppins',
+      color: Colors.white,
+      fontWeight: FontWeight.w500,
+    ),
+    labelMedium: TextStyle(
+      fontFamily: 'Poppins',
+      color: Colors.white60,
+      fontWeight: FontWeight.w400,
+    ),
+    labelSmall: TextStyle(
+      fontFamily: 'Poppins',
+      color: Colors.white60,
+      fontWeight: FontWeight.w500,
+    ),
+    titleLarge: TextStyle(
+        fontFamily: 'Poppins',
+        color: Color.fromARGB(255, 207, 203, 203),
         fontWeight: FontWeight.w600),
   );
 }

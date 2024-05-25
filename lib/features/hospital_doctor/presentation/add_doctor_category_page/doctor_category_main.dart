@@ -1,8 +1,7 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthycart/core/custom/app_bar/custom_appbar_curve.dart';
-import 'package:healthycart/core/custom/confirm_alertbox/confirm_delete_widget.dart';
+import 'package:healthycart/core/custom/confirm_alertbox/confirm_alertbox_widget.dart';
 import 'package:healthycart/core/services/easy_navigation.dart';
 import 'package:healthycart/features/authenthication/application/authenication_provider.dart';
 import 'package:healthycart/features/hospital_doctor/application/doctor_provider.dart';
@@ -128,7 +127,6 @@ class DoctorScreen extends StatelessWidget {
                               doctorProvider.selectedCategoryDetail(
                                   catId: doctorCategory.id ?? 'No ID',
                                   catName: doctorCategory.category);
-                              log('Category Id::::${doctorProvider.categoryId}');
                               EasyNavigation.push(
                                 type: PageTransitionType.rightToLeft,
                                 context: context,

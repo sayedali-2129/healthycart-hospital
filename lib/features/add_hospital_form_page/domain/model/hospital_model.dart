@@ -21,6 +21,7 @@ class HospitalModel extends Admin {
     this.createdAt,
     this.keywords,
     this.rejectionReason,
+    this.ishospitalON,
   });
 
   final String? hospitalName;
@@ -31,6 +32,7 @@ class HospitalModel extends Admin {
   final List<String>? selectedCategoryId;
   final int? requested;
   final bool? isActive;
+  final bool? ishospitalON;
   final Timestamp? createdAt;
   final List<String>? keywords;
   final String? rejectionReason;
@@ -45,6 +47,7 @@ class HospitalModel extends Admin {
       'selectedCategoryId': selectedCategoryId,
       'requested': requested,
       'isActive': isActive,
+      'ishospitalON': ishospitalON,
       'createdAt': createdAt,
       'keywords': keywords,
       'rejectionReason' : rejectionReason,
@@ -88,6 +91,7 @@ class HospitalModel extends Admin {
           : null,
       requested: map['requested'] != null ? map['requested'] as int : null,
       isActive: map['isActive'] as bool?,
+      ishospitalON: map['ishospitalON'] as bool?,
       createdAt: map['createdAt'] as Timestamp?,
       keywords: map['keywords'] != null
           ? List<String>.from((map['keywords'] as List<dynamic>))
@@ -108,6 +112,7 @@ class HospitalModel extends Admin {
     List<String>? selectedCategoryId,
     int? requested,
     bool? isActive,
+    bool? ishospitalON,
     Timestamp? createdAt,
     List<String>? keywords,
     String? rejectionReason,
@@ -125,6 +130,7 @@ class HospitalModel extends Admin {
       selectedCategoryId: selectedCategoryId ?? this.selectedCategoryId,
       requested: requested ?? this.requested,
       isActive: isActive ?? this.isActive,
+      ishospitalON: ishospitalON ?? this.ishospitalON,
       createdAt: createdAt ?? this.createdAt,
       keywords: keywords ?? this.keywords,
       rejectionReason:  rejectionReason ?? this.rejectionReason,

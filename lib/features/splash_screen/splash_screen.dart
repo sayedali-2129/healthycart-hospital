@@ -18,13 +18,23 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
+       final userId = FirebaseAuth.instance.currentUser?.uid;
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+
+      if(userId!=null){
+          context.read<AuthenticationProvider>()
+          .hospitalStreamFetchData(userId: userId);
+
+      }
+    });
     Future.delayed(const Duration(seconds: 4)).then((value) {
-      final userId = FirebaseAuth.instance.currentUser?.uid;
       if (userId == null) {
-        EasyNavigation.pushReplacement(context: context, page: const LoginScreen());
+        EasyNavigation.pushReplacement(
+            context: context, page: const LoginScreen());
       } else {
-        context.read<AuthenticationProvider>().hospitalStreamFetchData(context : context,
-            userId: userId,);
+        context
+            .read<AuthenticationProvider>()
+            .navigationHospitalFuction(context: context);
       }
     });
     super.initState();

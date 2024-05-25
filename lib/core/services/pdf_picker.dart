@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:file_picker/file_picker.dart';
@@ -10,7 +9,7 @@ import 'package:healthycart/core/general/typdef.dart';
 class PdfPickerService {
   PdfPickerService(this._storage);
   final FirebaseStorage _storage;
-
+/// getting pdf using  file picker ------------
   FutureResult<File> getPdfFile() async {
     final FilePickerResult? pickedFile;
 
@@ -19,7 +18,6 @@ class PdfPickerService {
         type: FileType.custom,
         allowedExtensions: ['pdf'],
       );
-      log(pickedFile.toString());
       if (pickedFile != null && pickedFile.files.isNotEmpty) {
         PlatformFile file = pickedFile.files.first;
         File pdfFile = File(file.path!);
@@ -33,7 +31,7 @@ class PdfPickerService {
           errMsg: "Couldn't able to pick PDF file"));
     }
   }
-
+/// updloading pdf to  firebase firestore ------------
   FutureResult<String?> uploadPdf({
     required File pdfFile,
   }) async {
@@ -51,7 +49,7 @@ class PdfPickerService {
           errMsg: "Couldn't able to save PDF file"));
     }
   }
-
+/// delete pdf ------------
   FutureResult<String?> deletePdfUrl({
     required String? url,
   }) async {

@@ -4,7 +4,7 @@ import 'package:healthycart/core/general/typdef.dart';
 import 'package:healthycart/features/add_hospital_form_page/domain/model/hospital_model.dart';
 
 abstract class IFormFeildFacade {
-  FutureResult<String>   addHospitalDetails({
+  FutureResult<String>  addHospitalDetails({
     required HospitalModel hospitalDetails,
     required String hospitalId,
   });

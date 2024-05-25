@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:healthycart/core/general/cached_network_image.dart';
+import 'package:healthycart/core/custom/custom_cached_network/custom_cached_network_image.dart';
 import 'package:healthycart/features/hospital_doctor/application/doctor_provider.dart';
 import 'package:provider/provider.dart';
 

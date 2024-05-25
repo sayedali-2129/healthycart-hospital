@@ -19,7 +19,7 @@ class PendingPageScreen extends StatelessWidget {
       final authProvider = context.read<AuthenticationProvider>();
          if (authProvider.isRequsetedPendingPage == 2) {
         // 2 means approved, 1 means pending and 0 means rejected
-        EasyNavigation.pushReplacement(
+        EasyNavigation.pushAndRemoveUntil(
             type: PageTransitionType.bottomToTop,
             context: context,
             page: const SplashScreen());

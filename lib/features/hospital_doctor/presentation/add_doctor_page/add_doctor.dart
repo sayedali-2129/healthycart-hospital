@@ -74,7 +74,7 @@ class AddDoctorScreen extends StatelessWidget {
                                     saveButtonTap: () async {
                                       if (doctorProvider.imageFile == null) {
                                         CustomToast.errorToast(
-                                            text: "Pick doctor's image");
+                                            text: "Pick a doctor's image");
                                         return;
                                       }
                                       if (doctorProvider

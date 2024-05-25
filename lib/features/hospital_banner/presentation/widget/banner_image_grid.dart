@@ -1,30 +1,33 @@
-
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:healthycart/core/general/cached_network_image.dart';
+import 'package:healthycart/core/custom/confirm_alertbox/confirm_alertbox_widget.dart';
+import 'package:healthycart/core/custom/custom_cached_network/custom_cached_network_image.dart';
+import 'package:healthycart/features/hospital_banner/application/add_banner_provider.dart';
+import 'package:healthycart/features/hospital_banner/domain/model/hospital_banner_model.dart';
 import 'package:healthycart/utils/constants/colors/colors.dart';
+import 'package:provider/provider.dart';
 
 class BannerImageWidget extends StatelessWidget {
   const BannerImageWidget({
     super.key,
     required this.indexNumber,
-    required this.image,
+    required this.bannerData, required this.index,
   });
   final String indexNumber;
-  final String image;
+  final HospitalBannerModel bannerData;
+  final int index;
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {},
-      child: Stack(
+    return Consumer<AddBannerProvider>(
+        builder: (context, addBannerProvider, _) {
+      return Stack(
         alignment: Alignment.center,
         children: [
-          Positioned.fill( 
-              child: ClipRRect(
+          Positioned.fill(
+            child: ClipRRect(
                 borderRadius: BorderRadius.circular(16),
-                child: CustomCachedNetworkImage(image: image)),
-            ),
-          
+                child: CustomCachedNetworkImage(image: bannerData.image ?? '')),
+          ),
           Positioned.fill(
             child: Container(
               padding: const EdgeInsets.all(8),
@@ -48,27 +51,45 @@ class BannerImageWidget extends StatelessWidget {
                       .copyWith(color: Colors.white),
                 ),
               )),
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(color: BColors.lightGrey.withOpacity(.6)),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Edit",
-                  style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                      color: Colors.black, fontWeight: FontWeight.w700),
-                ),
-                const Gap(8),
-                const Icon(
-                  Icons.mode_edit_outline_outlined,
-                  size: 18,
-                )
-              ],
+          GestureDetector(
+            onTap: () {
+              ConfirmAlertBoxWidget.showAlertConfirmBox(
+                context: context,
+                confirmButtonTap: () {
+                  addBannerProvider.deleteBanner(
+                    bannerToDelete: bannerData,
+                    imageUrl: bannerData.image ?? '',
+                    context: context,
+                    index: index,
+                  );
+                },
+                titleText: 'Confirm to remove banner',
+                subText: 'Are you sure tou want to remove this banner?',
+              );
+            },
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              decoration:
+                  BoxDecoration(color: BColors.lightGrey.withOpacity(.6)),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Remove",
+                    style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                        color: Colors.black, fontWeight: FontWeight.w700),
+                  ),
+                  const Gap(8),
+                  const Icon(
+                    Icons.delete_outline_rounded,
+                    size: 18,
+                  )
+                ],
+              ),
             ),
           ),
         ],
-      ),
-    );
+      );
+    });
   }
 }

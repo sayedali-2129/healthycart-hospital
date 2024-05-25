@@ -11,6 +11,12 @@ class ProfileProvider extends ChangeNotifier {
   final IProfileFacade iProfileFacade;
   final hospitalId = FirebaseAuth.instance.currentUser?.uid;
   List<DoctorAddModel> doctorTotalList = [];
+  bool ishospitalON = false;
+
+  void hospitalStatus(bool status) {
+    ishospitalON = status;
+    notifyListeners();
+  }
 
   Future<void> getAllDoctorDetails() async {
     final result = await iProfileFacade.getAllDoctorDetails();
@@ -21,11 +27,9 @@ class ProfileProvider extends ChangeNotifier {
     });
   }
 
-  Future<void> setActiveHospital({
-    required bool ishospitalActive,
-  }) async {
+  Future<void> setActiveHospital() async {
     final result = await iProfileFacade.setActiveHospital(
-        ishospitalActive: ishospitalActive, hospitalId: hospitalId ?? '');
+        ishospitalON: ishospitalON, hospitalId: hospitalId ?? '');
     result.fold((failure) {
       CustomToast.errorToast(text: "Couldn't able to update hospital state");
     }, (sucess) {

@@ -74,7 +74,7 @@ class _UserLocationSearchWidgetState extends State<UserLocationSearchWidget> {
             onTap: () async {
               if (locationProvider.selectedPlaceMark == null) return;
               LoadingLottie.showLoading(
-                  context: context, text: 'Saving Location..');
+                  context: context, text: 'Getting Location..');
               await locationProvider.setLocationByHospital(context: context, isHospitaEditProfile: widget.isHospitaEditProfile ?? false, hospitalModelrequestedCount: authProvider.hospitalDataFetched?.requested);
               
             },

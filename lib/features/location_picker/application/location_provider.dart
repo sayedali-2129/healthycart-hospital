@@ -76,8 +76,8 @@ class LocationProvider extends ChangeNotifier {
         CustomToast.sucessToast(text: 'Location added sucessfully');
         (isHospitaEditProfile )
             ? Navigator.pop(context,)
-            : EasyNavigation.pushReplacement(
-                context: context, page:(hospitalModelrequestedCount == 2)?const SplashScreen(): const PendingPageScreen());
+            : EasyNavigation.pushAndRemoveUntil(
+                context: context, page:(hospitalModelrequestedCount == 2) ?const SplashScreen(): const PendingPageScreen());
         notifyListeners();
       });
     });

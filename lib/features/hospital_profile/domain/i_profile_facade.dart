@@ -5,5 +5,5 @@ abstract class IProfileFacade {
   FutureResult<List<DoctorAddModel>> getAllDoctorDetails();
 
   FutureResult<String> setActiveHospital(
-      {required bool ishospitalActive, required String hospitalId,});
+      {required bool ishospitalON, required String hospitalId,});
 }

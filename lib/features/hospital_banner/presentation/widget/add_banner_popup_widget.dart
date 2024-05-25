@@ -83,7 +83,7 @@ class AddBannerAlertWidget extends StatelessWidget {
                             width: 260,
                             onTap: onAddTap,
                             child: Image.network(
-                              value.imageUrl!,
+                              value.imageUrl ?? '',
                             ),
                           )
                   ),
@@ -101,7 +101,7 @@ class AddBannerAlertWidget extends StatelessWidget {
                               backgroundColor: BColors.buttonLightColor,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(16))),
-                          child: (value.fetchLoading)
+                          child: (value.saveLoading)
                               ? const Center(
                                   child: Padding(
                                     padding: EdgeInsets.all(4.0),

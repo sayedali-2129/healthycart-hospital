@@ -1,93 +1,80 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:healthycart/core/custom/custom_cached_network/custom_cached_network_image.dart';
+import 'package:healthycart/features/hospital_banner/application/add_banner_provider.dart';
+import 'package:healthycart/utils/constants/colors/colors.dart';
+import 'package:provider/provider.dart';
 
-class AdSlider extends StatefulWidget {
+class AdSlider extends StatelessWidget {
   const AdSlider({
     super.key,
-    required this.screenWidth,
   });
-
-  final double screenWidth;
-
-  @override
-  State<AdSlider> createState() => _AdSliderState();
-}
-
-class _AdSliderState extends State<AdSlider> {
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
-
-
-   // int currentIndex = 0;
-
-    return Column(
-      children: [
-        CarouselSlider.builder(
-          itemCount: 3,
-          itemBuilder: (context, index, realIndex) => Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4),
-            child: //provider.banners.isEmpty
-                // Center(
-                //     child: Lottie.asset(
-                //     ConstantIcons.lottieProgress,
-                //     height: 100,
-                //     width: 100,
-                //   ))
-                Container(
-                    clipBehavior: Clip.antiAlias,
-                    width: widget.screenWidth,
-                    height: 202,
-                    decoration: BoxDecoration(
+    return Consumer<AddBannerProvider>(
+        builder: (context, addBannerProvider, _) {
+      return(addBannerProvider.fetchLoading)? Container(
+                      clipBehavior: Clip.antiAlias,
+                      width: double.infinity,
+                      height: 202,
+                      decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(16),
-                       ),
-                    child: Image.asset(
-                      'assets/image/2-math.jpg',
-                      fit: BoxFit.fill,
-                    )),
-          ),
-          options: CarouselOptions(
-            viewportFraction: 1,
-            initialPage: 0,
-            autoPlay: true,
-            autoPlayCurve: Curves.decelerate,
-            onPageChanged: (index, reason) {
-              setState(() {
-               // currentIndex = index;
-              });
-            },
-          ),
+                      ),
+                      child: const Center(
+                        child: CircularProgressIndicator(color: BColors.darkblue,),
+                      )
+                    ): CarouselSlider.builder(
+        itemCount: addBannerProvider.bannerList.length,
+        itemBuilder: (context, index, realIndex) => Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4),
+          child: (addBannerProvider.bannerList.isEmpty || addBannerProvider.bannerList[index].image == null)
+              ? Container(
+                  clipBehavior: Clip.antiAlias,
+                  width: double.infinity,
+                  height: 202,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.auto_awesome_mosaic_outlined,
+                        size: 56,
+                        color: BColors.darkblue,
+                      ),
+                      Text(
+                        'Add Banner',
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyLarge!
+                            .copyWith(fontWeight: FontWeight.w700),
+                      )
+                    ],
+                  ),
+                )
+              : Container(
+                  clipBehavior: Clip.antiAlias,
+                  width: double.infinity,
+                  height: 202,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: CustomCachedNetworkImage(image: addBannerProvider.bannerList[index].image ?? '')
+                ),
         ),
-      
-      ],
-    );
+        options: CarouselOptions(
+          enlargeCenterPage: true,
+          viewportFraction: 1,
+          initialPage: 0,
+          autoPlay: true,
+          autoPlayCurve: Curves.fastEaseInToSlowEaseOut,
+          onPageChanged: (index, reason) {},
+        ),
+      );
+    });
   }
 }
 
-
-
-
-// Stack(
-//       alignment: Alignment.center,
-//       children: [
-//         Container(
-//           height: 202,
-//           width: screenWidth,
-//           decoration: const BoxDecoration(
-//             color: Colors.amber,
-//             borderRadius: BorderRadius.all(Radius.circular(16)),
-//           ),
-//         ),
-//         Center(
-//           child: SvgPicture.asset(
-//             ConstantImage.adBannerSampleSvg,
-//             width: screenWidth,
-//             // height: 202,
-//           ),
-//         ),
-//       ],
-//     );

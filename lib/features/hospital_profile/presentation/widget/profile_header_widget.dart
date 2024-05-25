@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:healthycart/core/general/cached_network_image.dart';
+import 'package:healthycart/core/custom/custom_cached_network/custom_cached_network_image.dart';
 import 'package:healthycart/core/services/easy_navigation.dart';
 import 'package:healthycart/features/add_hospital_form_page/presentation/hospital_form.dart';
 import 'package:healthycart/features/authenthication/application/authenication_provider.dart';

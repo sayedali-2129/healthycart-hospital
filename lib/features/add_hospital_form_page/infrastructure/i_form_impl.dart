@@ -10,36 +10,45 @@ import 'package:healthycart/features/add_hospital_form_page/domain/i_form_facade
 import 'package:healthycart/features/add_hospital_form_page/domain/model/hospital_model.dart';
 import 'package:injectable/injectable.dart';
 
-
-
 @LazySingleton(as: IFormFeildFacade)
 class IFormFieldImpl implements IFormFeildFacade {
-  IFormFieldImpl(this._repo, this._imageService, this._pdfService);
-  final FirebaseFirestore _repo;
+  IFormFieldImpl(this._firebaseFirestore, this._imageService, this._pdfService);
+  final FirebaseFirestore _firebaseFirestore;
   final ImageService _imageService;
   final PdfPickerService _pdfService;
   @override
   /////////////adding hospital to the collection
-  FutureResult<String> addHospitalDetails(
-      {required HospitalModel hospitalDetails, required String hospitalId,}) async {
+  FutureResult<String> addHospitalDetails({
+    required HospitalModel hospitalDetails,
+    required String hospitalId,
+  }) async {
     try {
-      await _repo
-          .collection(FirebaseCollections.hospitals)
-          .doc(hospitalId)
-          .update(hospitalDetails.toMap());
+      final batch = _firebaseFirestore.batch();
+      batch.update(
+          _firebaseFirestore
+              .collection(FirebaseCollections.hospitals)
+              .doc(hospitalId),
+          hospitalDetails.toMap());
+      batch.update(
+          _firebaseFirestore
+              .collection(FirebaseCollections.counts)
+              .doc('htfK5JIPTaZVlZi6fGdZ'),
+          {'pendingHospitals': FieldValue.increment(1)});
+      await batch.commit();
       return right('Sucessfully sent for review');
     } on FirebaseException catch (e) {
       return left(MainFailure.firebaseException(errMsg: e.code));
-    }catch(e){
-       return left(MainFailure.generalException(errMsg: e.toString()));
+    } catch (e) {
+      return left(MainFailure.generalException(errMsg: e.toString()));
     }
   }
 
   @override
-  FutureResult<HospitalModel> getHospitalDetails(
-      {required String userId,}) async {
+  FutureResult<HospitalModel> getHospitalDetails({
+    required String userId,
+  }) async {
     try {
-      final snapshot = await _repo
+      final snapshot = await _firebaseFirestore
           .collection(FirebaseCollections.hospitals)
           .doc(userId)
           .get();
@@ -50,6 +59,7 @@ class IFormFieldImpl implements IFormFeildFacade {
       return left(MainFailure.generalException(errMsg: e.toString()));
     }
   }
+
 //Image section -------------------------------------
   @override
   FutureResult<File> getImage() async {
@@ -62,13 +72,12 @@ class IFormFieldImpl implements IFormFeildFacade {
     return await _imageService.saveImage(imageFile: imageFile);
   }
 
-   @override
+  @override
   Future<Either<MainFailure, Unit>> deleteImage(
       {required String imageUrl}) async {
     return await _imageService.deleteImageUrl(imageUrl: imageUrl);
   }
 ///////////////////////////////////////////////////////////////////////////
-
 
   @override
   FutureResult<File> getPDF() async {
@@ -76,19 +85,27 @@ class IFormFieldImpl implements IFormFeildFacade {
   }
 
   @override
-  FutureResult<String?> savePDF({required File pdfFile,}) async {
+  FutureResult<String?> savePDF({
+    required File pdfFile,
+  }) async {
     return await _pdfService.uploadPdf(pdfFile: pdfFile);
   }
-  
+
   @override
-  FutureResult<String?> deletePDF({required String pdfUrl,}) async{
-   return await _pdfService.deletePdfUrl(url: pdfUrl);
+  FutureResult<String?> deletePDF({
+    required String pdfUrl,
+  }) async {
+    return await _pdfService.deletePdfUrl(url: pdfUrl);
   }
+
   ///update section from profile--------------------
   @override
-   FutureResult<String> updateHospitalForm({required HospitalModel hospitalDetails, required String hospitalId,}) async{
-      try {
-      await _repo
+  FutureResult<String> updateHospitalForm({
+    required HospitalModel hospitalDetails,
+    required String hospitalId,
+  }) async {
+    try {
+      await _firebaseFirestore
           .collection(FirebaseCollections.hospitals)
           .doc(hospitalId)
           .update(hospitalDetails.toEditMap());

@@ -1,5 +1,7 @@
 import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:healthycart/core/custom/toast/toast.dart';
 import 'package:healthycart/core/services/easy_navigation.dart';
 import 'package:healthycart/features/authenthication/domain/i_auth_facade.dart';
@@ -31,49 +33,55 @@ class AuthenticationProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void hospitalStreamFetchData(
-      {required String userId, required BuildContext context}) {
+  bool hospitalStreamFetchData({required String userId}) {
+    bool result = false;
     iAuthFacade.hospitalStreamFetchData(userId).listen((event) {
       event.fold((failure) {
+        result = false;
       }, (snapshot) {
         hospitalDataFetched = snapshot;
         isRequsetedPendingPage = snapshot.requested;
+        result = true;
         notifyListeners();
-        if (snapshot.address == null ||
-            snapshot.image == null ||
-            snapshot.ownerName == null ||
-            snapshot.uploadLicense == null ||
-            snapshot.hospitalName == null) {
-          EasyNavigation.pushReplacement(
-            type: PageTransitionType.bottomToTop,
-            context: context,
-            page:
-                HospitalFormScreen(phoneNo: hospitalDataFetched?.phoneNo ?? ''),
-          );
-          notifyListeners();
-        } else if (snapshot.placemark == null) {
-          EasyNavigation.pushReplacement(
-            type: PageTransitionType.bottomToTop,
-            context: context,
-            page: const LocationPage(),
-          );
-          notifyListeners();
-        } else if ((snapshot.requested == 0 || snapshot.requested == 1) &&
-            snapshot.placemark != null) {
-          EasyNavigation.pushReplacement(
-              type: PageTransitionType.bottomToTop,
-              context: context,
-              page: const PendingPageScreen());
-          notifyListeners();
-        } else {
-          EasyNavigation.pushReplacement(
-              type: PageTransitionType.bottomToTop,
-              context: context,
-              page: const HomeScreen());
-          notifyListeners();
-        }
       });
     });
+    return result;
+  }
+
+  void navigationHospitalFuction({required BuildContext context}) async {
+    if (hospitalDataFetched?.address == null ||
+        hospitalDataFetched?.image == null ||
+        hospitalDataFetched?.ownerName == null ||
+        hospitalDataFetched?.uploadLicense == null ||
+        hospitalDataFetched?.hospitalName == null) {
+      EasyNavigation.pushReplacement(
+        type: PageTransitionType.bottomToTop,
+        context: context,
+        page: HospitalFormScreen(phoneNo: hospitalDataFetched?.phoneNo ?? ''),
+      );
+      notifyListeners();
+    } else if (hospitalDataFetched?.placemark == null) {
+      EasyNavigation.pushReplacement(
+        type: PageTransitionType.bottomToTop,
+        context: context,
+        page: const LocationPage(),
+      );
+      notifyListeners();
+    } else if ((hospitalDataFetched?.requested == 0 ||
+            hospitalDataFetched?.requested == 1) &&
+        hospitalDataFetched?.placemark != null) {
+      EasyNavigation.pushReplacement(
+          type: PageTransitionType.bottomToTop,
+          context: context,
+          page: const PendingPageScreen());
+      notifyListeners();
+    } else {
+      EasyNavigation.pushAndRemoveUntil(
+          type: PageTransitionType.bottomToTop,
+          context: context,
+          page: const HomeScreen());
+      notifyListeners();
+    }
   }
 
   void verifyPhoneNumber({required BuildContext context}) {
@@ -105,6 +113,7 @@ class AuthenticationProvider extends ChangeNotifier {
       Navigator.pop(context);
       EasyNavigation.pushReplacement(
           context: context, page: const SplashScreen());
+      phoneNumberController.clear();
     });
   }
 

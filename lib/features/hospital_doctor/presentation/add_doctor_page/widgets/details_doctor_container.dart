@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthycart/core/custom/pop_over/pop_over.dart';
-import 'package:healthycart/core/general/cached_network_image.dart';
+import 'package:healthycart/core/custom/custom_cached_network/custom_cached_network_image.dart';
 import 'package:healthycart/features/hospital_doctor/application/doctor_provider.dart';
 import 'package:healthycart/features/hospital_doctor/domain/model/add_doctor_model.dart';
 import 'package:healthycart/utils/constants/colors/colors.dart';

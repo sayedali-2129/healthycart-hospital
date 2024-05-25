@@ -62,7 +62,6 @@ class HosptialFormProvider extends ChangeNotifier {
   final TextEditingController addressController = TextEditingController();
   final TextEditingController phoneNumberController = TextEditingController();
   final TextEditingController ownerNameController = TextEditingController();
-
   List<String> keywordHospitalBuider() {
     return keywordsBuilder(hospitalNameController.text);
   }
@@ -86,11 +85,12 @@ class HosptialFormProvider extends ChangeNotifier {
         image: imageUrl,
         adminType: adminType,
         id: hospitalId,
-        requested: 1,
-        isActive: true);
+        isActive: true,
+        ishospitalON : false,
+        requested: 1,);
 
     final result = await _iFormFeildFacade.addHospitalDetails(
-        hospitalDetails: hospitalDetail!, hospitalId: hospitalId!);
+        hospitalDetails: hospitalDetail!, hospitalId: hospitalId!,);
     result.fold((failure) {
       CustomToast.errorToast(text: failure.errMsg);
       Navigator.pop(context);

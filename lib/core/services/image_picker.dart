@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -30,7 +29,6 @@ class ImageService {
   }
 
 //save image
-
   Future<Either<MainFailure, String>> saveImage({
     required File imageFile,
   }) async {
@@ -59,8 +57,7 @@ class ImageService {
     }
   }
 
-//delete Image
-
+//delete Image with image url in the storage
   Future<Either<MainFailure, Unit>> deleteImageUrl({
     required String? imageUrl,
   }) async {

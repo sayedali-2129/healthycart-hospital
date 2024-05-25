@@ -59,131 +59,136 @@ class _OTPScreenState extends State<OTPScreen> {
             builder: (context, authenticationProvider, _) {
           return GestureDetector(
             onTap: () {
-               FocusScope.of(context).unfocus();
+              FocusScope.of(context).unfocus();
             },
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Gap(32),
-                    GestureDetector(
-                      // back to previous page
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Align(
-                          alignment: Alignment.bottomLeft,
-                          child: Icon(Icons.arrow_back_ios)),
-                    ),
-                    const Gap(56),
-                    SizedBox(
-                      child: Center(
-                        child:
-                            Image.asset(height: 260, width: 218, BImage.otpImage),
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Gap(32),
+                      GestureDetector(
+                        // back to previous page
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Align(
+                            alignment: Alignment.bottomLeft,
+                            child: Icon(Icons.arrow_back_ios)),
                       ),
-                    ),
-                    const Gap(40),
-                    Text(
-                      'Verification',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headlineSmall!
-                          .copyWith(fontWeight: FontWeight.w700, fontSize: 28),
-                    ),
-                    const Gap(16),
-                    SizedBox(
-                        width: 300,
-                        child: RichText(
-                          textAlign: TextAlign.center,
-                          text: TextSpan(
-                            children: [
-                              TextSpan(
-                                  text:
-                                      'Please enter the One Time Password we sent on via sms ',
+                      const Gap(56),
+                      SizedBox(
+                        child: Center(
+                          child: Image.asset(
+                              height: 280, width: 218, BImage.otpImage),
+                        ),
+                      ),
+                      const Gap(40),
+                      Text(
+                        'Verification',
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineSmall!
+                            .copyWith(fontWeight: FontWeight.w700, fontSize: 28),
+                      ),
+                      const Gap(16),
+                      SizedBox(
+                          width: 300,
+                          child: RichText(
+                            textAlign: TextAlign.center,
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                    text:
+                                        'Please enter the One Time Password we sent on via sms ',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelMedium!
+                                        .copyWith(fontWeight: FontWeight.w600)),
+                                TextSpan(
+                                  text: widget.phoneNumber,
                                   style: Theme.of(context)
                                       .textTheme
                                       .labelMedium!
-                                      .copyWith(fontWeight: FontWeight.w600)),
-                              TextSpan(
-                                text: widget.phoneNumber,
+                                      .copyWith(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.black),
+                                ),
+                              ],
+                            ),
+                          )),
+                      const Gap(40),
+                      PinputWidget(
+                          onSubmitted: (_) {}, controller: otpController),
+                      const Gap(40),
+                      CustomButton(
+                        width: double.infinity,
+                        height: 48,
+                        onTap: () {
+                          LoadingLottie.showLoading(
+                              context: context, text: 'Loading...');
+                          authenticationProvider.verifySmsCode(
+                              smsCode: otpController.text.trim(),
+                              context: context);
+                        },
+                        text: 'Verify code',
+                        buttonColor: BColors.buttonLightColor,
+                        style: Theme.of(context)
+                            .textTheme
+                            .labelLarge!
+                            .copyWith(fontSize: 18, color: BColors.white),
+                      ),
+                      const Gap(24),
+                      RichText(
+                        textAlign: TextAlign.center,
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                                text: "Didn't get OTP ? ",
                                 style: Theme.of(context)
                                     .textTheme
                                     .labelMedium!
                                     .copyWith(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w700,
-                                        color: Colors.black),
-                              ),
-                            ],
-                          ),
-                        )),
-                    const Gap(40),
-                    PinputWidget(onSubmitted: (_) {}, controller: otpController),
-                    const Gap(40),
-                    CustomButton(
-                      width: double.infinity,
-                      height: 48,
-                      onTap: () {
-                        LoadingLottie.showLoading(
-                            context: context, text: 'Loading...');
-                        authenticationProvider.verifySmsCode(
-                            smsCode: otpController.text.trim(), context: context);
-                      },
-                      text: 'Verify code',
-                      buttonColor: BColors.buttonLightColor,
-                      style: Theme.of(context)
-                          .textTheme
-                          .labelLarge!
-                          .copyWith(fontSize: 18, color: BColors.white),
-                    ),
-                    const Gap(24),
-                    RichText(
-                      textAlign: TextAlign.center,
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                              text: "Didn't get OTP ? ",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelMedium!
-                                  .copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 12,
-                                  )),
-                          (seconds == 0)
-                              ? TextSpan(
-                                  text: 'Resend',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .labelMedium!
-                                      .copyWith(
-                                        decoration: TextDecoration.underline,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = () {
-                                LoadingLottie.showLoading(
-                                  context: context, text: 'Loading...');
-                                      authenticationProvider.verifyPhoneNumber(
-                                          context: context);
-                                    })
-                              : TextSpan(
-                                  text: 'in 00:$seconds',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .labelMedium!
-                                      .copyWith(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                ),
-                        ],
-                      ),
-                    )
-                  ],
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 12,
+                                    )),
+                            (seconds == 0)
+                                ? TextSpan(
+                                    text: 'Resend',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelMedium!
+                                        .copyWith(
+                                          decoration: TextDecoration.underline,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () {
+                                        LoadingLottie.showLoading(
+                                            context: context, text: 'Loading...');
+                                        authenticationProvider.verifyPhoneNumber(
+                                            context: context);
+                                      })
+                                : TextSpan(
+                                    text: 'in 00:$seconds',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelMedium!
+                                        .copyWith(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                  ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),

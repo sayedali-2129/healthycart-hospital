@@ -28,7 +28,7 @@ class BannerScreen extends StatelessWidget {
           const SliverPadding(
             padding: EdgeInsets.all(16),
             sliver: SliverToBoxAdapter(
-              child: AdSlider(screenWidth: double.infinity),
+              child: AdSlider(),
             ),
           ),
           SliverPadding(
@@ -45,8 +45,10 @@ class BannerScreen extends StatelessWidget {
               ),
             ),
           ),
-          (addBannerProvider.fetchLoading) /// loading is done here
-              ? const SliverToBoxAdapter(
+          (addBannerProvider.fetchLoading)
+
+              /// loading is done here
+         ? const SliverToBoxAdapter(
                   child: Center(
                     child: Padding(
                       padding: EdgeInsets.all(16.0),
@@ -83,8 +85,11 @@ class BannerScreen extends StatelessWidget {
                                       text: 'Pick a banner image');
                                   return;
                                 }
-                                addBannerProvider.saveImage();
-                                await addBannerProvider.addBanner();
+                                await addBannerProvider
+                                    .saveImage()
+                                    .then((value) async{
+                                 await addBannerProvider.addBanner(context: context);
+                                });
                               },
                             );
                           },
@@ -92,9 +97,9 @@ class BannerScreen extends StatelessWidget {
                         );
                       } else {
                         return BannerImageWidget(
+                          index: index,
                           indexNumber: '${index + 1}',
-                          image:
-                              addBannerProvider.bannerList[index].image ?? '',
+                          bannerData: addBannerProvider.bannerList[index],
                         );
                       }
                     },

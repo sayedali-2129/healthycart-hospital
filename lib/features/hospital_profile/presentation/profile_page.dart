@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthycart/core/custom/app_bar/custom_appbar_curve.dart';
-import 'package:healthycart/core/custom/confirm_alertbox/confirm_delete_widget.dart';
+import 'package:healthycart/core/custom/confirm_alertbox/confirm_alertbox_widget.dart';
 import 'package:healthycart/core/custom/lottie/loading_lottie.dart';
 import 'package:healthycart/core/services/easy_navigation.dart';
 import 'package:healthycart/features/authenthication/application/authenication_provider.dart';
@@ -32,8 +32,10 @@ class ProfileScreen extends StatelessWidget {
             ProfileMainContainer(
               text: 'Hospital On / Off',
               sideChild: LiteRollingSwitch(
-                value: authenticationProvider.hospitalDataFetched?.isActive ??
-                    false,
+                
+                value:
+                    authenticationProvider.hospitalDataFetched?.ishospitalON ??
+                        false,
                 width: 80,
                 textOn: 'On',
                 textOff: 'Off',
@@ -42,10 +44,9 @@ class ProfileScreen extends StatelessWidget {
                 iconOff: Icons.block_rounded,
                 iconOn: Icons.power_settings_new,
                 animationDuration: const Duration(milliseconds: 300),
-                onChanged: (bool ishospitalActive) {
-                  profileProvider.setActiveHospital(
-                    ishospitalActive: ishospitalActive,
-                  );
+                onChanged: (bool ishospitalON) async {
+                  profileProvider.hospitalStatus(ishospitalON);
+                  await profileProvider.setActiveHospital();
                 },
                 onDoubleTap: () {},
                 onSwipe: () {},

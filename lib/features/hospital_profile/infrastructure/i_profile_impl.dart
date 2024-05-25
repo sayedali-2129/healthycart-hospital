@@ -10,13 +10,13 @@ import 'package:injectable/injectable.dart';
 
 @LazySingleton(as: IProfileFacade)
 class IProfileImpl implements IProfileFacade {
-  IProfileImpl(this._repo);
-  final FirebaseFirestore _repo;
-  
+  IProfileImpl(this._firebaseFirestore);
+  final FirebaseFirestore _firebaseFirestore;
+
   @override
   FutureResult<List<DoctorAddModel>> getAllDoctorDetails() async {
     try {
-      final snapshot = await _repo
+      final snapshot = await _firebaseFirestore
           .collection(FirebaseCollections.doctors)
           .orderBy('createdAt')
           .get();
@@ -32,21 +32,55 @@ class IProfileImpl implements IProfileFacade {
       return left(MainFailure.generalException(errMsg: e.toString()));
     }
   }
-@override
-  FutureResult<String> setActiveHospital(
-      {required bool ishospitalActive, required String hospitalId,}) async {
+
+  @override
+  FutureResult<String> setActiveHospital({
+    required bool ishospitalON,
+    required String hospitalId,
+  }) async {
+    final batch = _firebaseFirestore.batch();
+
     try {
-      await _repo
-          .collection(FirebaseCollections.hospitals)
-          .doc(hospitalId)
-          .update({'isActive': ishospitalActive});
-      return right('Sucessfully updated');
+      log('Starting batch update :::::');
+      batch.update(
+          _firebaseFirestore
+              .collection(FirebaseCollections.hospitals)
+              .doc(hospitalId),
+          {'ishospitalON': ishospitalON});
+
+      log('Updated hospital status :::::');
+
+      if (ishospitalON == true) {
+        batch.update(
+            _firebaseFirestore
+                .collection(FirebaseCollections.counts)
+                .doc('htfK5JIPTaZVlZi6fGdZ'),
+            {
+              'activeHospitals': FieldValue.increment(1),
+              'inActiveHospitals': FieldValue.increment(-1)
+            });
+      } else {
+        batch.update(
+            _firebaseFirestore
+                .collection(FirebaseCollections.counts)
+                .doc('htfK5JIPTaZVlZi6fGdZ'),
+            {
+              'activeHospitals': FieldValue.increment(-1),
+              'inActiveHospitals': FieldValue.increment(1)
+            });
+      }
+
+      log('About to commit batch :::::');
+      await batch.commit();
+      log('Batch committed successfully :::::');
+
+      return right('Successfully updated');
     } on FirebaseException catch (e) {
+      log('FirebaseException: ${e.code}');
       return left(MainFailure.firebaseException(errMsg: e.code));
-    }catch(e){
-       return left(MainFailure.generalException(errMsg: e.toString()));
+    } catch (e) {
+      log('GeneralException: ${e.toString()}');
+      return left(MainFailure.generalException(errMsg: e.toString()));
     }
   }
-
-
 }

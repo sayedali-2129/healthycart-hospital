@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -92,12 +91,10 @@ class DoctorProvider extends ChangeNotifier {
     notifyListeners();
     final result = await _iDoctorFacade.getDoctorCategoryAll();
     result.fold((failure) {
-      log(failure.errMsg);
       CustomToast.errorToast(text: "Couldn't able to fetch category");
       fetchLoading = false;
       notifyListeners();
     }, (categoryAllList) {
-      log('Get Category from CategoryAll in provider::::::::::::::::::::${categoryAllList.length}');
       doctorCategoryAllList.addAll(categoryAllList);
       doctorCategoryUniqueList.addAll(doctorCategoryAllList);
     });
@@ -106,14 +103,12 @@ class DoctorProvider extends ChangeNotifier {
   }
 
   Future<void> getHospitalDoctorCategory() async {
-    log(doctorCategoryList.toString());
     if (doctorCategoryList.isNotEmpty) return;
     fetchLoading = true;
     notifyListeners();
     final result = await _iDoctorFacade.getHospitalDoctorCategory(
         categoryIdList: doctorCategoryIdList);
     result.fold((failure) {
-      log(failure.errMsg);
       CustomToast.errorToast(text: "Couldn't able to fetch category");
       fetchLoading = false;
       notifyListeners();
@@ -138,12 +133,9 @@ class DoctorProvider extends ChangeNotifier {
   Future<void> updateCategory(
       {required DoctorCategoryModel categorySelected,
       required String hospitalId}) async {
-    log('User id in upadting category $hospitalId');
-
     final result = await _iDoctorFacade.updateHospitalDetails(
         hospitalId: hospitalId, category: categorySelected);
     result.fold((failure) {
-      log(failure.errMsg);
       CustomToast.errorToast(text: "Couldn't able to update category");
     }, (categorymodel) {
       doctorCategoryList.insert(doctorCategoryList.length, categorymodel);
@@ -162,7 +154,6 @@ class DoctorProvider extends ChangeNotifier {
         categoryId: category.id ?? 'No categoryId',
         hospitalId: hospitalId ?? ' No hospital Id is here..');
     boolResult.fold((failure) {
-      log(failure.errMsg);
       CustomToast.errorToast(text: "Something went wrong,please try again");
     }, (sucess) async {
       if (sucess) {
@@ -172,7 +163,6 @@ class DoctorProvider extends ChangeNotifier {
         final result = await _iDoctorFacade.deleteCategory(
             userId: hospitalId!, category: category);
         result.fold((failure) {
-          log('Failure in delete category::::${failure.errMsg}');
           CustomToast.errorToast(
               text: "Can't able to delete the category,please try again.");
         }, (category) {
@@ -263,7 +253,6 @@ class DoctorProvider extends ChangeNotifier {
     final result =
         await _iDoctorFacade.addDoctorDetails(doctorData: doctorDetails!);
     result.fold((failure) {
-      log(failure.errMsg);
       CustomToast.errorToast(
           text: "Couldn't able to add doctor, please try again.");
       EasyNavigation.pop(context: context);
@@ -330,11 +319,9 @@ class DoctorProvider extends ChangeNotifier {
     final result = await _iDoctorFacade.getDoctorDetails(
         categoryId: categoryId!, hospitalId: hospitalId!);
     result.fold((failure) {
-      log(failure.errMsg);
       CustomToast.errorToast(text: "Couldn't able to fetch doctor's");
     }, (doctors) {
       doctorList.addAll(doctors); //// here we are assigning the doctor
-      log('Doctors list Number ::::${doctorList.toString()}');
     });
     fetchLoading = false;
     notifyListeners();
@@ -346,13 +333,11 @@ class DoctorProvider extends ChangeNotifier {
     final result = await _iDoctorFacade.deleteDoctorDetails(
         doctorId: doctorData.id ?? '', doctorData: doctorData);
     result.fold((failure) {
-      log(failure.errMsg);
       CustomToast.errorToast(
           text: "Couldn't able to delete doctor details, please try again.");
     }, (doctorsData) {
       CustomToast.sucessToast(text: "Removed doctor sucessfully");
       doctorList.removeAt(index); //// here we are assigning the doctor
-      log('Doctors list Number ::::${doctorList.toString()}');
     });
     notifyListeners();
   }
@@ -399,7 +384,6 @@ class DoctorProvider extends ChangeNotifier {
     final result = await _iDoctorFacade.updateDoctorDetails(
         doctorId: doctorData.id ?? '', doctorData: doctorDetails!);
     result.fold((failure) {
-      log(failure.errMsg);
       CustomToast.errorToast(
           text: "Couldn't able to delete doctor details, please try again.");
     }, (doctorsData) {
@@ -407,7 +391,6 @@ class DoctorProvider extends ChangeNotifier {
       doctorList.removeAt(index);
       doctorList.insert(
           index, doctorsData); //// here we are assigning the doctor
-      log('Doctors list Number ::::${doctorsData.id}');
       clearDoctorDetails();
       notifyListeners();
     });

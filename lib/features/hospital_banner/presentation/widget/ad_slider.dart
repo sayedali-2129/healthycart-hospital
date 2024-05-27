@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:healthycart/core/custom/custom_cached_network/custom_cached_network_image.dart';
@@ -69,7 +68,7 @@ class AdSlider extends StatelessWidget {
           enlargeCenterPage: true,
           viewportFraction: 1,
           initialPage: 0,
-          autoPlay: true,
+          autoPlay:(addBannerProvider.bannerList.isEmpty || addBannerProvider.bannerList.length == 1)? false :true,
           autoPlayCurve: Curves.fastEaseInToSlowEaseOut,
           onPageChanged: (index, reason) {},
         ),

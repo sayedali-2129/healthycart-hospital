@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:healthycart/core/custom/app_bar/custom_appbar_curve.dart';
 import 'package:healthycart/core/custom/confirm_alertbox/confirm_alertbox_widget.dart';
@@ -20,94 +21,98 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer2<AuthenticationProvider, ProfileProvider>(
         builder: (context, authenticationProvider, profileProvider, _) {
-      return SizedBox(
-        height: double.infinity,
-        width: double.infinity,
-        child: Column(
-          children: [
-            const CustomCurveAppBarWidget(),
-            const Gap(6),
-            const ProfileHeaderWidget(),
-            const Gap(8),
-            ProfileMainContainer(
-              text: 'Hospital On / Off',
-              sideChild: LiteRollingSwitch(
-                
-                value:
-                    authenticationProvider.hospitalDataFetched?.ishospitalON ??
-                        false,
-                width: 80,
-                textOn: 'On',
-                textOff: 'Off',
-                colorOff: Colors.grey.shade400,
-                colorOn: BColors.mainlightColor,
-                iconOff: Icons.block_rounded,
-                iconOn: Icons.power_settings_new,
-                animationDuration: const Duration(milliseconds: 300),
-                onChanged: (bool ishospitalON) async {
-                  profileProvider.hospitalStatus(ishospitalON);
-                  await profileProvider.setActiveHospital();
-                },
-                onDoubleTap: () {},
-                onSwipe: () {},
-                onTap: () {},
+      return CustomScrollView(
+        slivers: [
+          const CustomSliverCurveAppBarWidget(),
+          SliverToBoxAdapter(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  const Gap(6),
+                  const ProfileHeaderWidget(),
+                  const Gap(8),
+                  ProfileMainContainer(
+                    text: 'Hospital On / Off',
+                    sideChild: LiteRollingSwitch(
+                      value: authenticationProvider
+                              .hospitalDataFetched?.ishospitalON ??
+                          false,
+                      width: 80,
+                      textOn: 'On',
+                      textOff: 'Off',
+                      colorOff: Colors.grey.shade400,
+                      colorOn: BColors.mainlightColor,
+                      iconOff: Icons.block_rounded,
+                      iconOn: Icons.power_settings_new,
+                      animationDuration: const Duration(milliseconds: 300),
+                      onChanged: (bool ishospitalON) async {
+                        profileProvider.hospitalStatus(ishospitalON);
+                        await profileProvider.setActiveHospital();
+                      },
+                      onDoubleTap: () {},
+                      onSwipe: () {},
+                      onTap: () {},
+                    ),
+                  ),
+                  const Gap(4),
+                  GestureDetector(
+                    onTap: () {
+                      EasyNavigation.push(
+                          context: context, page: const DoctorProfileList());
+                    },
+                    child: const ProfileMainContainer(
+                        text: 'Doctors List',
+                        sideChild: Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Icon(Icons.arrow_forward_ios),
+                        )),
+                  ),
+                  const Gap(4),
+                  GestureDetector(
+                    onTap: () {},
+                    child: const ProfileMainContainer(
+                        text: 'Bookings & History',
+                        sideChild: Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Icon(Icons.arrow_forward_ios),
+                        )),
+                  ),
+                  const Gap(4),
+                  GestureDetector(
+                    onTap: () {},
+                    child: const ProfileMainContainer(
+                        text: 'Payment History',
+                        sideChild: Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Icon(Icons.arrow_forward_ios),
+                        )),
+                  ),
+                  const Gap(4),
+                  GestureDetector(
+                    onTap: () {
+                      ConfirmAlertBoxWidget.showAlertConfirmBox(
+                          context: context,
+                          confirmButtonTap: () async {
+                            LoadingLottie.showLoading(
+                                context: context, text: 'Logging out..');
+                            await authenticationProvider.hospitalLogOut(
+                                context: context);
+                          },
+                          titleText: 'Confirm to Log Out',
+                          subText: 'Are you sure to Log Out ?');
+                    },
+                    child: const ProfileMainContainer(
+                        text: 'Log Out',
+                        sideChild: Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Icon(Icons.logout),
+                        )),
+                  ),
+                ],
               ),
             ),
-            const Gap(4),
-            GestureDetector(
-              onTap: () {
-                EasyNavigation.push(
-                    context: context, page: const DoctorProfileList());
-              },
-              child: const ProfileMainContainer(
-                  text: 'Doctors List',
-                  sideChild: Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Icon(Icons.arrow_forward_ios),
-                  )),
-            ),
-            const Gap(4),
-            GestureDetector(
-              onTap: () {},
-              child: const ProfileMainContainer(
-                  text: 'Bookings & History',
-                  sideChild: Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Icon(Icons.arrow_forward_ios),
-                  )),
-            ),
-            const Gap(4),
-            GestureDetector(
-              onTap: () {},
-              child: const ProfileMainContainer(
-                  text: 'Payment History',
-                  sideChild: Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Icon(Icons.arrow_forward_ios),
-                  )),
-            ),
-            const Gap(4),
-            GestureDetector(
-              onTap: () {
-                ConfirmAlertBoxWidget.showAlertConfirmBox(
-                    context: context,
-                    confirmButtonTap: () {
-                      LoadingLottie.showLoading(
-                          context: context, text: 'Logging Out');
-                      authenticationProvider.hospitalLogOut(context: context);
-                    },
-                    titleText: 'Confirm to Log Out',
-                    subText: 'Are you sure to Log Out ?');
-              },
-              child: const ProfileMainContainer(
-                  text: 'Log Out',
-                  sideChild: Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Icon(Icons.logout),
-                  )),
-            ),
-          ],
-        ),
+          ),
+        ],
       );
     });
   }

@@ -49,7 +49,9 @@ class AddBannerAlertWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<AddBannerProvider>(builder: (context, value, _) {
       return PopScope(
+       canPop: (value.saveLoading) ? false : true,
         onPopInvoked: (didPop) {
+          if (value.saveLoading) return;
           value.clearBannerDetails();
         },
         child: AlertDialog(

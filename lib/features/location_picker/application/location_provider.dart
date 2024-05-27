@@ -12,6 +12,7 @@ import 'package:injectable/injectable.dart';
 @injectable
 class LocationProvider extends ChangeNotifier {
   LocationProvider(this.iLocationFacade);
+    bool locationGetLoading = false;
   final ILocationFacade iLocationFacade;
   PlaceMark? selectedPlaceMark;
   final searchController = TextEditingController();
@@ -19,10 +20,15 @@ class LocationProvider extends ChangeNotifier {
   List<PlaceMark> searchResults = [];
   bool searchLoading = false;
   String? userId = FirebaseAuth.instance.currentUser?.uid;
-  Future<void> getLocationPermisson() async {
-    await iLocationFacade.getLocationPermisson();
-  }
 
+  Future<bool> getLocationPermisson() async {
+    locationGetLoading = true;
+    notifyListeners();
+    await iLocationFacade.getLocationPermisson();
+    locationGetLoading = false;
+    notifyListeners();
+    return true;
+  }
   Future<void> getCurrentLocationAddress() async {
     searchLoading = true;
     final result = await iLocationFacade.getCurrentLocationAddress();

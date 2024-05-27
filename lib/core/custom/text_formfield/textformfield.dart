@@ -48,8 +48,8 @@ class TextfieldWidget extends StatelessWidget {
         onFieldSubmitted: onSubmit,
         style: style,
         decoration: InputDecoration(
-          labelStyle: Theme.of(context).textTheme.labelMedium,
-          hintStyle: Theme.of(context).textTheme.labelMedium,
+          labelStyle:Theme.of(context).textTheme.labelSmall!.copyWith(fontWeight: FontWeight.w600),
+          hintStyle: Theme.of(context).textTheme.labelSmall!.copyWith(fontWeight: FontWeight.w600),
           hintText: hintText,
           labelText: labelText,
           contentPadding: const EdgeInsets.all(16),

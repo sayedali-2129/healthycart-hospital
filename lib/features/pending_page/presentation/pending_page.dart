@@ -47,7 +47,7 @@ class PendingPageScreen extends StatelessWidget {
             ),
                 Text(
                  authProvider.hospitalDataFetched?.rejectionReason ?? 'Your request got rejected please re-apply after sometime or contact our team.' ,
-                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  style: Theme.of(context).textTheme.labelMedium!.copyWith(
                         fontSize: 14,
                       ),
                   textAlign: TextAlign.center,
@@ -56,7 +56,7 @@ class PendingPageScreen extends StatelessWidget {
             ):
             Text(
               'Please wait while our team reviews and accepts your request. Thank you for your patience!',
-              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+              style: Theme.of(context).textTheme.labelMedium!.copyWith(
                     fontSize: 14,
                   ),
               textAlign: TextAlign.center,

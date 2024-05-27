@@ -4,9 +4,10 @@ import 'package:gap/gap.dart';
 import 'package:healthycart/core/custom/custom_button_n_search/common_button.dart';
 import 'package:healthycart/core/custom/lottie/loading_lottie.dart';
 import 'package:healthycart/core/custom/toast/toast.dart';
+import 'package:healthycart/core/services/easy_navigation.dart';
 import 'package:healthycart/features/hospital_doctor/application/doctor_provider.dart';
-import 'package:healthycart/features/hospital_doctor/presentation/add_doctor_page/widgets/add_doctor_bottomsheet.dart';
-import 'package:healthycart/features/hospital_doctor/presentation/add_doctor_page/widgets/details_doctor_container.dart';
+import 'package:healthycart/features/hospital_doctor/presentation/add_doctor/widgets/add_doctor_bottomsheet.dart';
+import 'package:healthycart/features/hospital_doctor/presentation/add_doctor/widgets/details_doctor_container.dart';
 import 'package:healthycart/utils/constants/colors/colors.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/custom/app_bar/sliver_appbar.dart';
@@ -175,9 +176,17 @@ class AddDoctorScreen extends StatelessWidget {
                                       });
                                 },
                                 deleteButton: () {
-                                  doctorProvider.deleteDoctorDetails(
-                                      index: index - 1,
-                                      doctorData: doctorListData);
+                                  LoadingLottie.showLoading(
+                                      context: context,
+                                      text: 'Please wait ...');
+                                  doctorProvider
+                                      .deleteDoctorDetails(
+                                          index: index - 1,
+                                          doctorData: doctorListData)
+                                      .then((value) {
+                                        EasyNavigation.pop(context: context);
+                                      });
+                                  
                                 },
                               ), // consumer/ provider data is passed here
                               const Gap(12)

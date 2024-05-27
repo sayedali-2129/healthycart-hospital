@@ -36,8 +36,9 @@ class ILocationImpl implements ILocationFacade {
   }
 
   @override
-  Future<void> getLocationPermisson() async {
+  Future<bool> getLocationPermisson() async {
     await _locationService.getPermission();
+    return true;
   }
 
   @override
@@ -322,15 +323,14 @@ class ILocationImpl implements ILocationFacade {
   @override
   Future<Either<MainFailure, Unit>> updateUserLocation(
       PlaceMark placeMark, String userId) async {
-    try{
-        await _firebaseFirestore
-        .collection(FirebaseCollections.hospitals)
-        .doc(userId)
-        .update({'placemark': placeMark.toMap()});
-        return right(unit);
-    }catch(e){
-         return left(MainFailure.locationError(errMsg: e.toString())); 
-    }    
-
+    try {
+      await _firebaseFirestore
+          .collection(FirebaseCollections.hospitals)
+          .doc(userId)
+          .update({'placemark': placeMark.toMap()});
+      return right(unit);
+    } catch (e) {
+      return left(MainFailure.locationError(errMsg: e.toString()));
+    }
   }
 }

@@ -4,7 +4,7 @@ import 'package:healthycart/core/general/typdef.dart';
 import 'package:healthycart/features/location_picker/domain/model/location_model.dart';
 
 abstract class ILocationFacade {
-  Future<void> getLocationPermisson();
+  Future<bool> getLocationPermisson();
   Future<Either<MainFailure, PlaceMark?>> getCurrentLocationAddress();
 
   FutureResult<List<PlaceMark>?> getSearchPlaces(String query);

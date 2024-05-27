@@ -172,7 +172,7 @@ class HospitalFormScreen extends StatelessWidget {
                             TextfieldWidget(
                               hintText: 'Enter hospital address',
                               textInputAction: TextInputAction.done,
-                              keyboardType: TextInputType.multiline,
+                              
                               validator: BValidator.validate,
                               controller: formProvider.addressController,
                               maxlines: 3,

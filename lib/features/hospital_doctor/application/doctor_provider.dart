@@ -168,7 +168,7 @@ class DoctorProvider extends ChangeNotifier {
         }, (category) {
           doctorCategoryList.removeAt(index);
           doctorCategoryUniqueList.add(category);
-          CustomToast.sucessToast(text: 'Sucessfully deleted.');
+          CustomToast.sucessToast(text: 'Sucessfully removed.');
           notifyListeners();
         });
       }

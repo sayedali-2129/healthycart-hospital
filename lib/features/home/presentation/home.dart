@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:healthycart/core/custom/bottom_navigation/bottom_nav_widget.dart';
 import 'package:healthycart/features/hospital_banner/presentation/banner_page.dart';
-import 'package:healthycart/features/hospital_doctor/presentation/add_doctor_category_page/doctor_category_main.dart';
+import 'package:healthycart/features/hospital_doctor/presentation/doctor_category/doctor_category_main.dart';
 import 'package:healthycart/features/hospital_profile/presentation/profile_page.dart';
 import 'package:healthycart/features/hospital_request_userside/presentation/request_page.dart';
 import 'package:healthycart/utils/constants/image/icon.dart';
@@ -23,8 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Scaffold(
+    return  Scaffold(
           bottomNavigationBar: BottomNavigationWidget(
         text1: 'Request',
         text2: 'Doctor',
@@ -46,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
           height: 24,
           width: 24,
         ),
-      )),
+      ),
     );
   }
 }

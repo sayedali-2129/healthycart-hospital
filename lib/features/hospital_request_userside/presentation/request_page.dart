@@ -14,9 +14,7 @@ class RequestScreen extends StatelessWidget {
     return Consumer<RequestDoctorProvider>(builder: (context, state, _) {
       return CustomScrollView(
         slivers: [
-          const SliverToBoxAdapter(
-            child: CustomCurveAppBarWidget(),
-          ),
+          const CustomSliverCurveAppBarWidget(),
           HorizontalTabBarWidget(
             state: state,
           ),
@@ -370,89 +368,47 @@ class HorizontalTabBarWidget extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 16, right: 16),
-                child: SizedBox(
-                  height: 40,
-                  width: 136,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      state.changeTabINdex(index: 0);
-                    },
-                    style: ElevatedButton.styleFrom(
-                        elevation: 5,
-                        backgroundColor: (state.tabIndex == 0)
-                            ? const Color(0xFF11334E)
-                            : Colors.white,
-                        surfaceTintColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                            side: const BorderSide(),
-                            borderRadius: BorderRadius.circular(14))),
-                    child: Text('New Request',
-                        style:
-                            Theme.of(context).textTheme.labelMedium!.copyWith(
-                                  color: (state.tabIndex == 0)
-                                      ? Colors.white
-                                      : Colors.black,
-                                )),
-                  ),
-                ),
+               CustomElevatedTabButton(
+                 backgroundColor: (state.tabIndex == 0)
+                     ? const Color(0xFF11334E)
+                     : Colors.white,
+                 onPressed: () {
+                   state.changeTabINdex(index: 0);
+                 },
+                 child: Text('New Request',
+                     style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                           color: (state.tabIndex == 0)
+                               ? Colors.white
+                               : Colors.black,
+                         )),
+               ),
+              CustomElevatedTabButton(
+                backgroundColor: (state.tabIndex == 1)
+                    ? const Color(0xFF11334E)
+                    : Colors.white,
+                onPressed: () {
+                  state.changeTabINdex(index: 1);
+                },
+                child: Text('On Process',
+                    style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                          color: (state.tabIndex == 1)
+                              ? Colors.white
+                              : Colors.black,
+                        )),
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 16, right: 16),
-                child: SizedBox(
-                  height: 40,
-                  width: 136,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      state.changeTabINdex(index: 1);
-                    },
-                    style: ElevatedButton.styleFrom(
-                        elevation: 5,
-                        backgroundColor: (state.tabIndex == 1)
-                            ? const Color(0xFF11334E)
-                            : Colors.white,
-                        surfaceTintColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                            side: const BorderSide(),
-                            borderRadius: BorderRadius.circular(14))),
-                    child: Text('On Process',
-                        style:
-                            Theme.of(context).textTheme.labelMedium!.copyWith(
-                                  color: (state.tabIndex == 1)
-                                      ? Colors.white
-                                      : Colors.black,
-                                )),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 16),
-                child: SizedBox(
-                  height: 40,
-                  width: 136,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      state.changeTabINdex(index: 2);
-                    },
-                    style: ElevatedButton.styleFrom(
-                        elevation: 5,
-                        backgroundColor: (state.tabIndex == 2)
-                            ? const Color(0xFF11334E)
-                            : Colors.white,
-                        surfaceTintColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                            side: const BorderSide(),
-                            borderRadius: BorderRadius.circular(14))),
-                    child: Text('Visited',
-                        style:
-                            Theme.of(context).textTheme.labelMedium!.copyWith(
-                                  color: (state.tabIndex == 2)
-                                      ? Colors.white
-                                      : Colors.black,
-                                )),
-                  ),
-                ),
+              CustomElevatedTabButton(
+                backgroundColor: (state.tabIndex == 2)
+                    ? const Color(0xFF11334E)
+                    : Colors.white,
+                onPressed: () {
+                  state.changeTabINdex(index: 2);
+                },
+                child: Text('Visited',
+                    style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                          color: (state.tabIndex == 2)
+                              ? Colors.white
+                              : Colors.black,
+                        )),
               ),
             ],
           ),
@@ -461,7 +417,39 @@ class HorizontalTabBarWidget extends StatelessWidget {
     );
   }
 }
+class CustomElevatedTabButton extends StatelessWidget {
+  const CustomElevatedTabButton({
+    super.key,
+    required this.backgroundColor,
+    required this.child,
+    required this.onPressed,
+  });
 
+  final Color backgroundColor;
+  final Widget child;
+  final VoidCallback onPressed;
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+       padding: const EdgeInsets.only(top: 16, right: 16),
+      child: SizedBox(
+        height: 40,
+        width: 136,
+        child: ElevatedButton(
+          onPressed: onPressed,
+          style: ElevatedButton.styleFrom(
+              elevation: 5,
+              backgroundColor: backgroundColor,
+              surfaceTintColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                  side: const BorderSide(),
+                  borderRadius: BorderRadius.circular(14))),
+          child: child,
+        ),
+      ),
+    );
+  }
+}
 class DoctorRoundImageNameWidget extends StatelessWidget {
   const DoctorRoundImageNameWidget({
     super.key,
@@ -493,7 +481,7 @@ class DoctorRoundImageNameWidget extends StatelessWidget {
                 style: Theme.of(context)
                     .textTheme
                     .labelLarge!
-                    .copyWith(fontWeight: FontWeight.w700),
+                    .copyWith(fontWeight: FontWeight.w900),
               ),
               Text(
                 '(Neurologist)',

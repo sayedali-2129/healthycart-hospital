@@ -132,7 +132,7 @@ class HosptialFormProvider extends ChangeNotifier {
       notifyListeners();
     }, (pdfFileSucess) async {
       pdfFile = pdfFileSucess;
-      LoadingLottie.showLoading(context: context, text: 'Adding PDF...');
+      LoadingLottie.showLoading(context: context, text: 'Please wait...');
       await savePDF().then((value) {
         // save PDF function is called here......
         value.fold((failure) {
@@ -152,7 +152,7 @@ class HosptialFormProvider extends ChangeNotifier {
   FutureResult<String?> savePDF() async {
     if (pdfFile == null) {
       return left(const MainFailure.generalException(
-          errMsg: 'Please check the file selected.'));
+          errMsg: 'Please check the PDF selected.'));
     }
     final result = await _iFormFeildFacade.savePDF(pdfFile: pdfFile!);
     return result;

@@ -19,7 +19,6 @@ class PopupDoctorCategoryShower {
     required BuildContext context,
   }) async {
     //main provider to get user id
- 
 
     await showDialog(
         context: context,
@@ -34,7 +33,6 @@ class AddDoctorsCategoryDilogue extends StatefulWidget {
     super.key,
   });
 
- 
   @override
   State<AddDoctorsCategoryDilogue> createState() =>
       _AddDoctorsCategoryDilogueState();
@@ -62,7 +60,8 @@ class _AddDoctorsCategoryDilogueState extends State<AddDoctorsCategoryDilogue> {
         surfaceTintColor: Colors.white,
         backgroundColor: BColors.lightGrey,
         title: Text('Add prefered category',
-            style: Theme.of(context).textTheme.labelLarge!.copyWith(fontSize: 18)),
+            style:
+                Theme.of(context).textTheme.labelLarge!.copyWith(fontSize: 14)),
         content: (value.fetchAlertLoading)
 
             /// loading is done here
@@ -85,14 +84,11 @@ class _AddDoctorsCategoryDilogueState extends State<AddDoctorsCategoryDilogue> {
                 : SizedBox(
                     height: MediaQuery.of(context).size.height - 520,
                     width: MediaQuery.of(context).size.width - 80,
-                    child: ListView.separated(
-                      separatorBuilder: (context, index) {
-                        return const Gap(8);
-                      },
+                    child: ListView.builder(
                       itemCount: value.doctorCategoryUniqueList.length,
                       itemBuilder: (context, index) {
                         return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                          padding: const EdgeInsets.symmetric(horizontal: 4,vertical: 6),
                           child: Material(
                             surfaceTintColor: Colors.white,
                             borderRadius: BorderRadius.circular(40),
@@ -136,7 +132,7 @@ class _AddDoctorsCategoryDilogueState extends State<AddDoctorsCategoryDilogue> {
                                         },
                                         child: const SizedBox())
                                   ],
-                                )),
+                                ),),
                           ),
                         );
                       },
@@ -155,15 +151,18 @@ class _AddDoctorsCategoryDilogueState extends State<AddDoctorsCategoryDilogue> {
 
                     LoadingLottie.showLoading(
                         context: context, text: 'Adding doctor category...');
-                    await value.updateCategory(
+                    await value
+                        .updateCategory(
                       categorySelected: value.selectedRadioButtonCategoryValue!,
                       hospitalId: value.hospitalId ?? '',
-                    );
-                    value.selectedRadioButtonCategoryValue = null;
-                    // ignore: use_build_context_synchronously
-                    EasyNavigation.pop(context: context);
-                    // ignore: use_build_context_synchronously
-                    EasyNavigation.pop(context: context);
+                    )
+                        .then((result) {
+                      value.selectedRadioButtonCategoryValue = null;
+
+                      EasyNavigation.pop(context: context);
+
+                      EasyNavigation.pop(context: context);
+                    });
                   },
                   text: 'Save',
                   buttonColor: BColors.mainlightColor,
@@ -177,7 +176,7 @@ class _AddDoctorsCategoryDilogueState extends State<AddDoctorsCategoryDilogue> {
     });
   }
 
-  void _removeSelectedDocter() { 
+  void _removeSelectedDocter() {
     context.read<DoctorProvider>().removingFromUniqueCategoryList();
   }
 }

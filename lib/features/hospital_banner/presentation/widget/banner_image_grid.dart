@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthycart/core/custom/confirm_alertbox/confirm_alertbox_widget.dart';
 import 'package:healthycart/core/custom/custom_cached_network/custom_cached_network_image.dart';
+import 'package:healthycart/core/custom/lottie/loading_lottie.dart';
+import 'package:healthycart/core/services/easy_navigation.dart';
 import 'package:healthycart/features/hospital_banner/application/add_banner_provider.dart';
 import 'package:healthycart/features/hospital_banner/domain/model/hospital_banner_model.dart';
 import 'package:healthycart/utils/constants/colors/colors.dart';
@@ -11,7 +13,8 @@ class BannerImageWidget extends StatelessWidget {
   const BannerImageWidget({
     super.key,
     required this.indexNumber,
-    required this.bannerData, required this.index,
+    required this.bannerData,
+    required this.index,
   });
   final String indexNumber;
   final HospitalBannerModel bannerData;
@@ -55,13 +58,18 @@ class BannerImageWidget extends StatelessWidget {
             onTap: () {
               ConfirmAlertBoxWidget.showAlertConfirmBox(
                 context: context,
-                confirmButtonTap: () {
-                  addBannerProvider.deleteBanner(
+                confirmButtonTap: () async {
+                  LoadingLottie.showLoading(
+                      context: context, text: 'Please wait ..');
+                  await addBannerProvider
+                      .deleteBanner(
                     bannerToDelete: bannerData,
                     imageUrl: bannerData.image ?? '',
-                    context: context,
                     index: index,
-                  );
+                  )
+                      .then((value) {
+                    EasyNavigation.pop(context: context);
+                  });
                 },
                 titleText: 'Confirm to remove banner',
                 subText: 'Are you sure tou want to remove this banner?',

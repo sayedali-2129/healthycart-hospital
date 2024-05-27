@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthycart/core/custom/app_bar/custom_appbar_curve.dart';
 import 'package:healthycart/core/custom/confirm_alertbox/confirm_alertbox_widget.dart';
+import 'package:healthycart/core/custom/lottie/loading_lottie.dart';
 import 'package:healthycart/core/services/easy_navigation.dart';
 import 'package:healthycart/features/authenthication/application/authenication_provider.dart';
 import 'package:healthycart/features/hospital_doctor/application/doctor_provider.dart';
-import 'package:healthycart/features/hospital_doctor/presentation/add_doctor_page/add_doctor.dart';
-import 'package:healthycart/features/hospital_doctor/presentation/add_doctor_category_page/widgets/add_new_round_widget.dart';
-import 'package:healthycart/features/hospital_doctor/presentation/add_doctor_category_page/widgets/get_category_popup.dart';
-import 'package:healthycart/features/hospital_doctor/presentation/add_doctor_category_page/widgets/round_text_widget.dart';
+import 'package:healthycart/features/hospital_doctor/presentation/add_doctor/add_doctor.dart';
+import 'package:healthycart/features/hospital_doctor/presentation/doctor_category/widgets/add_new_round_widget.dart';
+import 'package:healthycart/features/hospital_doctor/presentation/doctor_category/widgets/get_category_popup.dart';
+import 'package:healthycart/features/hospital_doctor/presentation/doctor_category/widgets/round_text_widget.dart';
 import 'package:healthycart/utils/constants/colors/colors.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
@@ -19,7 +20,8 @@ class DoctorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final doctorProvider = Provider.of<DoctorProvider>(context, listen: false);
-    final mainProvider = Provider.of<AuthenticationProvider>(context, listen: false);
+    final mainProvider =
+        Provider.of<AuthenticationProvider>(context, listen: false);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       if (doctorProvider.doctorCategoryIdList.isEmpty) {
         doctorProvider.doctorCategoryIdList =
@@ -35,9 +37,7 @@ class DoctorScreen extends StatelessWidget {
     return Consumer<DoctorProvider>(builder: (context, doctorProvider, _) {
       return CustomScrollView(
         slivers: [
-          const SliverToBoxAdapter(
-            child: CustomCurveAppBarWidget(),
-          ),
+          const CustomSliverCurveAppBarWidget(),
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -56,13 +56,24 @@ class DoctorScreen extends StatelessWidget {
                     icon: doctorProvider.onTapBool
                         ? Text(
                             'Cancel Edit',
-                            style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 14, fontWeight: FontWeight.w600),
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelMedium!
+                                .copyWith(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    color: BColors.red),
                           )
                         : Row(
                             children: [
                               Text(
                                 'Edit',
-                                style: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 14, fontWeight: FontWeight.w600),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelMedium!
+                                    .copyWith(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600),
                               ),
                               const Gap(4),
                               const Icon(
@@ -139,9 +150,17 @@ class DoctorScreen extends StatelessWidget {
                                   context: context,
                                   titleText: 'Confirm to delete',
                                   subText: "Are you sure you want to delete?",
-                                  confirmButtonTap: () async {
-                                    await doctorProvider.deleteCategory(
-                                        index: index -1, category: doctorCategory);
+                                  confirmButtonTap: () {
+                                    LoadingLottie.showLoading(
+                                        context: context,
+                                        text: 'Please wait ..');
+                                    doctorProvider
+                                        .deleteCategory(
+                                            index: index - 1,
+                                            category: doctorCategory)
+                                        .then((value) {
+                                      EasyNavigation.pop(context: context);
+                                    });
                                   });
                             },
                             image: doctorCategory.image,

@@ -1,4 +1,4 @@
-import 'dart:developer';
+
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
@@ -75,14 +75,14 @@ class IDoctorImpl implements IDoctorFacade {
               DoctorCategoryModel.fromMap(e.data() as Map<String, dynamic>)
                   .copyWith(id: e.id))
           .toList();
-      log('Category of hospitals::::::${categoryList.length.toString()}');
+  
 
       return right(categoryList);
     } on FirebaseException catch (e) {
-      log(e.toString());
+
       return left(MainFailure.firebaseException(errMsg: e.message.toString()));
     } catch (e) {
-      log(e.toString());
+   
 
       return left(MainFailure.generalException(errMsg: e.toString()));
     }
@@ -94,13 +94,13 @@ class IDoctorImpl implements IDoctorFacade {
     required DoctorCategoryModel category,
   }) async {
     try {
-      log('User Id:::::$hospitalId CategoryId::::: ${category.id}');
-      log('${category.id}');
+
+  
       if (hospitalId == null) {
         return left(
             const MainFailure.firebaseException(errMsg: 'check userid'));
       }
-      log('User id for updating category');
+    
       await _repo
           .collection(FirebaseCollections.hospitals)
           .doc(hospitalId)
@@ -109,7 +109,7 @@ class IDoctorImpl implements IDoctorFacade {
       });
       return right(category);
     } on FirebaseException catch (e) {
-      log(e.message!);
+     
       return left(MainFailure.firebaseException(errMsg: e.message.toString()));
     } catch (e) {
       return left(MainFailure.generalException(errMsg: e.toString()));
@@ -128,14 +128,13 @@ class IDoctorImpl implements IDoctorFacade {
             const MainFailure.firebaseException(errMsg: 'Check user Id'));
       }
       final categoryId = category.id;
-      log('Category id for deleting category ::: $categoryId');
-      log('User id for deleting category ::: $userId');
+
       await _repo.collection(FirebaseCollections.hospitals).doc(userId).update({
         'selectedCategoryId': FieldValue.arrayRemove([categoryId])
       });
       return right(category);
     } on FirebaseException catch (e) {
-      log(e.message!);
+    
       return left(MainFailure.firebaseException(errMsg: e.message.toString()));
     } catch (e) {
       return left(MainFailure.generalException(errMsg: e.toString()));
@@ -156,8 +155,7 @@ class IDoctorImpl implements IDoctorFacade {
           .get();
       return right(snapshot.docs.isNotEmpty);
     } on FirebaseException catch (e) {
-      log(e.code);
-      log(e.message!);
+
       return left(MainFailure.firebaseException(errMsg: e.message.toString()));
     } catch (e) {
       return left(MainFailure.generalException(errMsg: e.toString()));
@@ -176,10 +174,10 @@ class IDoctorImpl implements IDoctorFacade {
           .collection(FirebaseCollections.doctors)
           .doc(id)
           .set(doctorData.toMap());
-      log('Doctor id :::::: $id');
+
       return right(doctorData.copyWith(id: id));
     } on FirebaseException catch (e) {
-      log(e.message!);
+
       return left(MainFailure.firebaseException(errMsg: e.message.toString()));
     } catch (e) {
       return left(MainFailure.generalException(errMsg: e.toString()));
@@ -198,13 +196,12 @@ class IDoctorImpl implements IDoctorFacade {
           .where('categoryId', isEqualTo: categoryId)
           .where('hospitalId', isEqualTo: hospitalId)
           .get();
-      log(' Implementation of get doctor called  :::: ');
+    
       return right(snapshot.docs
           .map((e) => DoctorAddModel.fromMap(e.data()).copyWith(id: e.id))
           .toList());
     } on FirebaseException catch (e) {
-      log(e.code);
-      log(e.message!);
+
       return left(MainFailure.firebaseException(errMsg: e.message.toString()));
     } catch (e) {
       return left(MainFailure.generalException(errMsg: e.toString()));
@@ -222,11 +219,9 @@ class IDoctorImpl implements IDoctorFacade {
           .doc(doctorId)
           .delete();
 
-      log(' Deletion of doctor called  :::: ');
       return right(doctorData);
     } on FirebaseException catch (e) {
-      log(e.code);
-      log(e.message!);
+
       return left(MainFailure.firebaseException(errMsg: e.message.toString()));
     } catch (e) {
       return left(MainFailure.generalException(errMsg: e.toString()));
@@ -244,11 +239,9 @@ class IDoctorImpl implements IDoctorFacade {
           .doc(doctorId)
           .update(doctorData.toMap());
 
-      log(' Updating  of get doctor called  :::: ');
       return right(doctorData);
     } on FirebaseException catch (e) {
-      log(e.code);
-      log(e.message!);
+
       return left(MainFailure.firebaseException(errMsg: e.message.toString()));
     } catch (e) {
       return left(MainFailure.generalException(errMsg: e.toString()));

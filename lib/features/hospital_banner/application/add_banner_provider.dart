@@ -57,14 +57,15 @@ class AddBannerProvider extends ChangeNotifier {
   Future<void> deleteBanner(
       {required HospitalBannerModel bannerToDelete,
       required String imageUrl,
-      required BuildContext context,
+   
       required int index}) async {
     final result =
         await iBannerFacade.deleteHospitalBanner(banner: bannerToDelete);
     result.fold((failure) {
       CustomToast.errorToast(text: "Can't able to remove the banner.");
     }, (sucess) async {
-      await iBannerFacade.deleteImage(imageUrl: imageUrl);
+      await iBannerFacade.deleteImage(imageUrl: imageUrl).then((value) {
+      });
       bannerList.removeAt(index);
       CustomToast.sucessToast(text: "Banner removed sucessfully.");
       notifyListeners();

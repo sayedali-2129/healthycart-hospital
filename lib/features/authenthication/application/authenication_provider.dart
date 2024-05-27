@@ -120,10 +120,10 @@ class AuthenticationProvider extends ChangeNotifier {
   Future<void> hospitalLogOut({required BuildContext context}) async {
     final result = await iAuthFacade.hospitalLogOut();
     result.fold((failure) {
-      Navigator.pop(context);
+      EasyNavigation.pop(context: context);
       CustomToast.errorToast(text: failure.errMsg);
     }, (sucess) {
-      Navigator.pop(context);
+      EasyNavigation.pop(context: context);
       CustomToast.sucessToast(text: sucess);
       EasyNavigation.pushReplacement(
           context: context, page: const SplashScreen());

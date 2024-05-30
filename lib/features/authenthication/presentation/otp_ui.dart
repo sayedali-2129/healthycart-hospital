@@ -130,7 +130,7 @@ class _OTPScreenState extends State<OTPScreen> {
                         height: 48,
                         onTap: () {
                           LoadingLottie.showLoading(
-                              context: context, text: 'Loading...');
+                              context: context, text: 'Verifying...');
                           authenticationProvider.verifySmsCode(
                               smsCode: otpController.text.trim(),
                               context: context);

@@ -1,5 +1,7 @@
 
 import 'package:flutter/material.dart';
+import 'package:healthycart/core/custom/lottie/loading_lottie.dart';
+import 'package:healthycart/core/services/easy_navigation.dart';
 import 'package:healthycart/features/add_hospital_form_page/application/hospital_form_provider.dart';
 import 'package:healthycart/utils/constants/image/image.dart';
 
@@ -22,7 +24,11 @@ class PDFShowerWidget extends StatelessWidget {
               right: -14,
               child: IconButton(
                   onPressed: () {
-                    formProvider.deletePDF();
+                       LoadingLottie.showLoading(
+                        context: context, text: 'Please wait');
+                    formProvider.deletePDF().then((value) {
+                      EasyNavigation.pop(context: context);
+                    });
                   },
                   icon: const Icon(
                     Icons.cancel,

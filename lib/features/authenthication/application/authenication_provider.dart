@@ -57,7 +57,7 @@ class AuthenticationProvider extends ChangeNotifier {
       EasyNavigation.pushReplacement(
         type: PageTransitionType.bottomToTop,
         context: context,
-        page: HospitalFormScreen(phoneNo: hospitalDataFetched?.phoneNo ?? ''),
+        page: HospitalFormScreen( hospitalModel:hospitalDataFetched ,isEditing: false,),
       );
       notifyListeners();
     } else if (hospitalDataFetched?.placemark == null) {

@@ -1,3 +1,5 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:healthycart/utils/constants/colors/colors.dart';
 import 'package:healthycart/utils/constants/image/icon.dart';
@@ -23,37 +25,65 @@ class BottomNavigationWidget extends StatefulWidget {
   State<BottomNavigationWidget> createState() => _BottonNavTabState();
 }
 
-class _BottonNavTabState extends State<BottomNavigationWidget> {
+class _BottonNavTabState extends State<BottomNavigationWidget>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
   int selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: widget.tabItems.length, vsync: this);
+    _tabController.addListener(_handleTabSelection);
+  }
+
+  void _handleTabSelection() {
+    if (_tabController.index != selectedIndex) {
+    
+      setState(() {
+        selectedIndex = _tabController.index;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _tabController.removeListener(_handleTabSelection);
+    _tabController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 4,
+      length: widget.tabItems.length,
       child: Scaffold(
         body: TabBarView(
-           clipBehavior: Clip.antiAlias,
-            physics: const NeverScrollableScrollPhysics(),
+            controller: _tabController,
+            clipBehavior: Clip.antiAlias,
+            //physics: const NeverScrollableScrollPhysics(),
             children: widget.tabItems),
         bottomNavigationBar: PhysicalModel(
           color: Colors.white,
           elevation: 10,
           child: TabBar(
+              controller: _tabController,
               indicatorSize: TabBarIndicatorSize.tab,
               indicator: UnderlineTabIndicator(
-                  borderSide:
-                      BorderSide(color: BColors.mainlightColor, width: 8.0),
-                  insets: const EdgeInsets.fromLTRB(30.0, 0.0, 30.0, 66.0),
-                  borderRadius: const BorderRadius.only(
-                      bottomRight: Radius.circular(4),
-                      bottomLeft: Radius.circular(4),
-                      ),),
-              labelStyle:
-                  Theme.of(context).textTheme.labelLarge!.copyWith(fontSize: 10,
-                  fontWeight: FontWeight.w600,  ),
+                borderSide:
+                    BorderSide(color: BColors.mainlightColor, width: 8.0),
+                insets: const EdgeInsets.fromLTRB(30.0, 0.0, 30.0, 66.0),
+                borderRadius: const BorderRadius.only(
+                  bottomRight: Radius.circular(4),
+                  bottomLeft: Radius.circular(4),
+                ),
+              ),
+              labelStyle: Theme.of(context).textTheme.labelLarge!.copyWith(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                  ),
               labelColor: BColors.mainlightColor,
               unselectedLabelColor: Colors.black87,
-              
               onTap: (index) {
                 setState(() {
                   selectedIndex = index;
@@ -62,18 +92,19 @@ class _BottonNavTabState extends State<BottomNavigationWidget> {
               tabs: [
                 Tab(
                   icon: Padding(
-                      padding: const EdgeInsets.only(top: 6),
-                      child: selectedIndex == 0
-                          ? Image.asset(
-                              BIcon.request,
-                              height: 28,
-                              width: 28,
-                            )
-                          : Image.asset(
-                              BIcon.requestBlack,
-                              height: 24,
-                              width: 24,
-                            ),),
+                    padding: const EdgeInsets.only(top: 6),
+                    child: selectedIndex == 0
+                        ? Image.asset(
+                            BIcon.request,
+                            height: 28,
+                            width: 28,
+                          )
+                        : Image.asset(
+                            BIcon.requestBlack,
+                            height: 24,
+                            width: 24,
+                          ),
+                  ),
                   text: widget.text1,
                 ),
                 Tab(

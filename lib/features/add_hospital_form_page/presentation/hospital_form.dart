@@ -22,11 +22,10 @@ import 'package:healthycart/utils/constants/colors/colors.dart';
 import 'package:provider/provider.dart';
 
 class HospitalFormScreen extends StatelessWidget {
-  const HospitalFormScreen(
-      {super.key, this.phoneNo, this.hospitalModel, this.placeMark});
+  const HospitalFormScreen({super.key, this.hospitalModel, this.placeMark, this.isEditing});
   final HospitalModel? hospitalModel;
-  final String? phoneNo;
   final PlaceMark? placeMark;
+  final bool? isEditing;
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -38,20 +37,23 @@ class HospitalFormScreen extends StatelessWidget {
         FormState>(); // authenication provider is getting here to show the location details
     return Consumer2<HosptialFormProvider, AuthenticationProvider>(
         builder: (context, formProvider, authProvider, _) {
-      formProvider.phoneNumberController.text = phoneNo ?? '';
       return Scaffold(
           backgroundColor: const Color(0xFFF5F3F3),
           body: GestureDetector(
             onTap: () {
               FocusScope.of(context).unfocus();
-            },
+            }, //////////////////////here not added pdf logic
             child: CustomScrollView(
               slivers: [
-                (hospitalModel != null)
+               (isEditing == true)
                     ? SliverCustomAppbar(
                         title: 'Edit Profile',
                         onBackTap: () {
-                          Navigator.pop(context);
+                          if (formProvider.pdfUrl == null) {
+                            CustomToast.sucessToast(text: 'Please add PDF');
+                            return;
+                          }
+                          Navigator.canPop(context);
                         },
                       )
                     : const SliverToBoxAdapter(),
@@ -64,7 +66,7 @@ class HospitalFormScreen extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            (hospitalModel != null)
+                             (isEditing == true)
                                 ? Padding(
                                     padding: const EdgeInsets.only(
                                       top: 8,
@@ -172,7 +174,6 @@ class HospitalFormScreen extends StatelessWidget {
                             TextfieldWidget(
                               hintText: 'Enter hospital address',
                               textInputAction: TextInputAction.done,
-                              
                               validator: BValidator.validate,
                               controller: formProvider.addressController,
                               maxlines: 3,
@@ -250,7 +251,7 @@ class HospitalFormScreen extends StatelessWidget {
                                   }
                                   LoadingLottie.showLoading(
                                       context: context, text: 'Please wait...');
-                                  if (hospitalModel == null) {
+                                  if (hospitalModel?.requested != 2) {
                                     await formProvider
                                         .saveImage()
                                         .then((value) async {
@@ -267,7 +268,7 @@ class HospitalFormScreen extends StatelessWidget {
                                     );
                                   }
                                 },
-                                text: (hospitalModel == null)
+                                text:(hospitalModel?.requested != 2)
                                     ? 'Send for review'
                                     : 'Update details',
                                 buttonColor: BColors.buttonDarkColor,

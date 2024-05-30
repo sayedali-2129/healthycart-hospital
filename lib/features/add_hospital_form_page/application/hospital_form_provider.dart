@@ -14,6 +14,7 @@ import 'package:healthycart/core/general/typdef.dart';
 import 'package:healthycart/core/services/easy_navigation.dart';
 import 'package:healthycart/features/add_hospital_form_page/domain/i_form_facade.dart';
 import 'package:healthycart/features/add_hospital_form_page/domain/model/hospital_model.dart';
+import 'package:healthycart/features/home/presentation/home.dart';
 import 'package:healthycart/features/location_picker/presentation/location.dart';
 import 'package:healthycart/utils/constants/enums.dart';
 import 'package:injectable/injectable.dart';
@@ -125,14 +126,18 @@ class HosptialFormProvider extends ChangeNotifier {
   String? pdfUrl;
 
   Future<void> getPDF({required BuildContext context}) async {
-    pdfUrl = null;
     final result = await _iFormFeildFacade.getPDF();
     result.fold((failure) {
       CustomToast.errorToast(text: failure.errMsg);
       notifyListeners();
     }, (pdfFileSucess) async {
+    LoadingLottie.showLoading(context: context, text: 'Uploading document...');
+      if (pdfUrl != null) {
+        await _iFormFeildFacade.deletePDF(pdfUrl: pdfUrl ?? '', hospitalId: hospitalId?? '');
+        pdfUrl = null;
+      } 
       pdfFile = pdfFileSucess;
-      LoadingLottie.showLoading(context: context, text: 'Please wait...');
+
       await savePDF().then((value) {
         // save PDF function is called here......
         value.fold((failure) {
@@ -166,7 +171,7 @@ class HosptialFormProvider extends ChangeNotifier {
       notifyListeners();
       return;
     }
-    final result = await _iFormFeildFacade.deletePDF(pdfUrl: pdfUrl!);
+    final result = await _iFormFeildFacade.deletePDF(pdfUrl: pdfUrl?? '', hospitalId: hospitalId ?? '');
     result.fold((failure) {
       CustomToast.errorToast(text: failure.errMsg);
       notifyListeners();
@@ -211,9 +216,13 @@ class HosptialFormProvider extends ChangeNotifier {
       Navigator.pop(context);
     }, (sucess) {
       clearAllData();
-      CustomToast.sucessToast(text: 'Sucessfully updated.');
+      CustomToast.sucessToast(text: 'Sucessfully updated details.');
       Navigator.pop(context);
-      EasyNavigation.pop(context: context);
+       EasyNavigation.pushReplacement(
+        type: PageTransitionType.bottomToTop,
+        context: context,
+        page: const HomeScreen(),
+      );
       // when edited moving back to the profile screen
       notifyListeners();
     });

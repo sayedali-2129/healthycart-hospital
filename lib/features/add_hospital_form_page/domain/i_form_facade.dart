@@ -23,8 +23,10 @@ abstract class IFormFeildFacade {
   FutureResult<File> getPDF();
   FutureResult<String?> savePDF({
     required File pdfFile,
+   
   });
   FutureResult<String?> deletePDF({
     required String pdfUrl,
+     required String hospitalId,
   });
 }

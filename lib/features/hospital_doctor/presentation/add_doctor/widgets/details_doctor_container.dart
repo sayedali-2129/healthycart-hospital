@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:healthycart/core/custom/pop_over/pop_over.dart';
 import 'package:healthycart/core/custom/custom_cached_network/custom_cached_network_image.dart';
@@ -24,14 +25,14 @@ class DoctorDetailsViewContainerWidget extends StatelessWidget {
     return Consumer<DoctorProvider>(builder: (context, doctorProvider, _) {
       return Stack(
         children: [
-          PhysicalModel(
-            color: BColors.white,
-            borderRadius: BorderRadius.circular(12),
-            elevation: 5,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 8, top: 6, bottom: 6),
-              child: SizedBox(
-                width: double.infinity,
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: Material(
+              color: BColors.white,
+              borderRadius: BorderRadius.circular(12),
+              elevation: 5,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
                 child: Row(
                   children: [
                     Container(
@@ -45,101 +46,61 @@ class DoctorDetailsViewContainerWidget extends StatelessWidget {
                           child: CustomCachedNetworkImage(
                               image: doctorListData.doctorImage ?? '')),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        top: 8,
-                        bottom: 8,
-                        left: 6,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            width: 232,
-                            child: Row(
-                              children: [
-                                const Gap(8),
-                                Expanded(
-                                  child: Text(
-                                    doctorListData.doctorName ?? 'Unknown Name',
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .labelLarge!
-                                        .copyWith(fontWeight: FontWeight.w700),
-                                  ),
-                                ),
-                              ],
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 8, right: 16),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              doctorListData.doctorName ?? 
+                              'Unknown Name ',
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelLarge!
+                                  .copyWith(fontWeight: FontWeight.w700),
                             ),
-                          ),
-                          const Gap(4),
-                          SizedBox(
-                            width: 232,
-                            child: Row(
-                              children: [
-                                const Gap(8),
-                                Expanded(
-                                  child: Text(
-                                    doctorListData.doctorQualification ??
-                                        'Unknown Qualification',
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .labelMedium!
-                                        .copyWith(fontWeight: FontWeight.w700),
-                                  ),
-                                ),
-                              ],
+                            const Gap(4),
+                            Text(
+                              doctorListData.doctorQualification ??
+                                  'Unknown Qualification',
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelMedium!
+                                  .copyWith(fontWeight: FontWeight.w700),
                             ),
-                          ),
-                          const Gap(4),
-                          SizedBox(
-                            width: 232,
-                            child: Row(
-                              children: [
-                                const Gap(8),
-                                Expanded(
-                                  child: Text(
-                                    doctorListData.doctorSpecialization ??
-                                        'Unknown Specialization',
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .labelLarge!
-                                        .copyWith(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w300),
-                                  ),
-                                ),
-                              ],
+                            const Gap(4),
+                            Text(
+                              doctorListData.doctorSpecialization ??
+                                  'Unknown Specialization',
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelLarge!
+                                  .copyWith(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600),
                             ),
-                          ),
-                          const Gap(4),
-                          SizedBox(
-                            width: 232,
-                            child: Row(
-                              children: [
-                                const Gap(8),
-                                Expanded(
-                                  child: Text(
-                                    doctorListData.doctorTotalTime ??
-                                        '9:00Am - 5.00PM',
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .labelMedium!
-                                        .copyWith(color: Colors.green),
-                                  ),
-                                ),
-                              ],
+                            const Gap(4),
+                            Text(
+                              doctorListData.doctorTotalTime ??
+                                  '9:00Am - 5.00PM',
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelMedium!
+                                  .copyWith(color: Colors.green),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     )
                   ],

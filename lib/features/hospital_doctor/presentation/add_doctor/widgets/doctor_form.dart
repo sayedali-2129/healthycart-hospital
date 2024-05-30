@@ -40,7 +40,7 @@ class DoctorAddForm extends StatelessWidget {
               height: 640,
               child: SingleChildScrollView(
                 child: Padding(
-                  padding: const EdgeInsets.all(15.0),
+                  padding: const EdgeInsets.all(16.0),
                   child: SizedBox(
                       width: double.infinity,
                       child: Padding(

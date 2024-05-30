@@ -37,7 +37,7 @@ class DoctorProvider extends ChangeNotifier {
       CustomToast.errorToast(text: failure.errMsg);
     }, (imageFilesucess) async {
       if (imageUrl != null) {
-        await _iDoctorFacade.deleteImage(imageUrl: imageUrl!);
+        await _iDoctorFacade.deleteImage(imageUrl: imageUrl?? '');
         imageUrl = null;
       } // when editing  this will make the url null when we pick a new file
       imageFile = imageFilesucess;
@@ -67,14 +67,11 @@ class DoctorProvider extends ChangeNotifier {
   /// adding category -----------------------------------------
   ///
   /// radio button
-  int? selectedCategoryIndex;
   DoctorCategoryModel? selectedRadioButtonCategoryValue;
   void selectedRadioButton({
     required DoctorCategoryModel result,
-    required int index,
   }) {
     selectedRadioButtonCategoryValue = result;
-    selectedCategoryIndex = index;
     notifyListeners();
   }
 

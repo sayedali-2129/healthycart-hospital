@@ -79,8 +79,27 @@ class IFormFieldImpl implements IFormFeildFacade {
   @override
   FutureResult<String?> deletePDF({
     required String pdfUrl,
+      required String hospitalId,
   }) async {
-    return await _pdfService.deletePdfUrl(url: pdfUrl);
+    try{
+   await _pdfService.deletePdfUrl(url: pdfUrl).then((value) {
+      value.fold((failure) {
+        return left(failure);
+      }, (sucess) async {
+        await _firebaseFirestore
+            .collection(FirebaseCollections.hospitals)
+            .doc(hospitalId)
+            .update({'pharmacyDocumentLicense': null}).then((value) {
+        });
+      });
+    });
+    return right('Sucessfully removed');
+  
+    }catch(e){
+      return left(MainFailure.generalException(errMsg: e.toString()));
+    }
+
+  
   }
 
   ///update section from profile--------------------

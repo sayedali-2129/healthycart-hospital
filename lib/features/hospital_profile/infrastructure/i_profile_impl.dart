@@ -70,7 +70,7 @@ class IProfileImpl implements IProfileFacade {
       await batch.commit();
  
 
-      return right('Successfully updated');
+      return right('Hospital status changed.');
     } on FirebaseException catch (e) {
 
       return left(MainFailure.firebaseException(errMsg: e.code));

@@ -91,6 +91,7 @@ class _AddDoctorsCategoryDilogueState extends State<AddDoctorsCategoryDilogue> {
                           padding: const EdgeInsets.symmetric(horizontal: 4,vertical: 6),
                           child: Material(
                             surfaceTintColor: Colors.white,
+                            color: Colors.white,
                             borderRadius: BorderRadius.circular(40),
                             elevation: 3,
                             child: SizedBox(
@@ -128,7 +129,7 @@ class _AddDoctorsCategoryDilogueState extends State<AddDoctorsCategoryDilogue> {
                                             .selectedRadioButtonCategoryValue,
                                         onChanged: (result) {
                                           value.selectedRadioButton(
-                                              index: index, result: result!);
+                                              result: result!);
                                         },
                                         child: const SizedBox())
                                   ],

@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:healthycart/core/custom/custom_cached_network/custom_cached_network_image.dart';
 import 'package:healthycart/features/add_hospital_form_page/application/hospital_form_provider.dart';
 import 'package:healthycart/utils/constants/image/image.dart';
 import 'package:provider/provider.dart';
@@ -43,10 +44,7 @@ class ImageFormContainerWidget extends StatelessWidget {
                       borderRadius: BorderRadius.circular(16),
                       child: Padding(
                         padding: const EdgeInsets.all(10.0),
-                        child: Image.network(
-                          formProvider.imageUrl!,
-                          fit: BoxFit.contain,
-                        ),
+                        child: CustomCachedNetworkImage(image: formProvider.imageUrl!, fit: BoxFit.contain,)
                       ),
                     ),
                     ),

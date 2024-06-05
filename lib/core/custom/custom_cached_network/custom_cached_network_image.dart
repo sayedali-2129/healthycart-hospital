@@ -4,9 +4,9 @@ import 'package:shimmer/shimmer.dart';
 
 
 class CustomCachedNetworkImage extends StatelessWidget {
-  const CustomCachedNetworkImage({super.key, required this.image});
+  const CustomCachedNetworkImage({super.key, required this.image, this.fit});
   final String image;
-
+  final BoxFit? fit;
   @override
   Widget build(BuildContext context) {
     return CachedNetworkImage(
@@ -14,7 +14,7 @@ class CustomCachedNetworkImage extends StatelessWidget {
       fit: BoxFit.fill,
       imageBuilder: (context, imageProvider) => Container(
         decoration: BoxDecoration(
-            image: DecorationImage(image: imageProvider, fit: BoxFit.cover)),
+            image: DecorationImage(image: imageProvider, fit:fit?? BoxFit.cover)),
       ),
       placeholder: (context, url) => Shimmer.fromColors(
         baseColor: Colors.blue,

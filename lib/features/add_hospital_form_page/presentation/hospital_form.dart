@@ -1,5 +1,4 @@
 // ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthycart/core/custom/app_bar/sliver_appbar.dart';
@@ -53,7 +52,7 @@ class HospitalFormScreen extends StatelessWidget {
                             CustomToast.sucessToast(text: 'Please add PDF');
                             return;
                           }
-                          Navigator.canPop(context);
+                          Navigator.pop(context);
                         },
                       )
                     : const SliverToBoxAdapter(),

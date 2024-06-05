@@ -37,7 +37,8 @@ class HosptialFormProvider extends ChangeNotifier {
       notifyListeners();
     }, (imageFilesucess) async {
       if (imageUrl != null) {
-        await _iFormFeildFacade.deleteImage(imageUrl: imageUrl!);
+        await _iFormFeildFacade.deleteImage(
+            imageUrl: imageUrl!, hospitalId: hospitalId ?? '');
         imageUrl = null;
       } // when editing  this will make the url null when we pick a new file
       imageFile = imageFilesucess;
@@ -76,22 +77,25 @@ class HosptialFormProvider extends ChangeNotifier {
   }) async {
     keywordHospitalBuider();
     hospitalDetail = HospitalModel(
-        createdAt: Timestamp.now(),
-        keywords: keywordHospitalBuider(),
-        phoneNo: phoneNumberController.text,
-        hospitalName: hospitalNameController.text,
-        address: addressController.text,
-        ownerName: ownerNameController.text,
-        uploadLicense: pdfUrl,
-        image: imageUrl,
-        adminType: adminType,
-        id: hospitalId,
-        isActive: true,
-        ishospitalON : null,
-        requested: 1,);
+      createdAt: Timestamp.now(),
+      keywords: keywordHospitalBuider(),
+      phoneNo: phoneNumberController.text,
+      hospitalName: hospitalNameController.text,
+      address: addressController.text,
+      ownerName: ownerNameController.text,
+      uploadLicense: pdfUrl,
+      image: imageUrl,
+      adminType: adminType,
+      id: hospitalId,
+      isActive: true,
+      ishospitalON: null,
+      requested: 1,
+    );
 
     final result = await _iFormFeildFacade.addHospitalDetails(
-        hospitalDetails: hospitalDetail!, hospitalId: hospitalId!,);
+      hospitalDetails: hospitalDetail!,
+      hospitalId: hospitalId!,
+    );
     result.fold((failure) {
       CustomToast.errorToast(text: failure.errMsg);
       Navigator.pop(context);
@@ -114,6 +118,8 @@ class HosptialFormProvider extends ChangeNotifier {
     adminType = null;
     pdfFile = null;
     pdfUrl = null;
+    imageFile = null;
+    imageUrl = null;
     phoneNumberController.clear();
     ownerNameController.clear();
     notifyListeners();
@@ -131,11 +137,13 @@ class HosptialFormProvider extends ChangeNotifier {
       CustomToast.errorToast(text: failure.errMsg);
       notifyListeners();
     }, (pdfFileSucess) async {
-    LoadingLottie.showLoading(context: context, text: 'Uploading document...');
+      LoadingLottie.showLoading(
+          context: context, text: 'Uploading document...');
       if (pdfUrl != null) {
-        await _iFormFeildFacade.deletePDF(pdfUrl: pdfUrl ?? '', hospitalId: hospitalId?? '');
+        await _iFormFeildFacade.deletePDF(
+            pdfUrl: pdfUrl ?? '', hospitalId: hospitalId ?? '');
         pdfUrl = null;
-      } 
+      }
       pdfFile = pdfFileSucess;
 
       await savePDF().then((value) {
@@ -171,7 +179,8 @@ class HosptialFormProvider extends ChangeNotifier {
       notifyListeners();
       return;
     }
-    final result = await _iFormFeildFacade.deletePDF(pdfUrl: pdfUrl?? '', hospitalId: hospitalId ?? '');
+    final result = await _iFormFeildFacade.deletePDF(
+        pdfUrl: pdfUrl ?? '', hospitalId: hospitalId ?? '');
     result.fold((failure) {
       CustomToast.errorToast(text: failure.errMsg);
       notifyListeners();
@@ -213,12 +222,12 @@ class HosptialFormProvider extends ChangeNotifier {
 
     result.fold((failure) {
       CustomToast.errorToast(text: failure.errMsg);
-      Navigator.pop(context);
+      EasyNavigation.pop(context: context);
     }, (sucess) {
       clearAllData();
       CustomToast.sucessToast(text: 'Sucessfully updated details.');
-      Navigator.pop(context);
-       EasyNavigation.pushReplacement(
+      EasyNavigation.pop(context: context);
+      EasyNavigation.pushReplacement(
         type: PageTransitionType.bottomToTop,
         context: context,
         page: const HomeScreen(),

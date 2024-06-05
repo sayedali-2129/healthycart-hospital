@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:healthycart/core/failures/main_failure.dart';
 import 'package:healthycart/core/general/firebase_collection.dart';
 import 'package:healthycart/core/general/typdef.dart';
@@ -12,8 +13,9 @@ import 'package:injectable/injectable.dart';
 
 @LazySingleton(as: IFormFeildFacade)
 class IFormFieldImpl implements IFormFeildFacade {
-  IFormFieldImpl(this._firebaseFirestore, this._imageService, this._pdfService);
+  IFormFieldImpl(this._firebaseFirestore, this._imageService, this._pdfService, this._firebaseStore);
   final FirebaseFirestore _firebaseFirestore;
+  final FirebaseStorage _firebaseStore;
   final ImageService _imageService;
   final PdfPickerService _pdfService;
   @override
@@ -43,8 +45,6 @@ class IFormFieldImpl implements IFormFeildFacade {
     }
   }
 
-
-
 //Image section -------------------------------------
   @override
   FutureResult<File> getImage() async {
@@ -54,13 +54,28 @@ class IFormFieldImpl implements IFormFeildFacade {
   @override
   Future<Either<MainFailure, String>> saveImage(
       {required File imageFile}) async {
-    return await _imageService.saveImage(imageFile: imageFile, folderName: 'hospital');
+    return await _imageService.saveImage(
+        imageFile: imageFile, folderName: 'hospital');
   }
 
   @override
-  Future<Either<MainFailure, Unit>> deleteImage(
-      {required String imageUrl}) async {
-    return await _imageService.deleteImageUrl(imageUrl: imageUrl);
+  FutureResult<Unit> deleteImage(
+      {required String imageUrl,required String hospitalId,}) async {
+    try {
+      await _imageService.deleteImageUrl(imageUrl: imageUrl).then((value) {
+        value.fold((failure) {
+          return left(failure);
+        }, (sucess) async {
+          await _firebaseFirestore
+              .collection(FirebaseCollections.hospitals)
+              .doc(hospitalId)
+              .update({'image': null}).then((value) {});
+        });
+      });
+      return right(unit);
+    } catch (e) {
+      return left(MainFailure.generalException(errMsg: e.toString()));
+    }
   }
 ///////////////////////////////////////////////////////////////////////////
 
@@ -73,33 +88,30 @@ class IFormFieldImpl implements IFormFeildFacade {
   FutureResult<String?> savePDF({
     required File pdfFile,
   }) async {
-    return await _pdfService.uploadPdf(pdfFile: pdfFile, folderName: 'hospitalPDF');
+    return await _pdfService.uploadPdf(
+        pdfFile: pdfFile, folderName: 'hospitalPDF');
   }
 
   @override
   FutureResult<String?> deletePDF({
     required String pdfUrl,
-      required String hospitalId,
+    required String hospitalId,
   }) async {
-    try{
-   await _pdfService.deletePdfUrl(url: pdfUrl).then((value) {
-      value.fold((failure) {
-        return left(failure);
-      }, (sucess) async {
-        await _firebaseFirestore
-            .collection(FirebaseCollections.hospitals)
-            .doc(hospitalId)
-            .update({'pharmacyDocumentLicense': null}).then((value) {
+    try {
+      await _pdfService.deletePdfUrl(url: pdfUrl).then((value) {
+        value.fold((failure) {
+          return left(failure);
+        }, (sucess) async {
+          await _firebaseFirestore
+              .collection(FirebaseCollections.hospitals)
+              .doc(hospitalId)
+              .update({'pharmacyDocumentLicense': null}).then((value) {});
         });
       });
-    });
-    return right('Sucessfully removed');
-  
-    }catch(e){
+      return right('Sucessfully removed');
+    } catch (e) {
       return left(MainFailure.generalException(errMsg: e.toString()));
     }
-
-  
   }
 
   ///update section from profile--------------------

@@ -7,8 +7,8 @@ import 'package:healthycart/core/custom/lottie/loading_lottie.dart';
 import 'package:healthycart/core/custom/toast/toast.dart';
 import 'package:healthycart/core/services/easy_navigation.dart';
 import 'package:healthycart/features/hospital_doctor/application/doctor_provider.dart';
-import 'package:healthycart/features/hospital_doctor/presentation/add_doctor/widgets/add_doctor_bottomsheet.dart';
-import 'package:healthycart/features/hospital_doctor/presentation/add_doctor/widgets/details_doctor_container.dart';
+import 'package:healthycart/features/hospital_doctor/presentation/doctor_details/widgets/add_doctor_bottomsheet.dart';
+import 'package:healthycart/features/hospital_doctor/presentation/doctor_details/widgets/details_doctor_container.dart';
 import 'package:healthycart/utils/constants/colors/colors.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/custom/app_bar/sliver_appbar.dart';
@@ -52,13 +52,14 @@ class AddDoctorScreen extends StatelessWidget {
                     popup.showBottomSheet(
                         context:
                             context, //// adding nag in new doctor adding form from here
-                        addImageTap: () {
-                          doctorProvider.getImage();
+                        addImageTap: () async{
+                          await doctorProvider.getImage();
                         },
                         saveButtonTap: () async {
                           if (doctorProvider.imageFile == null) {
                             CustomToast.errorToast(
-                                text: "Pick a doctor's image");
+                                                                             text: "Pick an image of doctor");
+
                             return;
                           }
                           if (doctorProvider.timeSlotListElementList!.isEmpty ||
@@ -121,14 +122,14 @@ class AddDoctorScreen extends StatelessWidget {
                                   popup.showBottomSheet(
                                       context:
                                           context, //// adding nag in new doctor adding form from here
-                                      addImageTap: () {
-                                        doctorProvider.getImage();
+                                      addImageTap: () async{
+                                       await doctorProvider.getImage(doctorId: doctorListData.id);
                                       },
                                       saveButtonTap: () async {
                                         if (doctorProvider.imageFile == null &&
                                             doctorProvider.imageUrl == null) {
                                           CustomToast.errorToast(
-                                              text: "Add doctor's image");
+                                              text: "Pick an image of doctor");
                                           return;
                                         }
                                         if (doctorProvider

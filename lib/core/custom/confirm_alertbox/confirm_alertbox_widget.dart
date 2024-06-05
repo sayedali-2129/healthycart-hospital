@@ -25,15 +25,15 @@ class ConfirmAlertBoxWidget {
             actions: [
               TextButton(
                   onPressed: () {
-                     EasyNavigation.pop(context: context);
+                    Navigator.pop(context);
                   },
                   child: const Text(
                     'No',
                     style: TextStyle(color: BColors.darkblue),
                   )),
               ElevatedButton(
-                onPressed: () {
-                  EasyNavigation.pop(context: context);
+                onPressed: () async {
+                  Navigator.pop(context);
                   confirmButtonTap.call();
                 },
                 style: ElevatedButton.styleFrom(

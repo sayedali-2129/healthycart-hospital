@@ -6,7 +6,7 @@ import 'package:healthycart/core/custom/lottie/loading_lottie.dart';
 import 'package:healthycart/core/services/easy_navigation.dart';
 import 'package:healthycart/features/authenthication/application/authenication_provider.dart';
 import 'package:healthycart/features/hospital_doctor/application/doctor_provider.dart';
-import 'package:healthycart/features/hospital_doctor/presentation/add_doctor/add_doctor.dart';
+import 'package:healthycart/features/hospital_doctor/presentation/doctor_details/add_doctor.dart';
 import 'package:healthycart/features/hospital_doctor/presentation/doctor_category/widgets/add_new_round_widget.dart';
 import 'package:healthycart/features/hospital_doctor/presentation/doctor_category/widgets/get_category_popup.dart';
 import 'package:healthycart/features/hospital_doctor/presentation/doctor_category/widgets/round_text_widget.dart';

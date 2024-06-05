@@ -1,54 +1,55 @@
 import 'dart:io';
 import 'package:dartz/dartz.dart';
-import 'package:healthycart/core/failures/main_failure.dart';
+import 'package:healthycart/core/general/typdef.dart';
 import 'package:healthycart/features/hospital_doctor/domain/model/add_doctor_model.dart';
 import 'package:healthycart/features/hospital_doctor/domain/model/doctor_category_model.dart';
 
 abstract class IDoctorFacade {
-  Future<Either<MainFailure, File>> getImage();
-  Future<Either<MainFailure, String>> saveImage({
+  FutureResult<File> getImage();
+  FutureResult<String>saveImage({
     required File imageFile,
   });
-  Future<Either<MainFailure, Unit>> deleteImage({
+   FutureResult<Unit>deleteImage({
     required String imageUrl,
+    required String doctorId,
   });
-  Future<Either<MainFailure, List<DoctorCategoryModel>>> getDoctorCategoryAll();
+ FutureResult< List<DoctorCategoryModel>>getDoctorCategoryAll();
 
-  Future<Either<MainFailure, List<DoctorCategoryModel>>>
+   FutureResult<List<DoctorCategoryModel>>
       getHospitalDoctorCategory({
     required List<String> categoryIdList,
   });
 
-  Future<Either<MainFailure, DoctorCategoryModel>> updateHospitalDetails({
+   FutureResult<DoctorCategoryModel>updateHospitalDetails({
     required String hospitalId,
     required DoctorCategoryModel category,
   });
 
-  Future<Either<MainFailure, DoctorCategoryModel>> deleteCategory({
+  FutureResult<DoctorCategoryModel> deleteCategory({
     required String userId,
     required DoctorCategoryModel category,
   });
 
-  Future<Either<MainFailure, bool>> checkDoctorInsideCategory({
+   FutureResult<bool>checkDoctorInsideCategory({
     required String categoryId,
     required String hospitalId,
   });
 
-  Future<Either<MainFailure, DoctorAddModel>> addDoctorDetails({
+   FutureResult<DoctorAddModel>addDoctorDetails({
     required DoctorAddModel doctorData,
   });
 
-  Future<Either<MainFailure, List<DoctorAddModel>>> getDoctorDetails({
+   FutureResult<List<DoctorAddModel>> getDoctorDetails({
     required String categoryId,
     required String hospitalId,
   });
 
-  Future<Either<MainFailure, DoctorAddModel>> deleteDoctorDetails({
+  FutureResult<DoctorAddModel> deleteDoctorDetails({
     required String doctorId,
     required DoctorAddModel doctorData,
   });
 
-  Future<Either<MainFailure, DoctorAddModel>> updateDoctorDetails({
+  FutureResult<DoctorAddModel> updateDoctorDetails({
     required String doctorId,
     required DoctorAddModel doctorData,
   });

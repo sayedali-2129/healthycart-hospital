@@ -46,7 +46,6 @@ class IProfileImpl implements IProfileFacade {
           {'ishospitalON': ishospitalON});
 
    
-
       if (ishospitalON == true) {
         batch.update(
             _firebaseFirestore

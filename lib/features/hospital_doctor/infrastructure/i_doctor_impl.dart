@@ -1,4 +1,3 @@
-
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
@@ -23,21 +22,36 @@ class IDoctorImpl implements IDoctorFacade {
   }
 
   @override
-  FutureResult<String>saveImage(
-      {required File imageFile}) async {
-    return await _imageService.saveImage(imageFile: imageFile, folderName: 'doctor_image');
+  FutureResult<String> saveImage({required File imageFile}) async {
+    return await _imageService.saveImage(
+        imageFile: imageFile, folderName: 'doctor_image');
   }
 
   @override
- FutureResult<Unit> deleteImage(
-      {required String imageUrl}) async {
-    return await _imageService.deleteImageUrl(imageUrl: imageUrl);
+  FutureResult<Unit> deleteImage({
+    required String imageUrl,
+    required String doctorId,
+  }) async {
+    try {
+      await _imageService.deleteImageUrl(imageUrl: imageUrl).then((value) {
+        value.fold((failure) {
+          return left(failure);
+        }, (sucess) async {
+          await _repo
+              .collection(FirebaseCollections.doctors)
+              .doc(doctorId)
+              .update({'doctorImage': null}).then((value) {});
+        });
+      });
+      return right(unit);
+    } catch (e) {
+      return left(MainFailure.generalException(errMsg: e.toString()));
+    }
   }
 
 //////////// add and get category----------------------------------
   @override
-  FutureResult<List<DoctorCategoryModel>>
-      getDoctorCategoryAll() async {
+  FutureResult<List<DoctorCategoryModel>> getDoctorCategoryAll() async {
     try {
       final snapshot = await _repo
           .collection(FirebaseCollections.doctorcategory)
@@ -56,7 +70,8 @@ class IDoctorImpl implements IDoctorFacade {
 
 //////////////// getting the list of hospital selected categories here
   @override
- FutureResult<List<DoctorCategoryModel>> getHospitalDoctorCategory({required List<String> categoryIdList}) async {
+  FutureResult<List<DoctorCategoryModel>> getHospitalDoctorCategory(
+      {required List<String> categoryIdList}) async {
     try {
       List<Future<DocumentSnapshot<Map<String, dynamic>>>> futures = [];
 
@@ -75,15 +90,11 @@ class IDoctorImpl implements IDoctorFacade {
               DoctorCategoryModel.fromMap(e.data() as Map<String, dynamic>)
                   .copyWith(id: e.id))
           .toList();
-  
 
       return right(categoryList);
     } on FirebaseException catch (e) {
-
       return left(MainFailure.firebaseException(errMsg: e.message.toString()));
     } catch (e) {
-   
-
       return left(MainFailure.generalException(errMsg: e.toString()));
     }
   }
@@ -94,13 +105,11 @@ class IDoctorImpl implements IDoctorFacade {
     required DoctorCategoryModel category,
   }) async {
     try {
-
-  
       if (hospitalId == null) {
         return left(
             const MainFailure.firebaseException(errMsg: 'check userid'));
       }
-    
+
       await _repo
           .collection(FirebaseCollections.hospitals)
           .doc(hospitalId)
@@ -109,7 +118,6 @@ class IDoctorImpl implements IDoctorFacade {
       });
       return right(category);
     } on FirebaseException catch (e) {
-     
       return left(MainFailure.firebaseException(errMsg: e.message.toString()));
     } catch (e) {
       return left(MainFailure.generalException(errMsg: e.toString()));
@@ -134,7 +142,6 @@ class IDoctorImpl implements IDoctorFacade {
       });
       return right(category);
     } on FirebaseException catch (e) {
-    
       return left(MainFailure.firebaseException(errMsg: e.message.toString()));
     } catch (e) {
       return left(MainFailure.generalException(errMsg: e.toString()));
@@ -143,7 +150,7 @@ class IDoctorImpl implements IDoctorFacade {
 
   // this is to check if there is data inside the selected category, if yes to inform before the category is deleted.
   @override
-  FutureResult<bool>checkDoctorInsideCategory({
+  FutureResult<bool> checkDoctorInsideCategory({
     required String categoryId,
     required String hospitalId, // hospital id is the user id
   }) async {
@@ -155,7 +162,6 @@ class IDoctorImpl implements IDoctorFacade {
           .get();
       return right(snapshot.docs.isNotEmpty);
     } on FirebaseException catch (e) {
-
       return left(MainFailure.firebaseException(errMsg: e.message.toString()));
     } catch (e) {
       return left(MainFailure.generalException(errMsg: e.toString()));
@@ -164,7 +170,7 @@ class IDoctorImpl implements IDoctorFacade {
 
   //////////////////////// doctor add section------------------------------------------
   @override
- FutureResult<DoctorAddModel> addDoctorDetails({
+  FutureResult<DoctorAddModel> addDoctorDetails({
     required DoctorAddModel doctorData,
   }) async {
     try {
@@ -177,7 +183,6 @@ class IDoctorImpl implements IDoctorFacade {
 
       return right(doctorData.copyWith(id: id));
     } on FirebaseException catch (e) {
-
       return left(MainFailure.firebaseException(errMsg: e.message.toString()));
     } catch (e) {
       return left(MainFailure.generalException(errMsg: e.toString()));
@@ -185,7 +190,7 @@ class IDoctorImpl implements IDoctorFacade {
   }
 
   @override
- FutureResult<List<DoctorAddModel>>getDoctorDetails({
+  FutureResult<List<DoctorAddModel>> getDoctorDetails({
     required String categoryId,
     required String hospitalId,
   }) async {
@@ -196,12 +201,11 @@ class IDoctorImpl implements IDoctorFacade {
           .where('categoryId', isEqualTo: categoryId)
           .where('hospitalId', isEqualTo: hospitalId)
           .get();
-    
+
       return right(snapshot.docs
           .map((e) => DoctorAddModel.fromMap(e.data()).copyWith(id: e.id))
           .toList());
     } on FirebaseException catch (e) {
-
       return left(MainFailure.firebaseException(errMsg: e.message.toString()));
     } catch (e) {
       return left(MainFailure.generalException(errMsg: e.toString()));
@@ -214,14 +218,18 @@ class IDoctorImpl implements IDoctorFacade {
     required DoctorAddModel doctorData,
   }) async {
     try {
-      await _repo
+      await _imageService
+          .deleteImageUrl(imageUrl: doctorData.doctorImage)
+          .then((value) async{
+          await _repo
           .collection(FirebaseCollections.doctors)
           .doc(doctorId)
           .delete();
+          });
+
 
       return right(doctorData);
     } on FirebaseException catch (e) {
-
       return left(MainFailure.firebaseException(errMsg: e.message.toString()));
     } catch (e) {
       return left(MainFailure.generalException(errMsg: e.toString()));
@@ -241,7 +249,6 @@ class IDoctorImpl implements IDoctorFacade {
 
       return right(doctorData);
     } on FirebaseException catch (e) {
-
       return left(MainFailure.firebaseException(errMsg: e.message.toString()));
     } catch (e) {
       return left(MainFailure.generalException(errMsg: e.toString()));

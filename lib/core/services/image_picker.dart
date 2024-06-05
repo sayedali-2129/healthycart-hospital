@@ -9,6 +9,8 @@ class ImageService {
   ImageService(this._storage);
 
   final FirebaseStorage _storage;
+
+ 
   final ImagePicker picker = ImagePicker();
   Future<Either<MainFailure, File>> getGalleryImage() async {
     final XFile? pickedImageFile;
@@ -62,6 +64,7 @@ class ImageService {
   Future<Either<MainFailure, Unit>> deleteImageUrl({
     required String? imageUrl,
   }) async {
+     
     if (imageUrl == null) {
       return left(const MainFailure.generalException(
           errMsg: "Can't able to remove previous image."));

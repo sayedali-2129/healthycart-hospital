@@ -30,14 +30,14 @@ class DoctorProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getImage() async {
+  Future<void> getImage({String? doctorId}) async {
     final result = await _iDoctorFacade.getImage();
     notifyListeners();
     result.fold((failure) {
       CustomToast.errorToast(text: failure.errMsg);
     }, (imageFilesucess) async {
-      if (imageUrl != null) {
-        await _iDoctorFacade.deleteImage(imageUrl: imageUrl?? '');
+      if (imageUrl != null && doctorId != null) {
+        await _iDoctorFacade.deleteImage(imageUrl: imageUrl?? '', doctorId: doctorId);
         imageUrl = null;
       } // when editing  this will make the url null when we pick a new file
       imageFile = imageFilesucess;
@@ -301,7 +301,6 @@ class DoctorProvider extends ChangeNotifier {
     qualificationController.clear();
     aboutController.clear();
     timeSlotListElementList?.clear();
-    notifyListeners();
     if (imageUrl != null) {
       imageUrl = null;
     }
@@ -326,7 +325,7 @@ class DoctorProvider extends ChangeNotifier {
 /////////////////////////// 3.) deleting the doctor field
 
   Future<void> deleteDoctorDetails(
-      {required int index, required DoctorAddModel doctorData}) async {
+      {required int index, required DoctorAddModel doctorData}) async {  
     final result = await _iDoctorFacade.deleteDoctorDetails(
         doctorId: doctorData.id ?? '', doctorData: doctorData);
     result.fold((failure) {
@@ -383,12 +382,15 @@ class DoctorProvider extends ChangeNotifier {
     result.fold((failure) {
       CustomToast.errorToast(
           text: "Couldn't able to delete doctor details, please try again.");
+      EasyNavigation.pop(context: context);   
     }, (doctorsData) {
       CustomToast.sucessToast(text: "Edited doctor details sucessfully");
       doctorList.removeAt(index);
       doctorList.insert(
           index, doctorsData); //// here we are assigning the doctor
       clearDoctorDetails();
+      EasyNavigation.pop(context: context);
+      EasyNavigation.pop(context: context);
       notifyListeners();
     });
     fetchLoading = false;

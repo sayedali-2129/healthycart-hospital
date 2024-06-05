@@ -41,7 +41,10 @@ class ListItems extends StatelessWidget {
             onTap: () async {
               ///delete confirm alert box
               ConfirmAlertBoxWidget.showAlertConfirmBox(
-                  context: context, confirmButtonTap: deleteButton, titleText: 'Confirm to delete', subText: "Are you sure you want to delete?");
+                  context: context,
+                  confirmButtonTap: deleteButton,
+                  titleText: 'Confirm to delete',
+                  subText: "Are you sure you want to delete?");
             },
             child: Padding(
               padding: const EdgeInsets.all(8.0),

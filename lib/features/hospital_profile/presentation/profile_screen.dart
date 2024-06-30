@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:healthycart/core/custom/app_bar/custom_appbar_curve.dart';
 import 'package:healthycart/core/custom/confirm_alertbox/confirm_alertbox_widget.dart';
@@ -7,6 +6,7 @@ import 'package:healthycart/core/custom/lottie/loading_lottie.dart';
 import 'package:healthycart/core/services/easy_navigation.dart';
 import 'package:healthycart/features/authenthication/application/authenication_provider.dart';
 import 'package:healthycart/features/hospital_profile/application/profile_provider.dart';
+import 'package:healthycart/features/hospital_profile/presentation/payments_screen.dart';
 import 'package:healthycart/features/hospital_profile/presentation/widget/doctor_list_profile/doctor_list.dart';
 import 'package:healthycart/features/hospital_profile/presentation/widget/profile_header_widget.dart';
 import 'package:healthycart/features/hospital_profile/presentation/widget/profile_main_container_widget.dart';
@@ -46,7 +46,7 @@ class ProfileScreen extends StatelessWidget {
                       iconOn: Icons.power_settings_new,
                       animationDuration: const Duration(milliseconds: 300),
                       onChanged: (bool ishospitalON) async {
-                       LoadingLottie.showLoading(
+                        LoadingLottie.showLoading(
                             context: context, text: 'Please wait...');
                         profileProvider.hospitalStatus(ishospitalON);
                         await profileProvider.setActiveHospital().whenComplete(
@@ -75,7 +75,10 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   const Gap(4),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      EasyNavigation.push(
+                          context: context, page: const PaymentsScreen());
+                    },
                     child: const ProfileMainContainer(
                         text: 'Payment History',
                         sideChild: Padding(

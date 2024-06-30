@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:healthycart/core/custom/app_bar/clip_path_appbar_custom.dart';
 import 'package:healthycart/utils/constants/colors/colors.dart';
 import 'package:healthycart/utils/constants/image/image.dart';
-
 
 class CustomSliverCurveAppBarWidget extends StatelessWidget {
   const CustomSliverCurveAppBarWidget({super.key});

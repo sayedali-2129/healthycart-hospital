@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:healthycart/core/di/injection.dart';
+import 'package:healthycart/features/add_hospital_form_page/application/hospital_form_provider.dart';
 import 'package:healthycart/features/authenthication/application/authenication_provider.dart';
 import 'package:healthycart/features/hospital_banner/application/add_banner_provider.dart';
 import 'package:healthycart/features/hospital_doctor/application/doctor_provider.dart';
-import 'package:healthycart/features/add_hospital_form_page/application/hospital_form_provider.dart';
 import 'package:healthycart/features/hospital_profile/application/profile_provider.dart';
-import 'package:healthycart/features/hospital_request_userside/application/provider/request_doctor_provider.dart';
+import 'package:healthycart/features/hospital_request_userside/application/provider/hospital_booking_provider.dart.dart';
 import 'package:healthycart/features/location_picker/application/location_provider.dart';
+import 'package:healthycart/features/notification/application/notification_provider.dart';
 import 'package:healthycart/features/pending_page/application/pending_provider.dart';
-import 'package:healthycart/features/pending_page/presentation/pending_page.dart';
 import 'package:healthycart/features/splash_screen/splash_screen.dart';
 import 'package:healthycart/main.dart';
 import 'package:healthycart/utils/theme/theme.dart';
@@ -19,7 +19,6 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-   
     return MultiProvider(
       providers: [
         // ChangeNotifierProvider(
@@ -32,34 +31,36 @@ class App extends StatelessWidget {
           create: (context) => sl<DoctorProvider>(),
         ),
         ChangeNotifierProvider(
-          create: (context) => RequestDoctorProvider(),
+          create: (context) => sl<HospitalBookingProvider>(),
         ),
         ChangeNotifierProvider(
           create: (context) => sl<AddBannerProvider>(),
         ),
-       ChangeNotifierProvider(
+        ChangeNotifierProvider(
           create: (context) => sl<LocationProvider>(),
         ),
 
-      ChangeNotifierProvider(
+        ChangeNotifierProvider(
           create: (context) => sl<AuthenticationProvider>(),
-        ), 
-        
-      ChangeNotifierProvider(
+        ),
+
+        ChangeNotifierProvider(
           create: (context) => sl<PendingProvider>(),
-        ), 
-       ChangeNotifierProvider(
+        ),
+        ChangeNotifierProvider(
           create: (context) => sl<ProfileProvider>(),
         ),
+        ChangeNotifierProvider(
+          create: (context) => NotificationProvider(),
+        ),
       ],
-        child: MaterialApp(
+      child: MaterialApp(
           navigatorKey: navigatorKey,
-            debugShowCheckedModeBanner: false,
-            themeMode: ThemeMode.light,
-            theme: BAppTheme.lightTheme,
-            darkTheme: BAppTheme.darkTheme,
-            home: const SplashScreen()),
-      
+          debugShowCheckedModeBanner: false,
+          themeMode: ThemeMode.light,
+          theme: BAppTheme.lightTheme,
+          darkTheme: BAppTheme.darkTheme,
+          home: const SplashScreen()),
     );
   }
 }

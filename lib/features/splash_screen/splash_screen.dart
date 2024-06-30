@@ -5,6 +5,7 @@ import 'package:gap/gap.dart';
 import 'package:healthycart/core/services/easy_navigation.dart';
 import 'package:healthycart/features/authenthication/application/authenication_provider.dart';
 import 'package:healthycart/features/authenthication/presentation/login_ui.dart';
+import 'package:healthycart/features/notification/application/notification_provider.dart';
 import 'package:healthycart/utils/constants/image/image.dart';
 import 'package:provider/provider.dart';
 
@@ -18,13 +19,16 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-       final userId = FirebaseAuth.instance.currentUser?.uid;
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    final notiprovider = context.read<NotificationProvider>();
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      notiprovider.notificationPermission();
 
-      if(userId!=null){
-          context.read<AuthenticationProvider>()
-          .hospitalStreamFetchData(userId: userId);
-
+      if (userId != null) {
+        context
+            .read<AuthenticationProvider>()
+            .hospitalStreamFetchData(userId: userId);
       }
     });
     Future.delayed(const Duration(seconds: 4)).then((value) {

@@ -1,15 +1,19 @@
 import 'package:healthycart/core/general/typdef.dart';
 import 'package:healthycart/features/hospital_doctor/domain/model/add_doctor_model.dart';
+import 'package:healthycart/features/hospital_profile/domain/models/transaction_model.dart';
 
 abstract class IProfileFacade {
-
-
-  FutureResult<String> setActiveHospital(
-      {required bool ishospitalON, required String hospitalId,});
+  FutureResult<String> setActiveHospital({
+    required bool ishospitalON,
+    required String hospitalId,
+  });
 
   FutureResult<List<DoctorAddModel>> getHospitalAllDoctorDetails({
     required String hospitalId,
     required String? searchText,
   });
-   void clearFetchData();   
+  void clearFetchData();
+  FutureResult<List<TransferTransactionsModel>> getAdminTransactionList(
+      {required String hospitalId});
+  void clearTransactionData();
 }

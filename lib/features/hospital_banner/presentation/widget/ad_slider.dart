@@ -54,15 +54,23 @@ class AdSlider extends StatelessWidget {
                     ],
                   ),
                 )
-              : Container(
-                  clipBehavior: Clip.antiAlias,
-                  width: double.infinity,
-                  height: 202,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: CustomCachedNetworkImage(image: addBannerProvider.bannerList[index].image ?? '')
+              : Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                child: Material(
+                  elevation: 8,
+                   borderRadius: BorderRadius.circular(16),
+                  child: Container(
+                      clipBehavior: Clip.antiAlias,
+                      width: double.infinity,
+                      height: 202,
+                      decoration: BoxDecoration(
+                        color: BColors.white,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: CustomCachedNetworkImage(image: addBannerProvider.bannerList[index].image ?? '', fit: BoxFit.fill,)
+                    ),
                 ),
+              ),
         ),
         options: CarouselOptions(
           enlargeCenterPage: true,

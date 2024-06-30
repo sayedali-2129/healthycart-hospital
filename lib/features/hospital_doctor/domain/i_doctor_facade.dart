@@ -39,10 +39,16 @@ abstract class IDoctorFacade {
     required DoctorAddModel doctorData,
   });
 
-   FutureResult<List<DoctorAddModel>> getDoctorDetails({
-    required String categoryId,
+  //  FutureResult<List<DoctorAddModel>> getDoctorDetails({
+  //   required String categoryId,
+  //   required String hospitalId,
+  // });
+    FutureResult<List<DoctorAddModel>> getHospitalCategoryDoctorsDetails({
+    required String categoryId,  
     required String hospitalId,
+    required String? searchText,
   });
+   void clearFetchData();   
 
   FutureResult<DoctorAddModel> deleteDoctorDetails({
     required String doctorId,

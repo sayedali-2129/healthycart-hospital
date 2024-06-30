@@ -29,7 +29,7 @@ class BannerImageWidget extends StatelessWidget {
           Positioned.fill(
             child: ClipRRect(
                 borderRadius: BorderRadius.circular(16),
-                child: CustomCachedNetworkImage(image: bannerData.image ?? '')),
+                child: CustomCachedNetworkImage(image: bannerData.image ?? '', fit: BoxFit.contain)),
           ),
           Positioned.fill(
             child: Container(

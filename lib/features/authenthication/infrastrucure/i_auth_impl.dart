@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:healthycart/core/failures/main_failure.dart';
 import 'package:healthycart/core/general/firebase_collection.dart';
 import 'package:healthycart/features/authenthication/domain/i_auth_facade.dart';
@@ -80,14 +81,25 @@ class IAuthImpl implements IAuthFacade {
         .doc(uid)
         .get();
     if (user.data() != null) {
-      return;
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+      final fcmToken = await messaging.getToken();
+        await _firestore
+          .collection(FirebaseCollections.hospitals)
+          .doc(uid)
+          .update({
+        'fcmToken': fcmToken,
+      });
     } else {
+       FirebaseMessaging messaging = FirebaseMessaging.instance;
+      final fcmToken = await messaging.getToken();
       await _firestore
           .collection(FirebaseCollections.hospitals)
           .doc(uid)
           .set(HospitalModel.initial()
               .copyWith(
+                id: uid,
                 phoneNo: phoneNo,
+                fcmToken: fcmToken
               )
               .toMap());
     }

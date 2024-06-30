@@ -293,7 +293,7 @@ class DoctorAddForm extends StatelessWidget {
                                           TextfieldWidget(
                                             textInputAction:
                                                 TextInputAction.done,
-                                            maxlines: 3,
+                                            maxlines: 5,
                                             hintText:
                                                 'Enter the about the doctor.',
                                             validator: BValidator.validate,

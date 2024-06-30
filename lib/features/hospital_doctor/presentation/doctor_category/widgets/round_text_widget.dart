@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthycart/core/custom/custom_cached_network/custom_cached_network_image.dart';
 import 'package:healthycart/features/hospital_doctor/application/doctor_provider.dart';
+import 'package:healthycart/utils/constants/colors/colors.dart';
 import 'package:provider/provider.dart';
 
 class VerticalImageText extends StatelessWidget {
@@ -27,16 +28,22 @@ class VerticalImageText extends StatelessWidget {
             padding: const EdgeInsets.only(right: 8),
             child: Column(
               children: [
-                Container(
-                  width: 64,
-                  height: 64,
-                  clipBehavior: Clip.antiAlias,
-                  decoration: const BoxDecoration(
-                    color: Colors.grey,
-                    shape: BoxShape.circle,
+                Material(
+                  shape:  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(64)
                   ),
-                  child: CustomCachedNetworkImage(
-                    image: image,
+                  elevation: 4,                  
+                  child: Container(
+                    width: 64,
+                    height: 64,
+                    clipBehavior: Clip.antiAlias,
+                    decoration: const BoxDecoration(
+                    color:  BColors.white,
+                      shape: BoxShape.circle,
+                    ),
+                    child: CustomCachedNetworkImage(
+                      image: image,
+                    ),
                   ),
                 ),
                 const Gap(8),

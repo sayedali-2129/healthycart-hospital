@@ -100,7 +100,6 @@ Future<_i1.GetIt> init(
         gh<_i6.FirebaseFirestore>(),
         gh<_i7.ImageService>(),
         gh<_i9.PdfPickerService>(),
-        gh<_i5.FirebaseStorage>(),
       ));
   gh.lazySingleton<_i22.IBannerFacade>(() => _i23.IBannerImpl(
         gh<_i6.FirebaseFirestore>(),

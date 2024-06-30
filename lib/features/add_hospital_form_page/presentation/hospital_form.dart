@@ -21,7 +21,8 @@ import 'package:healthycart/utils/constants/colors/colors.dart';
 import 'package:provider/provider.dart';
 
 class HospitalFormScreen extends StatelessWidget {
-  const HospitalFormScreen({super.key, this.hospitalModel, this.placeMark, this.isEditing});
+  const HospitalFormScreen(
+      {super.key, this.hospitalModel, this.placeMark, this.isEditing});
   final HospitalModel? hospitalModel;
   final PlaceMark? placeMark;
   final bool? isEditing;
@@ -42,247 +43,278 @@ class HospitalFormScreen extends StatelessWidget {
             onTap: () {
               FocusScope.of(context).unfocus();
             }, //////////////////////here not added pdf logic
-            child: CustomScrollView(
-              slivers: [
-               (isEditing == true)
-                    ? SliverCustomAppbar(
-                        title: 'Edit Profile',
-                        onBackTap: () {
-                          if (formProvider.pdfUrl == null) {
-                            CustomToast.sucessToast(text: 'Please add PDF');
-                            return;
-                          }
-                          Navigator.pop(context);
-                        },
-                      )
-                    : const SliverToBoxAdapter(),
-                SliverFillRemaining(
-                  child: SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Form(
-                        key: formKey,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                             (isEditing == true)
-                                ? Padding(
-                                    padding: const EdgeInsets.only(
-                                      top: 8,
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        Icon(
-                                          Icons.location_on_outlined,
-                                          color: BColors.mainlightColor,
-                                        ),
-                                        SizedBox(
-                                          width: 176,
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              context
-                                                  .read<LocationProvider>()
-                                                  .getLocationPermisson();
-                                              Navigator.of(context)
-                                                  .push(MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const UserLocationSearchWidget(
-                                                        isHospitaEditProfile:
-                                                            true),
-                                              ));
-                                            },
-                                            child: Text(
-                                              "${authProvider.hospitalDataFetched?.placemark?.localArea},${authProvider.hospitalDataFetched?.placemark?.district},${authProvider.hospitalDataFetched?.placemark?.state}",
-                                              overflow: TextOverflow.ellipsis,
-                                              style: const TextStyle(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: BColors.darkblue,
-                                                  decoration:
-                                                      TextDecoration.underline),
+            child: PopScope(
+              canPop: (formProvider.pdfUrl != null),
+              onPopInvoked: (didPop) {
+                if (formProvider.pdfUrl == null) {
+                  CustomToast.sucessToast(text: 'Please add PDF');
+                  return;
+                }
+              },
+              child: CustomScrollView(
+                slivers: [
+                  (isEditing == true)
+                      ? SliverCustomAppbar(
+                          title: 'Edit Profile',
+                          onBackTap: () {
+                            if (formProvider.pdfUrl == null) {
+                              CustomToast.sucessToast(text: 'Please add PDF');
+                              return;
+                            }
+                            Navigator.pop(context);
+                          },
+                        )
+                      : const SliverToBoxAdapter(),
+                  SliverFillRemaining(
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Form(
+                          key: formKey,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              (isEditing == true)
+                                  ? Padding(
+                                      padding: const EdgeInsets.only(
+                                        top: 8,
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          Icon(
+                                            Icons.location_on_outlined,
+                                            color: BColors.mainlightColor,
+                                          ),
+                                          SizedBox(
+                                            width: 176,
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                context
+                                                    .read<LocationProvider>()
+                                                    .getLocationPermisson();
+                                                Navigator.of(context)
+                                                    .push(MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const UserLocationSearchWidget(
+                                                          isHospitaEditProfile:
+                                                              true),
+                                                ));
+                                              },
+                                              child: Text(
+                                                "${authProvider.hospitalDataFetched?.placemark?.localArea},${authProvider.hospitalDataFetched?.placemark?.district},${authProvider.hospitalDataFetched?.placemark?.state}",
+                                                overflow: TextOverflow.ellipsis,
+                                                style: const TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: BColors.darkblue,
+                                                    decoration: TextDecoration
+                                                        .underline),
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                : const SizedBox(),
-                            const Gap(24),
-                            const ImageFormContainerWidget(),
-                            const Gap(16),
-                            const DividerWidget(text: 'Tap above to add image'),
-                            const Gap(24),
-                            const TextAboveFormFieldWidget(
-                                text: "Phone Number"),
-                            TextfieldWidget(
-                              readOnly: true,
-                              textInputAction: TextInputAction.next,
-                              keyboardType: TextInputType.phone,
-                              validator: BValidator.validate,
-                              controller: formProvider.phoneNumberController,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelLarge!
-                                  .copyWith(
-                                    fontSize: 14,
-                                  ),
-                            ),
-                            const Gap(8),
-                            //hospital Name
-                            const TextAboveFormFieldWidget(
-                              text: "Hospital Name",
-                            ),
-
-                            TextfieldWidget(
-                              hintText: 'Enter hospital name',
-                              textInputAction: TextInputAction.next,
-                              keyboardType: TextInputType.multiline,
-                              minlines: 1,
-                              maxlines: 2,
-                              validator: BValidator.validate,
-                              controller: formProvider.hospitalNameController,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelLarge!
-                                  .copyWith(
-                                    fontSize: 14,
-                                  ),
-                            ),
-                            const Gap(8),
-
-                            const TextAboveFormFieldWidget(
-                                text: "Proprietor Name"),
-                            TextfieldWidget(
-                              hintText: 'Enter Proprietor name',
-                              textInputAction: TextInputAction.next,
-                              keyboardType: TextInputType.name,
-                              validator: BValidator.validate,
-                              controller: formProvider.ownerNameController,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelLarge!
-                                  .copyWith(
-                                    fontSize: 14,
-                                  ),
-                            ),
-                            const Gap(8),
-
-                            const TextAboveFormFieldWidget(
-                                text: "Hospital Address"),
-                            TextfieldWidget(
-                              hintText: 'Enter hospital address',
-                              textInputAction: TextInputAction.done,
-                              validator: BValidator.validate,
-                              controller: formProvider.addressController,
-                              maxlines: 3,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelLarge!
-                                  .copyWith(
-                                    fontSize: 14,
-                                  ),
-                            ),
-                            const Gap(16),
-                            SizedBox(
-                              width: double.infinity,
-                              height: 48,
-                              child: ElevatedButton(
-                                onPressed: () async {
-                                  await formProvider.getPDF(
-                                      context: context); /////////pdf Section
-                                },
-                                style: ElevatedButton.styleFrom(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8)),
-                                    backgroundColor: BColors.buttonLightColor),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text('Upload License',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .labelLarge!
-                                            .copyWith(
-                                                fontSize: 16,
-                                                color: BColors.white)),
-                                    const Icon(
-                                      Icons.upload_rounded,
-                                      color: Colors.white,
-                                      size: 24,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const Gap(16),
-
-                            (formProvider.pdfUrl != null)
-                                ? Center(
-                                    child: PDFShowerWidget(
-                                      formProvider: formProvider,
-                                    ),
-                                  )
-                                : const DividerWidget(
-                                    text: 'Upload document as PDF'),
-                            const Gap(24),
-                            CustomButton(
-                                width: double.infinity,
-                                height: 48,
-                                onTap: () async {
-                                  if (formProvider.imageFile == null &&
-                                      formProvider.imageUrl == null) {
-                                    CustomToast.errorToast(
-                                        text: 'Pick hospital image');
-                                    return;
-                                  }
-                                  if (!formKey.currentState!.validate()) {
-                                    formKey.currentState!.validate();
-                                    return;
-                                  }
-                                  if (formProvider.pdfFile == null &&
-                                      formProvider.pdfUrl == null) {
-                                    CustomToast.errorToast(
-                                        text:
-                                            'Pick a hospital liscense document.');
-                                    return;
-                                  }
-                                  LoadingLottie.showLoading(
-                                      context: context, text: 'Please wait...');
-                                  if (hospitalModel?.requested != 2) {
-                                    await formProvider
-                                        .saveImage()
-                                        .then((value) async {
-                                      await formProvider.addHospitalForm(
-                                          context: context);
-                                    });
-                                  } else {
-                                    if (formProvider.imageUrl == null) {
-                                      await formProvider.saveImage();
-                                    }
-
-                                    await formProvider.updateHospitalForm(
-                                      context: context,
-                                    );
-                                  }
-                                },
-                                text:(hospitalModel?.requested != 2)
-                                    ? 'Send for review'
-                                    : 'Update details',
-                                buttonColor: BColors.buttonDarkColor,
+                                        ],
+                                      ),
+                                    )
+                                  : const SizedBox(),
+                              const Gap(24),
+                              const ImageFormContainerWidget(),
+                              const Gap(16),
+                              const DividerWidget(
+                                  text: 'Tap above to add image'),
+                              const Gap(24),
+                              const TextAboveFormFieldWidget(
+                                  text: "Phone Number"),
+                              TextfieldWidget(
+                                readOnly: true,
+                                textInputAction: TextInputAction.next,
+                                keyboardType: TextInputType.phone,
+                                validator: BValidator.validate,
+                                controller: formProvider.phoneNumberController,
                                 style: Theme.of(context)
                                     .textTheme
                                     .labelLarge!
                                     .copyWith(
-                                        fontSize: 18, color: BColors.white))
-                          ],
+                                      fontSize: 14,
+                                    ),
+                              ),
+                              const Gap(8),
+                              //hospital Name
+                              const TextAboveFormFieldWidget(
+                                text: "Hospital Name",
+                              ),
+
+                              TextfieldWidget(
+                                hintText: 'Enter hospital name',
+                                textInputAction: TextInputAction.next,
+                                keyboardType: TextInputType.multiline,
+                                minlines: 1,
+                                maxlines: 2,
+                                validator: BValidator.validate,
+                                controller: formProvider.hospitalNameController,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelLarge!
+                                    .copyWith(
+                                      fontSize: 14,
+                                    ),
+                              ),
+                              const Gap(8),
+
+                              const TextAboveFormFieldWidget(
+                                  text: "Proprietor Name"),
+                              TextfieldWidget(
+                                hintText: 'Enter Proprietor name',
+                                textInputAction: TextInputAction.next,
+                                keyboardType: TextInputType.name,
+                                validator: BValidator.validate,
+                                controller: formProvider.ownerNameController,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelLarge!
+                                    .copyWith(
+                                      fontSize: 14,
+                                    ),
+                              ),
+                              const Gap(8),
+
+                              const TextAboveFormFieldWidget(
+                                  text: "Hospital email"),
+                              TextfieldWidget(
+                                hintText: 'Enter email id',
+                                textInputAction: TextInputAction.next,
+                                keyboardType: TextInputType.name,
+                                validator: BValidator.validateEmail,
+                                controller: formProvider.hospitalEmailController,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelLarge!
+                                    .copyWith(
+                                      fontSize: 14,
+                                    ),
+                              ),
+                              const Gap(8),
+
+                              const TextAboveFormFieldWidget(
+                                  text: "Hospital Address"),
+                              TextfieldWidget(
+                                hintText: 'Enter hospital address',
+                                textInputAction: TextInputAction.done,
+                                validator: BValidator.validate,
+                                controller: formProvider.addressController,
+                                maxlines: 3,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelLarge!
+                                    .copyWith(
+                                      fontSize: 14,
+                                    ),
+                              ),
+                              const Gap(16),
+                              SizedBox(
+                                width: double.infinity,
+                                height: 48,
+                                child: ElevatedButton(
+                                  onPressed: () async {
+                                    await formProvider.getPDF(
+                                        context: context); /////////pdf Section
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8)),
+                                      backgroundColor:
+                                          BColors.buttonLightColor),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text('Upload License',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .labelLarge!
+                                              .copyWith(
+                                                  fontSize: 16,
+                                                  color: BColors.white)),
+                                      const Icon(
+                                        Icons.upload_rounded,
+                                        color: Colors.white,
+                                        size: 24,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              const Gap(16),
+
+                              (formProvider.pdfUrl != null)
+                                  ? Center(
+                                      child: PDFShowerWidget(
+                                        formProvider: formProvider,
+                                      ),
+                                    )
+                                  : const DividerWidget(
+                                      text: 'Upload document as PDF'),
+                              const Gap(24),
+                              CustomButton(
+                                  width: double.infinity,
+                                  height: 48,
+                                  onTap: () async {
+                                    if (formProvider.imageFile == null &&
+                                        formProvider.imageUrl == null) {
+                                      CustomToast.errorToast(
+                                          text: 'Pick hospital image');
+                                      return;
+                                    }
+                                    if (!formKey.currentState!.validate()) {
+                                      formKey.currentState!.validate();
+                                      return;
+                                    }
+                                    if (formProvider.pdfFile == null &&
+                                        formProvider.pdfUrl == null) {
+                                      CustomToast.errorToast(
+                                          text:
+                                              'Pick a hospital liscense document.');
+                                      return;
+                                    }
+                                    LoadingLottie.showLoading(
+                                        context: context,
+                                        text: 'Please wait...');
+                                    if (hospitalModel?.requested != 2) {
+                                      await formProvider
+                                          .saveImage()
+                                          .then((value) async {
+                                        await formProvider.addHospitalForm(
+                                            context: context);
+                                      });
+                                    } else {
+                                      if (formProvider.imageUrl == null) {
+                                        await formProvider.saveImage();
+                                      }
+
+                                      await formProvider.updateHospitalForm(
+                                        context: context,
+                                      );
+                                    }
+                                  },
+                                  text: (hospitalModel?.requested != 2)
+                                      ? 'Send for review'
+                                      : 'Update details',
+                                  buttonColor: BColors.buttonDarkColor,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelLarge!
+                                      .copyWith(
+                                          fontSize: 18, color: BColors.white))
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ));
     });

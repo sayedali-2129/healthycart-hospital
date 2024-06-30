@@ -37,7 +37,8 @@ class DoctorProvider extends ChangeNotifier {
       CustomToast.errorToast(text: failure.errMsg);
     }, (imageFilesucess) async {
       if (imageUrl != null && doctorId != null) {
-        await _iDoctorFacade.deleteImage(imageUrl: imageUrl?? '', doctorId: doctorId);
+        await _iDoctorFacade.deleteImage(
+            imageUrl: imageUrl ?? '', doctorId: doctorId);
         imageUrl = null;
       } // when editing  this will make the url null when we pick a new file
       imageFile = imageFilesucess;
@@ -181,8 +182,7 @@ class DoctorProvider extends ChangeNotifier {
   /// these both are used in the category also to check wheather the user
   String? selectedDoctorCategoryText;
 
-  final GlobalKey<FormState> formKey =
-      GlobalKey<FormState>(); // formkey for the user
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>(); // formkey for the user
   final TextEditingController aboutController = TextEditingController();
   final TextEditingController doctorNameController = TextEditingController();
   final TextEditingController doctorFeeController = TextEditingController();
@@ -257,7 +257,7 @@ class DoctorProvider extends ChangeNotifier {
       CustomToast.sucessToast(text: "Added doctor sucessfully");
       EasyNavigation.pop(context: context);
       EasyNavigation.pop(context: context);
-      doctorList.insert(doctorList.length, doctorReturned);
+      doctorList.insert(0, doctorReturned);
       clearDoctorDetails();
       notifyListeners();
     });
@@ -306,26 +306,45 @@ class DoctorProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
-  ///////////////// 2.)  Getting doctor details according to the category and user-------
 
-  Future<void> getDoctorsData() async {
+  ///////////////// 2.)  Getting doctor details according to the category and user-------
+  /* ----------------------------- GET ALL DOCTORS BY CATEGORY ---------------------------- */
+  final TextEditingController searchController = TextEditingController();
+
+  Future<void> getHospitalCategoryDoctorsDetails({String? searchText}) async {
     fetchLoading = true;
     notifyListeners();
-    doctorList.clear();
-    final result = await _iDoctorFacade.getDoctorDetails(
-        categoryId: categoryId!, hospitalId: hospitalId!);
+    final result = await _iDoctorFacade.getHospitalCategoryDoctorsDetails(
+        categoryId: categoryId!,
+        hospitalId: hospitalId ?? '',
+        searchText: searchText);
     result.fold((failure) {
-      CustomToast.errorToast(text: "Couldn't able to fetch doctor's");
-    }, (doctors) {
-      doctorList.addAll(doctors); //// here we are assigning the doctor
+      CustomToast.errorToast(text: "Couldn't able to show doctor");
+    }, (products) {
+      doctorList.addAll(products); //// here we are assigning the doctor
     });
     fetchLoading = false;
     notifyListeners();
   }
+
+  void clearFetchData() {
+    searchController.clear();
+    doctorList.clear();
+    _iDoctorFacade.clearFetchData();
+  }
+
+  void searchCategoryDoctors(String searchText) {
+    doctorList.clear();
+    _iDoctorFacade.clearFetchData();
+    getHospitalCategoryDoctorsDetails(searchText: searchText);
+    notifyListeners();
+  }
+  /* -------------------------------------------------------------------------- */
+
 /////////////////////////// 3.) deleting the doctor field
 
   Future<void> deleteDoctorDetails(
-      {required int index, required DoctorAddModel doctorData}) async {  
+      {required int index, required DoctorAddModel doctorData}) async {
     final result = await _iDoctorFacade.deleteDoctorDetails(
         doctorId: doctorData.id ?? '', doctorData: doctorData);
     result.fold((failure) {
@@ -381,13 +400,11 @@ class DoctorProvider extends ChangeNotifier {
         doctorId: doctorData.id ?? '', doctorData: doctorDetails!);
     result.fold((failure) {
       CustomToast.errorToast(
-          text: "Couldn't able to delete doctor details, please try again.");
-      EasyNavigation.pop(context: context);   
+          text: "Couldn't able to update doctor details, please try again.");
+      EasyNavigation.pop(context: context);
     }, (doctorsData) {
-      CustomToast.sucessToast(text: "Edited doctor details sucessfully");
-      doctorList.removeAt(index);
-      doctorList.insert(
-          index, doctorsData); //// here we are assigning the doctor
+      CustomToast.sucessToast(text: "Updated doctor details sucessfully");
+      doctorList[index] = doctorsData; //// here we are assigning the doctor
       clearDoctorDetails();
       EasyNavigation.pop(context: context);
       EasyNavigation.pop(context: context);

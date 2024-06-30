@@ -13,22 +13,59 @@ class IProfileImpl implements IProfileFacade {
   IProfileImpl(this._firebaseFirestore);
   final FirebaseFirestore _firebaseFirestore;
 
+
+/* ----------------------------- GET ALL DOCTORS ---------------------------- */
+
+  DocumentSnapshot<Map<String, dynamic>>? lastDoc;
+  bool noMoreData = false;
   @override
-  FutureResult<List<DoctorAddModel>> getAllDoctorDetails() async {
+  FutureResult<List<DoctorAddModel>> getHospitalAllDoctorDetails({
+    required String hospitalId,
+    required String? searchText,
+  }) async {
     try {
-      final snapshot = await _firebaseFirestore
+      if (noMoreData) return right([]);
+      Query query = _firebaseFirestore
           .collection(FirebaseCollections.doctors)
-          .orderBy('createdAt')
-          .get();
-      return right(snapshot.docs
-          .map((e) => DoctorAddModel.fromMap(e.data()).copyWith(id: e.id))
-          .toList());
+          .orderBy('createdAt', descending: true)
+          .where('hospitalId', isEqualTo: hospitalId);
+
+      if (searchText != null && searchText.isNotEmpty) {
+        query =
+            query.where('keywords', arrayContains: searchText.toLowerCase());
+      }
+      if (lastDoc != null) {
+        query = query.startAfterDocument(lastDoc!);
+      }
+      final snapshots = await query.limit(6).get();
+      if (snapshots.docs.length < 6 || snapshots.docs.isEmpty) {
+        noMoreData = true;
+      } else {
+        lastDoc = snapshots.docs.last as DocumentSnapshot<Map<String, dynamic>>;
+      }
+      final List<DoctorAddModel> productList = snapshots.docs
+          .map((e) =>
+              DoctorAddModel.fromMap(e.data() as Map<String, dynamic>)
+                  .copyWith(id: e.id))
+          .toList();
+      return right(productList);
     } on FirebaseException catch (e) {
       return left(MainFailure.firebaseException(errMsg: e.message.toString()));
     } catch (e) {
       return left(MainFailure.generalException(errMsg: e.toString()));
     }
   }
+
+  @override
+  void clearFetchData() {
+    noMoreData = false;
+    lastDoc = null;
+  }
+
+
+
+
+/* -------------------------------------------------------------------------- */
 
   @override
   FutureResult<String> setActiveHospital({

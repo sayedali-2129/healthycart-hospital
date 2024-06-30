@@ -46,8 +46,14 @@ class ProfileScreen extends StatelessWidget {
                       iconOn: Icons.power_settings_new,
                       animationDuration: const Duration(milliseconds: 300),
                       onChanged: (bool ishospitalON) async {
+                       LoadingLottie.showLoading(
+                            context: context, text: 'Please wait...');
                         profileProvider.hospitalStatus(ishospitalON);
-                        await profileProvider.setActiveHospital();
+                        await profileProvider.setActiveHospital().whenComplete(
+                          () {
+                            EasyNavigation.pop(context: context);
+                          },
+                        );
                       },
                       onDoubleTap: () {},
                       onSwipe: () {},
@@ -62,16 +68,6 @@ class ProfileScreen extends StatelessWidget {
                     },
                     child: const ProfileMainContainer(
                         text: 'Doctors List',
-                        sideChild: Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Icon(Icons.arrow_forward_ios),
-                        )),
-                  ),
-                  const Gap(4),
-                  GestureDetector(
-                    onTap: () {},
-                    child: const ProfileMainContainer(
-                        text: 'Bookings & History',
                         sideChild: Padding(
                           padding: EdgeInsets.all(8.0),
                           child: Icon(Icons.arrow_forward_ios),

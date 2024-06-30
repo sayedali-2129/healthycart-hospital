@@ -53,7 +53,7 @@ class AuthenticationProvider extends ChangeNotifier {
         hospitalDataFetched?.image == null ||
         hospitalDataFetched?.ownerName == null ||
         hospitalDataFetched?.uploadLicense == null ||
-        hospitalDataFetched?.hospitalName == null) {
+        hospitalDataFetched?.hospitalName == null|| hospitalDataFetched?.email == null) {
       EasyNavigation.pushReplacement(
         type: PageTransitionType.bottomToTop,
         context: context,

@@ -20,6 +20,8 @@ class HospitalModel extends Admin {
     this.isActive,
     this.createdAt,
     this.keywords,
+    this.fcmToken,
+    this.email,
     this.rejectionReason,
     this.ishospitalON,
   });
@@ -36,9 +38,12 @@ class HospitalModel extends Admin {
   final Timestamp? createdAt;
   final List<String>? keywords;
   final String? rejectionReason;
+  final String? fcmToken;
+  final String? email;
   @override
   Map<String, dynamic> toMap() {
     return {
+      'id': id,
       'hospitalName': hospitalName,
       'address': address,
       'ownerName': ownerName,
@@ -50,6 +55,8 @@ class HospitalModel extends Admin {
       'ishospitalON': ishospitalON,
       'createdAt': createdAt,
       'keywords': keywords,
+      'email': email,
+   //   'fcmToken': fcmToken,
       'rejectionReason' : rejectionReason,
       ...super.toMap()
     };
@@ -62,6 +69,7 @@ class HospitalModel extends Admin {
       'ownerName': ownerName,
       'uploadLicense': uploadLicense,
       'image': image,
+      'email': email,
       'keywords': keywords,
     };
   }
@@ -89,6 +97,8 @@ class HospitalModel extends Admin {
       selectedCategoryId: map['selectedCategoryId'] != null
           ? List<String>.from((map['selectedCategoryId'] as List<dynamic>))
           : null,
+            email: map['email'] != null ? map['email'] as String : null,
+      fcmToken: map['fcmToken'] != null ? map['fcmToken'] as String : null,    
       requested: map['requested'] != null ? map['requested'] as int : null,
       isActive: map['isActive'] as bool?,
       ishospitalON: map['ishospitalON'] as bool?,
@@ -114,6 +124,8 @@ class HospitalModel extends Admin {
     bool? isActive,
     bool? ishospitalON,
     Timestamp? createdAt,
+    String? fcmToken,
+    String? email,
     List<String>? keywords,
     String? rejectionReason,
   }) {
@@ -127,6 +139,8 @@ class HospitalModel extends Admin {
       ownerName: ownerName ?? this.ownerName,
       uploadLicense: uploadLicense ?? this.uploadLicense,
       image: image ?? this.image,
+      fcmToken: fcmToken ?? this.fcmToken,
+      email: email ?? this.email,
       selectedCategoryId: selectedCategoryId ?? this.selectedCategoryId,
       requested: requested ?? this.requested,
       isActive: isActive ?? this.isActive,

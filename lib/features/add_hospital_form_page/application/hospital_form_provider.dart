@@ -47,7 +47,7 @@ class HosptialFormProvider extends ChangeNotifier {
   }
 
   Future<void> saveImage() async {
-    if (imageFile == null) {
+    if (imageFile == null && imageUrl == null) {
       CustomToast.errorToast(text: 'Please check the image selected.');
       return;
     }
@@ -64,6 +64,7 @@ class HosptialFormProvider extends ChangeNotifier {
   final TextEditingController addressController = TextEditingController();
   final TextEditingController phoneNumberController = TextEditingController();
   final TextEditingController ownerNameController = TextEditingController();
+  final TextEditingController hospitalEmailController = TextEditingController();
   List<String> keywordHospitalBuider() {
     return keywordsBuilder(hospitalNameController.text);
   }
@@ -77,16 +78,17 @@ class HosptialFormProvider extends ChangeNotifier {
   }) async {
     keywordHospitalBuider();
     hospitalDetail = HospitalModel(
+      id : hospitalId,
       createdAt: Timestamp.now(),
       keywords: keywordHospitalBuider(),
       phoneNo: phoneNumberController.text,
       hospitalName: hospitalNameController.text,
       address: addressController.text,
       ownerName: ownerNameController.text,
+      email: hospitalEmailController.text,
       uploadLicense: pdfUrl,
       image: imageUrl,
       adminType: adminType,
-      id: hospitalId,
       isActive: true,
       ishospitalON: null,
       requested: 1,
@@ -122,6 +124,7 @@ class HosptialFormProvider extends ChangeNotifier {
     imageUrl = null;
     phoneNumberController.clear();
     ownerNameController.clear();
+    hospitalEmailController.clear();
     notifyListeners();
   }
 
@@ -198,6 +201,7 @@ class HosptialFormProvider extends ChangeNotifier {
     addressController.text = hospitalDetailsEdit.address ?? '';
     phoneNumberController.text = hospitalDetailsEdit.phoneNo ?? '';
     ownerNameController.text = hospitalDetailsEdit.ownerName ?? '';
+    hospitalEmailController.text = hospitalDetailsEdit.email ?? '';
     pdfUrl = hospitalDetailsEdit.uploadLicense;
     imageUrl = hospitalDetailsEdit.image;
     notifyListeners();
@@ -213,6 +217,7 @@ class HosptialFormProvider extends ChangeNotifier {
       hospitalName: hospitalNameController.text,
       address: addressController.text,
       ownerName: ownerNameController.text,
+      email: hospitalEmailController.text,
       uploadLicense: pdfUrl,
       image: imageUrl,
     );

@@ -1,35 +1,99 @@
+import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthycart/core/custom/app_bar/sliver_appbar.dart';
+import 'package:healthycart/core/custom/custom_button_n_search/search_field_button.dart';
 import 'package:healthycart/core/custom/custom_cached_network/custom_cached_network_image.dart';
+import 'package:healthycart/core/custom/lottie/circular_loading.dart';
+import 'package:healthycart/core/custom/no_data/no_data_widget.dart';
+import 'package:healthycart/core/services/easy_navigation.dart';
 import 'package:healthycart/features/hospital_profile/application/profile_provider.dart';
 import 'package:healthycart/utils/constants/colors/colors.dart';
 import 'package:provider/provider.dart';
 
-class DoctorProfileList extends StatelessWidget {
+class DoctorProfileList extends StatefulWidget {
   const DoctorProfileList({super.key});
 
   @override
+  State<DoctorProfileList> createState() => _DoctorProfileListState();
+}
+
+class _DoctorProfileListState extends State<DoctorProfileList> {
+  final ScrollController _scrollcontroller = ScrollController();
+  @override
+  void initState() {
+    final profileProvider = context.read<ProfileProvider>();
+    WidgetsBinding.instance.addPostFrameCallback((timestamp) {
+      profileProvider.clearFetchData();
+      profileProvider.getHospitalAllDoctorDetails();
+    });
+
+    _scrollcontroller.addListener(() {
+      if (_scrollcontroller.position.atEdge &&
+          _scrollcontroller.position.pixels != 0 &&
+          profileProvider.fetchLoading == false) {
+        profileProvider.getHospitalAllDoctorDetails();
+      }
+    });
+
+    super.initState();
+  }
+  
+  @override
+  void dispose() {
+    EasyDebounce.cancel('searchalldoctors');
+    super.dispose();
+  }
+  @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback(
-      (timeStamp) {
-        context.read<ProfileProvider>().getAllDoctorDetails();
-      },
-    );
+
     return Scaffold(
         body: Consumer<ProfileProvider>(builder: (context, profileProvider, _) {
       return CustomScrollView(
+        controller: _scrollcontroller,
         slivers: [
-          SliverCustomAppbar(
+                   SliverCustomAppbar(
             title: 'All Doctors',
             onBackTap: () {
-              Navigator.pop(context);
+              EasyNavigation.pop(context: context);
             },
+            child: PreferredSize(
+              preferredSize: const Size(double.infinity, 68),
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    left: 16, right: 16, bottom: 8, top: 4),
+                child: SearchTextFieldButton(
+                  text: "Search doctors...",
+                  controller: profileProvider.searchController,
+                  onChanged: (value) {
+                    EasyDebounce.debounce(
+                        'searchalldoctors', const Duration(milliseconds: 500), () {
+                      profileProvider.searchDoctors(value);
+                    });
+                  },
+                ),
+              ),
+            ),
           ),
+          if (profileProvider.fetchLoading && profileProvider.allDoctorList.isEmpty)
+          const SliverFillRemaining(
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: LoadingIndicater()
+                    ),
+                  ),
+                )
+                else if
+                (profileProvider.allDoctorList.isEmpty)
+                   const ErrorOrNoDataPage(
+                      text: "No doctor's found.",
+                    )
+              else
           SliverPadding(
               padding: const EdgeInsets.all(16),
               sliver: SliverList.builder(
-                  itemCount: profileProvider.doctorTotalList.length,
+                  itemCount: profileProvider.allDoctorList.length,
                   itemBuilder: (context, index) {
                     return Column(
                       children: [
@@ -53,7 +117,7 @@ class DoctorProfileList extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(16),
                                         child: CustomCachedNetworkImage(
                                             image: profileProvider
-                                                    .doctorTotalList[index]
+                                                    .allDoctorList[index]
                                                     .doctorImage ??
                                                 '')),
                                   ),
@@ -74,7 +138,7 @@ class DoctorProfileList extends StatelessWidget {
                                               Expanded(
                                                 child: Text(
                                                   profileProvider
-                                                          .doctorTotalList[
+                                                          .allDoctorList[
                                                               index]
                                                           .doctorName ??
                                                       'Unknown Name',
@@ -101,7 +165,7 @@ class DoctorProfileList extends StatelessWidget {
                                               Expanded(
                                                 child: Text(
                                                   profileProvider
-                                                          .doctorTotalList[
+                                                          .allDoctorList[
                                                               index]
                                                           .doctorSpecialization ??
                                                       'Unknown Qualification',
@@ -128,7 +192,7 @@ class DoctorProfileList extends StatelessWidget {
                                               Expanded(
                                                 child: Text(
                                                   profileProvider
-                                                          .doctorTotalList[
+                                                          .allDoctorList[
                                                               index]
                                                           .doctorSpecialization ??
                                                       'Unknown Specialization',
@@ -156,7 +220,7 @@ class DoctorProfileList extends StatelessWidget {
                                               Expanded(
                                                 child: Text(
                                                   profileProvider
-                                                          .doctorTotalList[
+                                                          .allDoctorList[
                                                               index]
                                                           .doctorTotalTime ??
                                                   'Time 11.00AM - 2.30PM',
@@ -182,9 +246,17 @@ class DoctorProfileList extends StatelessWidget {
                           ),
                         ),
                         const Gap(8)
+                        
                       ],
                     );
-                  }))
+                  }
+                  ),
+                  ),
+                            SliverToBoxAdapter(
+              child: (profileProvider.fetchLoading == true &&
+                      profileProvider.allDoctorList.isNotEmpty)
+                  ? const Center(child: LoadingIndicater())
+                  : null),
         ],
       );
     }));

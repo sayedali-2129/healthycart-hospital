@@ -13,9 +13,8 @@ import 'package:injectable/injectable.dart';
 
 @LazySingleton(as: IFormFeildFacade)
 class IFormFieldImpl implements IFormFeildFacade {
-  IFormFieldImpl(this._firebaseFirestore, this._imageService, this._pdfService, this._firebaseStore);
+  IFormFieldImpl(this._firebaseFirestore, this._imageService, this._pdfService,);
   final FirebaseFirestore _firebaseFirestore;
-  final FirebaseStorage _firebaseStore;
   final ImageService _imageService;
   final PdfPickerService _pdfService;
   @override
@@ -37,7 +36,7 @@ class IFormFieldImpl implements IFormFeildFacade {
               .doc('htfK5JIPTaZVlZi6fGdZ'),
           {'pendingHospitals': FieldValue.increment(1)});
       await batch.commit();
-      return right('Sucessfully sent for review');
+      return right('Sucessfully sent for review.');
     } on FirebaseException catch (e) {
       return left(MainFailure.firebaseException(errMsg: e.code));
     } catch (e) {

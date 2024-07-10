@@ -99,4 +99,29 @@ class ProfileProvider extends ChangeNotifier {
     adminTransactionList = [];
     notifyListeners();
   }
+
+  /* ------------------------------ EXIT FROM APP ----------------------------- */
+  DateTime? currentBackPressTime;
+  int requiredSeconds = 2;
+  bool canPopNow = false;
+
+  void onPopInvoked(bool didPop) {
+    DateTime currentTime = DateTime.now();
+    if (currentBackPressTime == null ||
+        currentTime.difference(currentBackPressTime!) >
+            Duration(seconds: requiredSeconds)) {
+      currentBackPressTime = currentTime;
+      CustomToast.errorToast(text: 'Press again to exit');
+      Future.delayed(
+        Duration(seconds: requiredSeconds),
+        () {
+          canPopNow = false;
+          notifyListeners();
+        },
+      );
+
+      canPopNow = true;
+      notifyListeners();
+    }
+  }
 }

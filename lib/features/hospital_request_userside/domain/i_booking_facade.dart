@@ -27,4 +27,5 @@ abstract class IBookingFacade {
   FutureResult<List<HospitalBookingModel>> getRejectedOrders(
       {required String hospitalId});
   void clearDataRejected();
+  FutureResult<String> updatePaymentStatus({required String orderId});
 }

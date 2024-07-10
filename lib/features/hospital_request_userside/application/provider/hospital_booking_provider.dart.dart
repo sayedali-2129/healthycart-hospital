@@ -232,4 +232,17 @@ class HospitalBookingProvider extends ChangeNotifier {
       },
     );
   }
+
+  /* --------------- UPDATE PAYMENT STATUS WHEN PAYMENT RECEIVED -------------- */
+
+  Future<void> updatePaymentStatus({required String orderId}) async {
+    final result = await iBookingFacade.updatePaymentStatus(orderId: orderId);
+    result.fold((err) {
+      CustomToast.errorToast(text: 'Order status update failed');
+      log('ERROR updatePaymentStatus :: ${err.errMsg}');
+    }, (success) {
+      CustomToast.sucessToast(text: success);
+    });
+    notifyListeners();
+  }
 }

@@ -256,18 +256,60 @@ class _NewRequestState extends State<Accepted> {
                                         Row(
                                           children: [
                                             const Text('Payment Status : '),
-                                            bookings.paymentStatus == 0
-                                                ? const Text(
-                                                    'Pending',
-                                                    style: TextStyle(
-                                                        color:
-                                                            Color(0xffFFB800)),
-                                                  )
-                                                : const Text(
-                                                    'Payment Completed',
-                                                    style: TextStyle(
-                                                        color: Colors.green),
-                                                  ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                bookings.paymentStatus == 0
+                                                    ? const Text(
+                                                        'Pending',
+                                                        style: TextStyle(
+                                                            color: Color(
+                                                                0xffFFB800)),
+                                                      )
+                                                    : const Text(
+                                                        'Payment Completed',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.green),
+                                                      ),
+                                                Gap(10),
+                                                bookings.paymentMethod ==
+                                                            'Cash in hand' &&
+                                                        bookings.paymentStatus ==
+                                                            0
+                                                    ? GestureDetector(
+                                                        onTap: () {
+                                                          ConfirmAlertBoxWidget
+                                                              .showAlertConfirmBox(
+                                                                  context:
+                                                                      context,
+                                                                  confirmButtonTap:
+                                                                      () {
+                                                                    bookingProvider.updatePaymentStatus(
+                                                                        orderId:
+                                                                            bookings.id!);
+                                                                  },
+                                                                  titleText:
+                                                                      'Payment Received?',
+                                                                  subText:
+                                                                      'Are you revieved the payment?');
+                                                        },
+                                                        child: const Text(
+                                                          'Payment Recieved?',
+                                                          style: TextStyle(
+                                                              color: BColors
+                                                                  .darkblue,
+                                                              fontSize: 13,
+                                                              decoration:
+                                                                  TextDecoration
+                                                                      .underline),
+                                                        ),
+                                                      )
+                                                    : const Gap(0)
+                                              ],
+                                            )
                                           ],
                                         ),
                                         const Gap(4),

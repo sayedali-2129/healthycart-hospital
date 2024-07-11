@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:healthycart/core/failures/main_failure.dart';
 import 'package:healthycart/core/general/typdef.dart';
 import 'package:healthycart/features/hospital_request_userside/domain/models/booking_model.dart';
+import 'package:healthycart/features/hospital_request_userside/domain/models/day_transaction_model.dart';
 
 abstract class IBookingFacade {
   Stream<Either<MainFailure, List<HospitalBookingModel>>> getNewRequestStream(
@@ -13,6 +14,9 @@ abstract class IBookingFacade {
   FutureResult<String> updateOrderStatus(
       {required String orderId,
       required int orderStatus,
+      String? dayTransactionDate,
+      String? paymentMode,
+      DayTransactionModel? dayTransactionModel,
       String? hospitalId,
       String? rejectReason,
       num? totalAmount});

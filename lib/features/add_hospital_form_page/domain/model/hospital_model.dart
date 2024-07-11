@@ -24,6 +24,7 @@ class HospitalModel extends Admin {
     this.email,
     this.rejectionReason,
     this.ishospitalON,
+    this.dayTransaction,
   });
 
   final String? hospitalName;
@@ -40,6 +41,8 @@ class HospitalModel extends Admin {
   final String? rejectionReason;
   final String? fcmToken;
   final String? email;
+  final String? dayTransaction;
+
   @override
   Map<String, dynamic> toMap() {
     return {
@@ -56,8 +59,9 @@ class HospitalModel extends Admin {
       'createdAt': createdAt,
       'keywords': keywords,
       'email': email,
-   //   'fcmToken': fcmToken,
-      'rejectionReason' : rejectionReason,
+      'dayTransaction': dayTransaction,
+      //   'fcmToken': fcmToken,
+      'rejectionReason': rejectionReason,
       ...super.toMap()
     };
   }
@@ -89,7 +93,7 @@ class HospitalModel extends Admin {
           ? PlaceMark.fromMap(map['placemark'] as Map<String, dynamic>)
           : null,
       hospitalName: map['hospitalName'] as String?,
-       rejectionReason: map['rejectionReason'] as String?,
+      rejectionReason: map['rejectionReason'] as String?,
       address: map['address'] as String?,
       ownerName: map['ownerName'] as String?,
       uploadLicense: map['uploadLicense'] as String?,
@@ -97,8 +101,11 @@ class HospitalModel extends Admin {
       selectedCategoryId: map['selectedCategoryId'] != null
           ? List<String>.from((map['selectedCategoryId'] as List<dynamic>))
           : null,
-            email: map['email'] != null ? map['email'] as String : null,
-      fcmToken: map['fcmToken'] != null ? map['fcmToken'] as String : null,    
+      email: map['email'] != null ? map['email'] as String : null,
+      dayTransaction: map['dayTransaction'] != null
+          ? map['dayTransaction'] as String
+          : null,
+      fcmToken: map['fcmToken'] != null ? map['fcmToken'] as String : null,
       requested: map['requested'] != null ? map['requested'] as int : null,
       isActive: map['isActive'] as bool?,
       ishospitalON: map['ishospitalON'] as bool?,
@@ -128,6 +135,7 @@ class HospitalModel extends Admin {
     String? email,
     List<String>? keywords,
     String? rejectionReason,
+    String? dayTransaction,
   }) {
     return HospitalModel(
       id: id ?? super.id,
@@ -147,7 +155,8 @@ class HospitalModel extends Admin {
       ishospitalON: ishospitalON ?? this.ishospitalON,
       createdAt: createdAt ?? this.createdAt,
       keywords: keywords ?? this.keywords,
-      rejectionReason:  rejectionReason ?? this.rejectionReason,
+      rejectionReason: rejectionReason ?? this.rejectionReason,
+      dayTransaction: dayTransaction ?? this.dayTransaction,
     );
   }
 }

@@ -37,8 +37,8 @@ class _NewRequestState extends State<Accepted> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<HospitalBookingProvider>(
-        builder: (context, bookingProvider, _) {
+    return Consumer2<HospitalBookingProvider, AuthenticationProvider>(
+        builder: (context, bookingProvider, authProvider, _) {
       return CustomScrollView(
         slivers: [
           if (bookingProvider.isLoading == true &&
@@ -373,16 +373,22 @@ class _NewRequestState extends State<Accepted> {
                                           context: context,
                                           confirmButtonTap: () {
                                             bookingProvider.updateOrderStatus(
-                                                orderId: bookings.id!,
-                                                orderStatus: 2,
-                                                fcmtoken: bookings
-                                                    .userDetails!.fcmToken!,
-                                                hospitalId: bookings.hospitalId,
-                                                hospitalName: bookings
-                                                    .hospitalDetails!
-                                                    .hospitalName,
-                                                totalAmount:
-                                                    bookings.totalAmount);
+                                              orderId: bookings.id!,
+                                              orderStatus: 2,
+                                              fcmtoken: bookings
+                                                      .userDetails!.fcmToken ??
+                                                  '',
+                                              hospitalId: bookings.hospitalId,
+                                              hospitalName: bookings
+                                                  .hospitalDetails!
+                                                  .hospitalName,
+                                              totalAmount: bookings.totalAmount,
+                                              dayTransactionDate: authProvider
+                                                  .hospitalDataFetched!
+                                                  .dayTransaction,
+                                              paymentMode:
+                                                  bookings.paymentMethod,
+                                            );
                                           },
                                           titleText: 'Confirm',
                                           subText:

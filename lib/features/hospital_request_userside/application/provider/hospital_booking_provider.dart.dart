@@ -1,11 +1,14 @@
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:healthycart/core/custom/toast/toast.dart';
+import 'package:healthycart/core/services/get_network_time.dart';
 import 'package:healthycart/core/services/sent_fcm_message.dart';
 import 'package:healthycart/features/hospital_request_userside/domain/i_booking_facade.dart';
 import 'package:healthycart/features/hospital_request_userside/domain/models/booking_model.dart';
+import 'package:healthycart/features/hospital_request_userside/domain/models/day_transaction_model.dart';
 import 'package:injectable/injectable.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -93,7 +96,7 @@ class HospitalBookingProvider extends ChangeNotifier {
     );
   }
 
-  /* --------------------------- UPDATE ORDER STATYS -------------------------- */
+  /* --------------------------- UPDATE ORDER STATUS -------------------------- */
   TextEditingController rejectionReasonCobtroller = TextEditingController();
   final rejectionFormKey = GlobalKey<FormState>();
 
@@ -104,15 +107,27 @@ class HospitalBookingProvider extends ChangeNotifier {
       String? hospitalName,
       String? hospitalId,
       num? totalAmount,
+      String? dayTransactionDate,
+      String? paymentMode,
       String? rejectReason}) async {
     isLoading = true;
     notifyListeners();
+    final networkTime = await getNetworkTime();
+
     final result = await iBookingFacade.updateOrderStatus(
         totalAmount: totalAmount,
         orderId: orderId,
         orderStatus: orderStatus,
         hospitalId: hospitalId,
-        rejectReason: rejectReason);
+        rejectReason: rejectReason,
+        dayTransactionDate: dayTransactionDate,
+        paymentMode: paymentMode,
+        dayTransactionModel: DayTransactionModel(
+          createdAt: Timestamp.fromDate(networkTime),
+          totalAmount: totalAmount,
+          offlinePayment: paymentMode != 'Online' ? totalAmount : 0,
+          onlinePayment: paymentMode == 'Online' ? totalAmount : 0,
+        ));
     result.fold((err) {
       CustomToast.errorToast(text: err.errMsg);
       isLoading = false;

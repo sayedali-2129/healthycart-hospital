@@ -8,4 +8,5 @@ class FirebaseCollections {
   static const String hospitalBooking = 'hospital_booking';
   static const String hospitalTransactions = 'hospital_transactions';
   static String hospitalTransactionSubCollection = 'hospital_transfers';
+  static String dayTransaction = 'dayTransaction';
 }

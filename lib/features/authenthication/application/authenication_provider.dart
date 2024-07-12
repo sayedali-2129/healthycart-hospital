@@ -1,7 +1,4 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:healthycart/core/custom/toast/toast.dart';
 import 'package:healthycart/core/services/easy_navigation.dart';
 import 'package:healthycart/features/authenthication/domain/i_auth_facade.dart';
@@ -20,7 +17,6 @@ class AuthenticationProvider extends ChangeNotifier {
   AuthenticationProvider(this.iAuthFacade);
   final IAuthFacade iAuthFacade;
   HospitalModel? hospitalDataFetched;
-  String? verificationId;
   String? smsCode;
   final TextEditingController phoneNumberController = TextEditingController();
   String? countryCode;
@@ -84,20 +80,22 @@ class AuthenticationProvider extends ChangeNotifier {
     }
   }
 
-  void verifyPhoneNumber({required BuildContext context}) {
+  void verifyPhoneNumber({required BuildContext context, required bool resend}) {
     iAuthFacade.verifyPhoneNumber(phoneNumber!).listen((result) {
       result.fold((failure) {
         Navigator.pop(context);
         CustomToast.errorToast(text: failure.errMsg);
       }, (isVerified) {
         Navigator.pop(context);
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: ((context) => OTPScreen(
-                      verificationId: verificationId ?? 'No veriId',
-                      phoneNumber: phoneNumber ?? 'No Number',
-                    ))));
+        if(resend == false){
+           EasyNavigation.push(
+            type: PageTransitionType.rightToLeft,
+            context: context,
+            page: OTPScreen(
+              phoneNumber: phoneNumber ?? 'No Number',
+            ));
+        }
+        
       });
     });
   }

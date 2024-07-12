@@ -79,7 +79,7 @@ class LoginScreen extends StatelessWidget {
                               context: context, text: 'Please wait...');
                             
                          authenticationProvider.setNumber();
-                         authenticationProvider.verifyPhoneNumber(context: context);
+                         authenticationProvider.verifyPhoneNumber(context: context, resend: false);
                             
                             
                         },

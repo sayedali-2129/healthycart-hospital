@@ -12,8 +12,7 @@ import 'package:provider/provider.dart';
 
 class OTPScreen extends StatefulWidget {
   const OTPScreen(
-      {super.key, required this.verificationId, required this.phoneNumber});
-  final String verificationId;
+      {super.key, required this.phoneNumber});
   final String phoneNumber;
 
   @override
@@ -30,7 +29,6 @@ class _OTPScreenState extends State<OTPScreen> {
     setTimer();
     super.initState();
   }
-
   void setTimer() {
     timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (seconds > 0) {
@@ -40,8 +38,10 @@ class _OTPScreenState extends State<OTPScreen> {
       } else {
         timer.cancel();
       }
-    });
+    },
+    );
   }
+
 
   @override
   void dispose() {
@@ -172,7 +172,7 @@ class _OTPScreenState extends State<OTPScreen> {
                                         LoadingLottie.showLoading(
                                             context: context, text: 'Loading...');
                                         authenticationProvider.verifyPhoneNumber(
-                                            context: context);
+                                            context: context, resend: true);
                                       })
                                 : TextSpan(
                                     text: 'in 00:$seconds',

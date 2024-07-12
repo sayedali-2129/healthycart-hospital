@@ -5,10 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:healthycart/core/custom/keyword_builder/keyword_builder.dart';
 import 'package:healthycart/core/custom/toast/toast.dart';
 import 'package:healthycart/core/services/easy_navigation.dart';
+import 'package:healthycart/features/add_hospital_form_page/domain/model/hospital_model.dart';
 import 'package:healthycart/features/hospital_doctor/domain/i_doctor_facade.dart';
 import 'package:healthycart/features/hospital_doctor/domain/model/add_doctor_model.dart';
 import 'package:healthycart/features/hospital_doctor/domain/model/doctor_category_model.dart';
+import 'package:healthycart/features/location_picker/domain/model/location_model.dart';
 import 'package:injectable/injectable.dart';
+import 'package:provider/provider.dart';
 
 @injectable
 class DoctorProvider extends ChangeNotifier {
@@ -182,7 +185,8 @@ class DoctorProvider extends ChangeNotifier {
   /// these both are used in the category also to check wheather the user
   String? selectedDoctorCategoryText;
 
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>(); // formkey for the user
+  final GlobalKey<FormState> formKey =
+      GlobalKey<FormState>(); // formkey for the user
   final TextEditingController aboutController = TextEditingController();
   final TextEditingController doctorNameController = TextEditingController();
   final TextEditingController doctorFeeController = TextEditingController();
@@ -237,6 +241,7 @@ class DoctorProvider extends ChangeNotifier {
 
   ///////////////////////////////////// 1.)  Adding doctor----------
   ///
+  HospitalModel? hospitalData;
   List<DoctorAddModel> doctorList = [];
   DoctorAddModel? doctorDetails;
   List<DoctorAddModel> doctorData = [];
@@ -286,7 +291,10 @@ class DoctorProvider extends ChangeNotifier {
         doctorQualification: qualificationController.text,
         doctorAbout: aboutController.text,
         createdAt: Timestamp.now(),
-        keywords: keywordDoctorBuilder());
+        keywords: keywordDoctorBuilder(),
+        hospital: hospitalData?.hospitalName ?? '',
+        placemark: hospitalData?.placemark, 
+        );
     notifyListeners();
   }
 
@@ -395,6 +403,8 @@ class DoctorProvider extends ChangeNotifier {
       doctorAbout: aboutController.text,
       createdAt: doctorData.createdAt,
       keywords: keywordDoctorBuilder(),
+      hospital: hospitalData?.hospitalName ?? '',
+      placemark: hospitalData?.placemark, 
     );
     final result = await _iDoctorFacade.updateDoctorDetails(
         doctorId: doctorData.id ?? '', doctorData: doctorDetails!);

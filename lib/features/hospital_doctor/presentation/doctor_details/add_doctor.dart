@@ -9,6 +9,7 @@ import 'package:healthycart/core/custom/lottie/loading_lottie.dart';
 import 'package:healthycart/core/custom/no_data/no_data_widget.dart';
 import 'package:healthycart/core/custom/toast/toast.dart';
 import 'package:healthycart/core/services/easy_navigation.dart';
+import 'package:healthycart/features/authenthication/application/authenication_provider.dart';
 import 'package:healthycart/features/hospital_doctor/application/doctor_provider.dart';
 import 'package:healthycart/features/hospital_doctor/presentation/doctor_details/widgets/add_doctor_bottomsheet.dart';
 import 'package:healthycart/features/hospital_doctor/presentation/doctor_details/widgets/details_doctor_container.dart';
@@ -28,7 +29,9 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
   @override
   void initState() {
     final doctorProvider = context.read<DoctorProvider>();
+  
     WidgetsBinding.instance.addPostFrameCallback((timestamp) {
+   doctorProvider.hospitalData  =   context.read<AuthenticationProvider>().hospitalDataFetched;
       doctorProvider.clearFetchData();
       doctorProvider.getHospitalCategoryDoctorsDetails();
     });
@@ -68,7 +71,7 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
                   padding: const EdgeInsets.only(
                       left: 16, right: 16, bottom: 8, top: 4),
                   child: SearchTextFieldButton(
-                    text: "Search doctors...",
+                    text: "Search Doctors",
                     controller: doctorProvider.searchController,
                     onChanged: (value) {
                       EasyDebounce.debounce(
@@ -152,7 +155,7 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
               )
             else if (doctorProvider.doctorList.isEmpty)
               const ErrorOrNoDataPage(
-                text: "No categories's added.",
+                text: "No Doctors added to this category.",
               )
             else
               SliverPadding(
@@ -229,11 +232,11 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
                   },
                 ),
               ),
-              SliverToBoxAdapter(
-              child: (doctorProvider.fetchLoading == true &&
-                      doctorProvider.doctorList.isNotEmpty)
-                  ? const Center(child: LoadingIndicater())
-                  : null),
+            SliverToBoxAdapter(
+                child: (doctorProvider.fetchLoading == true &&
+                        doctorProvider.doctorList.isNotEmpty)
+                    ? const Center(child: LoadingIndicater())
+                    : null),
           ],
         );
       }),

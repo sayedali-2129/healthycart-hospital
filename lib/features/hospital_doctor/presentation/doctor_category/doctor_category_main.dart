@@ -114,7 +114,7 @@ class DoctorScreen extends StatelessWidget {
                 else if
                 (doctorProvider.doctorCategoryList.isEmpty)
                    const ErrorOrNoDataPage(
-                      text: "No categories's added.",
+                      text: "No categories added.",
                     )
               else  
               SliverPadding(

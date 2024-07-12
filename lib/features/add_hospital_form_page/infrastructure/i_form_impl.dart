@@ -1,7 +1,7 @@
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:healthycart/core/failures/main_failure.dart';
 import 'package:healthycart/core/general/firebase_collection.dart';
 import 'package:healthycart/core/general/typdef.dart';
@@ -13,7 +13,11 @@ import 'package:injectable/injectable.dart';
 
 @LazySingleton(as: IFormFeildFacade)
 class IFormFieldImpl implements IFormFeildFacade {
-  IFormFieldImpl(this._firebaseFirestore, this._imageService, this._pdfService,);
+  IFormFieldImpl(
+    this._firebaseFirestore,
+    this._imageService,
+    this._pdfService,
+  );
   final FirebaseFirestore _firebaseFirestore;
   final ImageService _imageService;
   final PdfPickerService _pdfService;
@@ -29,7 +33,7 @@ class IFormFieldImpl implements IFormFeildFacade {
           _firebaseFirestore
               .collection(FirebaseCollections.hospitals)
               .doc(hospitalId),
-          hospitalDetails.toMap());
+          hospitalDetails.toFormMap());
       batch.update(
           _firebaseFirestore
               .collection(FirebaseCollections.counts)
@@ -58,8 +62,10 @@ class IFormFieldImpl implements IFormFeildFacade {
   }
 
   @override
-  FutureResult<Unit> deleteImage(
-      {required String imageUrl,required String hospitalId,}) async {
+  FutureResult<Unit> deleteImage({
+    required String imageUrl,
+    required String hospitalId,
+  }) async {
     try {
       await _imageService.deleteImageUrl(imageUrl: imageUrl).then((value) {
         value.fold((failure) {

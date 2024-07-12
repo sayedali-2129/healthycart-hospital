@@ -1,4 +1,5 @@
 import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:healthycart/core/custom/toast/toast.dart';
@@ -12,14 +13,13 @@ import 'package:injectable/injectable.dart';
 @injectable
 class LocationProvider extends ChangeNotifier {
   LocationProvider(this.iLocationFacade);
-    bool locationGetLoading = false;
+  bool locationGetLoading = false;
   final ILocationFacade iLocationFacade;
   PlaceMark? selectedPlaceMark;
   final searchController = TextEditingController();
 
   List<PlaceMark> searchResults = [];
   bool searchLoading = false;
-  String? userId = FirebaseAuth.instance.currentUser?.uid;
 
   Future<bool> getLocationPermisson() async {
     locationGetLoading = true;
@@ -29,6 +29,7 @@ class LocationProvider extends ChangeNotifier {
     notifyListeners();
     return true;
   }
+
   Future<void> getCurrentLocationAddress() async {
     searchLoading = true;
     final result = await iLocationFacade.getCurrentLocationAddress();
@@ -63,6 +64,8 @@ class LocationProvider extends ChangeNotifier {
       {required BuildContext context,
       required bool isHospitaEditProfile,
       required int? hospitalModelrequestedCount}) async {
+    String? userId = FirebaseAuth.instance.currentUser?.uid;
+
     log('Location selected::::$selectedPlaceMark');
     final result =
         await iLocationFacade.setLocationByHospital(selectedPlaceMark!);
@@ -77,13 +80,17 @@ class LocationProvider extends ChangeNotifier {
         CustomToast.errorToast(
             text: "Can't able to add location, please try again");
       }, (sucess) {
-
         Navigator.pop(context);
         CustomToast.sucessToast(text: 'Location added sucessfully');
-        (isHospitaEditProfile )
-            ? Navigator.pop(context,)
+        (isHospitaEditProfile)
+            ? Navigator.pop(
+                context,
+              )
             : EasyNavigation.pushAndRemoveUntil(
-                context: context, page:(hospitalModelrequestedCount == 2) ?const SplashScreen(): const PendingPageScreen());
+                context: context,
+                page: (hospitalModelrequestedCount == 2)
+                    ? const SplashScreen()
+                    : const PendingPageScreen());
         notifyListeners();
       });
     });
@@ -93,8 +100,6 @@ class LocationProvider extends ChangeNotifier {
     selectedPlaceMark = place;
     notifyListeners();
   }
-
-
 
   void clearLocationData() {
     selectedPlaceMark = null;

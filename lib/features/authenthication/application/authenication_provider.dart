@@ -140,6 +140,7 @@ class AuthenticationProvider extends ChangeNotifier {
       CustomToast.errorToast(text: failure.errMsg);
     }, (sucess) {
       EasyNavigation.pop(context: context);
+      hospitalDataFetched = null;
       CustomToast.sucessToast(text: sucess);
       EasyNavigation.pushReplacement(
           context: context, page: const SplashScreen());

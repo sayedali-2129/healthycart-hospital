@@ -60,7 +60,28 @@ class HospitalModel extends Admin {
       'keywords': keywords,
       'email': email,
       'dayTransaction': dayTransaction,
-      //   'fcmToken': fcmToken,
+      'fcmToken': fcmToken,
+      'rejectionReason': rejectionReason,
+      ...super.toMap()
+    };
+  }
+
+  Map<String, dynamic> toFormMap() {
+    return {
+      'id': id,
+      'hospitalName': hospitalName,
+      'address': address,
+      'ownerName': ownerName,
+      'uploadLicense': uploadLicense,
+      'image': image,
+      'selectedCategoryId': selectedCategoryId,
+      'requested': requested,
+      'isActive': isActive,
+      'ishospitalON': ishospitalON,
+      'createdAt': createdAt,
+      'keywords': keywords,
+      'email': email,
+      'dayTransaction': dayTransaction,
       'rejectionReason': rejectionReason,
       ...super.toMap()
     };

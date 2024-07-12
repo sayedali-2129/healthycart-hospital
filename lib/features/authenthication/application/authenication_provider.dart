@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:healthycart/core/custom/blocked_alert_box.dart';
 import 'package:healthycart/core/custom/toast/toast.dart';
 import 'package:healthycart/core/services/easy_navigation.dart';
+import 'package:healthycart/features/add_hospital_form_page/domain/model/hospital_model.dart';
+import 'package:healthycart/features/add_hospital_form_page/presentation/hospital_form.dart';
 import 'package:healthycart/features/authenthication/domain/i_auth_facade.dart';
 import 'package:healthycart/features/authenthication/presentation/otp_ui.dart';
 import 'package:healthycart/features/home/presentation/home.dart';
-import 'package:healthycart/features/add_hospital_form_page/domain/model/hospital_model.dart';
-import 'package:healthycart/features/add_hospital_form_page/presentation/hospital_form.dart';
 import 'package:healthycart/features/location_picker/presentation/location.dart';
 import 'package:healthycart/features/pending_page/presentation/pending_page.dart';
 import 'package:healthycart/features/splash_screen/splash_screen.dart';
@@ -24,6 +25,17 @@ class AuthenticationProvider extends ChangeNotifier {
   String? userId;
   int? isRequsetedPendingPage;
 
+  bool showUserBlockDilogue = false;
+
+  void setShowUserBlock(bool value) {
+    showUserBlockDilogue = value;
+    if (showUserBlockDilogue) {
+      UserBlockedAlertBox.userBlockedAlert();
+    }
+    showUserBlockDilogue = true;
+    notifyListeners();
+  }
+
   void setNumber() {
     phoneNumber = '$countryCode${phoneNumberController.text.trim()}';
     notifyListeners();
@@ -39,6 +51,9 @@ class AuthenticationProvider extends ChangeNotifier {
         isRequsetedPendingPage = snapshot.requested;
         result = true;
         notifyListeners();
+        if (snapshot.isActive == false) {
+          UserBlockedAlertBox.userBlockedAlert();
+        } else {}
       });
     });
     return result;
@@ -49,11 +64,15 @@ class AuthenticationProvider extends ChangeNotifier {
         hospitalDataFetched?.image == null ||
         hospitalDataFetched?.ownerName == null ||
         hospitalDataFetched?.uploadLicense == null ||
-        hospitalDataFetched?.hospitalName == null|| hospitalDataFetched?.email == null) {
+        hospitalDataFetched?.hospitalName == null ||
+        hospitalDataFetched?.email == null) {
       EasyNavigation.pushReplacement(
         type: PageTransitionType.bottomToTop,
         context: context,
-        page: HospitalFormScreen( hospitalModel:hospitalDataFetched ,isEditing: false,),
+        page: HospitalFormScreen(
+          hospitalModel: hospitalDataFetched,
+          isEditing: false,
+        ),
       );
       notifyListeners();
     } else if (hospitalDataFetched?.placemark == null) {
@@ -122,6 +141,7 @@ class AuthenticationProvider extends ChangeNotifier {
       CustomToast.errorToast(text: failure.errMsg);
     }, (sucess) {
       EasyNavigation.pop(context: context);
+      hospitalDataFetched = null;
       CustomToast.sucessToast(text: sucess);
       EasyNavigation.pushReplacement(
           context: context, page: const SplashScreen());

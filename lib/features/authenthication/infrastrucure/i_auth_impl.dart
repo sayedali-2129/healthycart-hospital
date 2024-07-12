@@ -1,12 +1,14 @@
 import 'dart:async';
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:healthycart/core/failures/main_failure.dart';
 import 'package:healthycart/core/general/firebase_collection.dart';
-import 'package:healthycart/features/authenthication/domain/i_auth_facade.dart';
 import 'package:healthycart/features/add_hospital_form_page/domain/model/hospital_model.dart';
+import 'package:healthycart/features/authenthication/domain/i_auth_facade.dart';
 import 'package:injectable/injectable.dart';
 
 @LazySingleton(as: IAuthFacade)
@@ -81,26 +83,23 @@ class IAuthImpl implements IAuthFacade {
         .doc(uid)
         .get();
     if (user.data() != null) {
-    FirebaseMessaging messaging = FirebaseMessaging.instance;
+      FirebaseMessaging messaging = FirebaseMessaging.instance;
       final fcmToken = await messaging.getToken();
-        await _firestore
+      log(fcmToken ?? 'null');
+
+      await _firestore
           .collection(FirebaseCollections.hospitals)
           .doc(uid)
           .update({
         'fcmToken': fcmToken,
       });
     } else {
-       FirebaseMessaging messaging = FirebaseMessaging.instance;
+      FirebaseMessaging messaging = FirebaseMessaging.instance;
       final fcmToken = await messaging.getToken();
-      await _firestore
-          .collection(FirebaseCollections.hospitals)
-          .doc(uid)
-          .set(HospitalModel.initial()
-              .copyWith(
-                id: uid,
-                phoneNo: phoneNo,
-                fcmToken: fcmToken
-              )
+      log(fcmToken ?? 'null');
+      await _firestore.collection(FirebaseCollections.hospitals).doc(uid).set(
+          HospitalModel.initial()
+              .copyWith(id: uid, phoneNo: phoneNo, fcmToken: fcmToken)
               .toMap());
     }
   }
@@ -112,7 +111,7 @@ class IAuthImpl implements IAuthFacade {
         hospitalStreamController =
         StreamController<Either<MainFailure, HospitalModel>>();
     try {
-   _streamSubscription =  _firestore
+      _streamSubscription = _firestore
           .collection(FirebaseCollections.hospitals)
           .doc(userId)
           .snapshots()
@@ -133,7 +132,7 @@ class IAuthImpl implements IAuthFacade {
   }
 
   @override
-  Future<void> cancelStream() async{
+  Future<void> cancelStream() async {
     await _streamSubscription.cancel();
   }
 

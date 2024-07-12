@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -31,6 +32,8 @@ class HosptialFormProvider extends ChangeNotifier {
   bool fetchLoading = false;
 
   Future<void> getImage() async {
+    String? hospitalId = FirebaseAuth.instance.currentUser?.uid;
+
     final result = await _iFormFeildFacade.getImage();
     result.fold((failure) {
       CustomToast.errorToast(text: failure.errMsg);
@@ -70,15 +73,16 @@ class HosptialFormProvider extends ChangeNotifier {
   }
 
   HospitalModel? hospitalDetail;
-  String? hospitalId = FirebaseAuth.instance.currentUser?.uid;
   Placemark? placemark;
   AdminType? adminType;
   Future<void> addHospitalForm({
     required BuildContext context,
   }) async {
+    String? hospitalId = FirebaseAuth.instance.currentUser?.uid;
+
     keywordHospitalBuider();
     hospitalDetail = HospitalModel(
-      id : hospitalId,
+      id: hospitalId,
       createdAt: Timestamp.now(),
       keywords: keywordHospitalBuider(),
       phoneNo: phoneNumberController.text,
@@ -135,6 +139,8 @@ class HosptialFormProvider extends ChangeNotifier {
   String? pdfUrl;
 
   Future<void> getPDF({required BuildContext context}) async {
+    String? hospitalId = FirebaseAuth.instance.currentUser?.uid;
+
     final result = await _iFormFeildFacade.getPDF();
     result.fold((failure) {
       CustomToast.errorToast(text: failure.errMsg);
@@ -182,6 +188,8 @@ class HosptialFormProvider extends ChangeNotifier {
       notifyListeners();
       return;
     }
+    String? hospitalId = FirebaseAuth.instance.currentUser?.uid;
+
     final result = await _iFormFeildFacade.deletePDF(
         pdfUrl: pdfUrl ?? '', hospitalId: hospitalId ?? '');
     result.fold((failure) {
@@ -221,6 +229,7 @@ class HosptialFormProvider extends ChangeNotifier {
       uploadLicense: pdfUrl,
       image: imageUrl,
     );
+    String? hospitalId = FirebaseAuth.instance.currentUser?.uid;
 
     final result = await _iFormFeildFacade.updateHospitalForm(
         hospitalDetails: hospitalDetail!, hospitalId: hospitalId!);

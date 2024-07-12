@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:healthycart/core/custom/bottom_navigation/bottom_nav_widget.dart';
+import 'package:healthycart/features/authenthication/application/authenication_provider.dart';
 import 'package:healthycart/features/hospital_banner/presentation/banner_page.dart';
 import 'package:healthycart/features/hospital_doctor/presentation/doctor_category/doctor_category_main.dart';
 import 'package:healthycart/features/hospital_profile/application/profile_provider.dart';
@@ -18,6 +19,15 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) {
+        context.read<AuthenticationProvider>().setShowUserBlock(!(context
+                .read<AuthenticationProvider>()
+                .hospitalDataFetched
+                ?.isActive ??
+            false));
+      },
+    );
     super.initState();
   }
 

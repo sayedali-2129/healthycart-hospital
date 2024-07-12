@@ -12,7 +12,6 @@ import 'package:injectable/injectable.dart';
 class ProfileProvider extends ChangeNotifier {
   ProfileProvider(this.iProfileFacade);
   final IProfileFacade iProfileFacade;
-  final hospitalId = FirebaseAuth.instance.currentUser?.uid;
   bool ishospitalON = false;
 
   void hospitalStatus(bool status) {
@@ -26,6 +25,8 @@ class ProfileProvider extends ChangeNotifier {
   bool fetchLoading = false;
 
   Future<void> getHospitalAllDoctorDetails({String? searchText}) async {
+    final hospitalId = FirebaseAuth.instance.currentUser?.uid;
+
     fetchLoading = true;
     notifyListeners();
     final result = await iProfileFacade.getHospitalAllDoctorDetails(
@@ -55,6 +56,8 @@ class ProfileProvider extends ChangeNotifier {
 
 /* -------------------------------------------------------------------------- */
   Future<void> setActiveHospital() async {
+    final hospitalId = FirebaseAuth.instance.currentUser?.uid;
+
     final result = await iProfileFacade.setActiveHospital(
         ishospitalON: ishospitalON, hospitalId: hospitalId ?? '');
     result.fold((failure) {

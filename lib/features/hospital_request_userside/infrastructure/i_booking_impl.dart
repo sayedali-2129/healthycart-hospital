@@ -5,8 +5,10 @@ import 'package:dartz/dartz.dart';
 import 'package:healthycart/core/failures/main_failure.dart';
 import 'package:healthycart/core/general/firebase_collection.dart';
 import 'package:healthycart/core/general/typdef.dart';
+import 'package:healthycart/core/services/get_network_time.dart';
 import 'package:healthycart/features/hospital_request_userside/domain/i_booking_facade.dart';
 import 'package:healthycart/features/hospital_request_userside/domain/models/booking_model.dart';
+import 'package:healthycart/features/hospital_request_userside/domain/models/day_transaction_model.dart';
 import 'package:injectable/injectable.dart';
 
 @LazySingleton(as: IBookingFacade)
@@ -98,7 +100,10 @@ class IBookingImpl implements IBookingFacade {
       {required String orderId,
       required int orderStatus,
       String? hospitalId,
+      DayTransactionModel? dayTransactionModel,
       num? totalAmount,
+      String? paymentMode,
+      String? dayTransactionDate,
       String? rejectReason}) async {
     try {
       /* ------------------------------- ACCEPT ORDER ------------------------------ */
@@ -113,6 +118,7 @@ class IBookingImpl implements IBookingFacade {
         return right('Booking Accepted successfully');
       } else if (orderStatus == 2) {
         final batch = _firestore.batch();
+        final formattedDate = await getFormattedNetworkTime();
 
         final bookingDoc = _firestore
             .collection(FirebaseCollections.hospitalBooking)
@@ -121,10 +127,43 @@ class IBookingImpl implements IBookingFacade {
             .collection(FirebaseCollections.hospitalTransactions)
             .doc(hospitalId);
 
+        final dayTransactionDoc = _firestore
+            .collection(FirebaseCollections.hospitals)
+            .doc(hospitalId)
+            .collection(FirebaseCollections.dayTransaction)
+            .doc(formattedDate);
+        final hospitalDoc = _firestore
+            .collection(FirebaseCollections.hospitals)
+            .doc(hospitalId);
+
         batch.update(
             bookingDoc, {'orderStatus': 2, 'completedAt': Timestamp.now()});
         batch.update(transactionDoc,
             {'totalTransactionAmt': FieldValue.increment(totalAmount!)});
+
+        if (paymentMode == 'Online') {
+          batch.update(transactionDoc,
+              {'onlinePayment': FieldValue.increment(totalAmount)});
+        } else {
+          batch.update(transactionDoc,
+              {'offlinePayment': FieldValue.increment(totalAmount)});
+        }
+        batch.update(hospitalDoc, {'dayTransaction': formattedDate});
+
+        if (dayTransactionDate == formattedDate) {
+          batch.update(dayTransactionDoc, {
+            'totalAmount': FieldValue.increment(totalAmount),
+            'offlinePayment': paymentMode != 'Online'
+                ? FieldValue.increment(totalAmount)
+                : FieldValue.increment(0),
+            'onlinePayment': paymentMode == 'Online'
+                ? FieldValue.increment(totalAmount)
+                : FieldValue.increment(0),
+          });
+        } else {
+          batch.set(dayTransactionDoc, dayTransactionModel?.toMap());
+        }
+
         await batch.commit();
 
         return right('Order Completed Successfully');

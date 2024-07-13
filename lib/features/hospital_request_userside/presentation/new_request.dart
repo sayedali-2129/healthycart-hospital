@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthycart/core/custom/confirm_alertbox/confirm_alertbox_widget.dart';
 import 'package:healthycart/core/custom/lottie/circular_loading.dart';
+import 'package:healthycart/core/custom/lottie/loading_lottie.dart';
 import 'package:healthycart/core/custom/no_data/no_data_widget.dart';
 import 'package:healthycart/core/custom/toast/toast.dart';
+import 'package:healthycart/core/services/easy_navigation.dart';
 import 'package:healthycart/features/authenthication/application/authenication_provider.dart';
 import 'package:healthycart/features/hospital_request_userside/application/provider/hospital_booking_provider.dart.dart';
 import 'package:healthycart/features/hospital_request_userside/presentation/widgets/date_and_time_tab.dart';
@@ -348,6 +350,9 @@ class _NewRequestState extends State<NewRequest> {
                                             .showAlertConfirmBox(
                                                 context: context,
                                                 confirmButtonTap: () {
+                                                  LoadingLottie.showLoading(
+                                                      context: context,
+                                                      text: 'Please wait...');
                                                   bookingProvider
                                                       .updateOrderStatus(
                                                     orderId: bookings.id!,
@@ -359,6 +364,12 @@ class _NewRequestState extends State<NewRequest> {
                                                     hospitalName: bookings
                                                         .hospitalDetails!
                                                         .hospitalName,
+                                                  )
+                                                      .whenComplete(
+                                                    () {
+                                                      EasyNavigation.pop(
+                                                          context: context);
+                                                    },
                                                   );
                                                 },
                                                 titleText: 'Confirm',
@@ -366,7 +377,8 @@ class _NewRequestState extends State<NewRequest> {
                                                     'Are you sure you want to accept this order?');
                                       },
                                       style: ElevatedButton.styleFrom(
-                                          backgroundColor: Color(0xff6EAE6D),
+                                          backgroundColor:
+                                              const Color(0xff6EAE6D),
                                           surfaceTintColor: Colors.white,
                                           shape: RoundedRectangleBorder(
                                               borderRadius:

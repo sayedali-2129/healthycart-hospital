@@ -4,14 +4,13 @@ import 'package:healthycart/core/custom/app_bar/custom_appbar_curve.dart';
 import 'package:healthycart/core/custom/confirm_alertbox/confirm_alertbox_widget.dart';
 import 'package:healthycart/core/custom/lottie/circular_loading.dart';
 import 'package:healthycart/core/custom/lottie/loading_lottie.dart';
-import 'package:healthycart/core/custom/no_data/no_data_widget.dart';
 import 'package:healthycart/core/services/easy_navigation.dart';
 import 'package:healthycart/features/authenthication/application/authenication_provider.dart';
 import 'package:healthycart/features/hospital_doctor/application/doctor_provider.dart';
-import 'package:healthycart/features/hospital_doctor/presentation/doctor_details/add_doctor.dart';
 import 'package:healthycart/features/hospital_doctor/presentation/doctor_category/widgets/add_new_round_widget.dart';
 import 'package:healthycart/features/hospital_doctor/presentation/doctor_category/widgets/get_category_popup.dart';
 import 'package:healthycart/features/hospital_doctor/presentation/doctor_category/widgets/round_text_widget.dart';
+import 'package:healthycart/features/hospital_doctor/presentation/doctor_details/add_doctor.dart';
 import 'package:healthycart/utils/constants/colors/colors.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
@@ -100,24 +99,18 @@ class DoctorScreen extends StatelessWidget {
                 ),
               ),
             ),
-         if (doctorProvider.fetchLoading && doctorProvider.doctorCategoryList.isEmpty)
+          (doctorProvider.fetchLoading)
+              ?
 
               /// loading is done here
-             const SliverFillRemaining(
+              const SliverFillRemaining(
                   child: Center(
                     child: Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: LoadingIndicater()
-                    ),
+                        padding: EdgeInsets.all(16.0),
+                        child: LoadingIndicater()),
                   ),
                 )
-                else if
-                (doctorProvider.doctorCategoryList.isEmpty)
-                   const ErrorOrNoDataPage(
-                      text: "No categories added.",
-                    )
-              else  
-              SliverPadding(
+              : SliverPadding(
                   padding: const EdgeInsets.all(16),
                   sliver: SliverGrid.builder(
                     itemCount: doctorProvider.doctorCategoryList.length + 1,

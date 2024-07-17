@@ -1,6 +1,21 @@
 class AppDetails {
-  static const String whatsappNumber = '+917907014743';
   static const String appName = 'Healthycart Hospital';
   static const projectId = 'healthycart-4c697';
-  static const phoneNumber = "+91 7907014743";
+  static const String appVersion = "1.0.3";
+  static const appstoreId = "000000000";
+  static const bundleId = "com.healthy_cart_pharmacy";
+  static const phoneNumber = "+91 9961368060";
+  static const String whatsappNumber = '+91 9961368060';
+  static const email = "support@healtycart.in";
+  static const packageName = "";
+  static const bundleID = "";
+  static const projectID = "healthycart-4c697";
+  static const appStoreID = "";
+  static const appUrl = "";
+  static const urlPrfix = "";
+  static const domain = "";
+  static const privacyPolicyUrl = "";
+  static const termsAndConditionsUrl = "";
+  static const androidShareUrl = "";
+  static const iosShareUrl = "";
 }

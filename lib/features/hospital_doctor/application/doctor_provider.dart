@@ -200,6 +200,8 @@ class DoctorProvider extends ChangeNotifier {
   String? availableTotalTimeSlot1;
   String? availableTotalTimeSlot2;
   String? availableTotalTime;
+  DateTime? timeSlot1;
+  DateTime? timeSlot2;
   List<String>? timeSlotListElementList = [];
 // adding the userId/hospital and categoryId
   void selectedCategoryDetail({
@@ -279,27 +281,29 @@ class DoctorProvider extends ChangeNotifier {
 
   void doctorDataList() {
     doctorDetails = DoctorAddModel(
-        categoryId: categoryId,
-        hospitalId: hospitalId,
-        doctorImage: imageUrl,
-        doctorName: doctorNameController.text,
-        doctorTotalTime: availableTotalTime,
-        doctorTimeList: timeSlotListElementList,
-        doctorFee: int.parse(doctorFeeController.text),
-        doctorSpecialization: specializationController.text,
-        doctorExperience: int.parse(experienceController.text),
-        doctorQualification: qualificationController.text,
-        doctorAbout: aboutController.text,
-        createdAt: Timestamp.now(),
-        keywords: keywordDoctorBuilder(),
-        hospital: hospitalData?.hospitalName ?? '',
-        placemark: hospitalData?.placemark, 
-        );
+      categoryId: categoryId,
+      hospitalId: hospitalId,
+      doctorImage: imageUrl,
+      doctorName: doctorNameController.text,
+      doctorTotalTime: availableTotalTime,
+      doctorTimeList: timeSlotListElementList,
+      doctorFee: int.parse(doctorFeeController.text),
+      doctorSpecialization: specializationController.text,
+      doctorExperience: int.parse(experienceController.text),
+      doctorQualification: qualificationController.text,
+      doctorAbout: aboutController.text,
+      createdAt: Timestamp.now(),
+      keywords: keywordDoctorBuilder(),
+      hospital: hospitalData?.hospitalName ?? '',
+      placemark: hospitalData?.placemark,
+    );
     notifyListeners();
   }
 
   void clearDoctorDetails() {
     imageFile = null;
+    timeSlot1 = null;
+    timeSlot2 = null;
     availableTotalTimeSlot2 = null;
     availableTotalTimeSlot1 = null;
     availableTotalTime = null;
@@ -404,7 +408,7 @@ class DoctorProvider extends ChangeNotifier {
       createdAt: doctorData.createdAt,
       keywords: keywordDoctorBuilder(),
       hospital: hospitalData?.hospitalName ?? '',
-      placemark: hospitalData?.placemark, 
+      placemark: hospitalData?.placemark,
     );
     final result = await _iDoctorFacade.updateDoctorDetails(
         doctorId: doctorData.id ?? '', doctorData: doctorDetails!);

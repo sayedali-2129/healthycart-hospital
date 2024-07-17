@@ -199,11 +199,11 @@ class _NewRequestState extends State<NewRequest> {
                               const Gap(8),
                               /* ----------------------------- PATIENT DETAILS ---------------------------- */
                               PatientDetailsContainer(
-                                patientName: bookings.patientName!,
-                                patientGender: bookings.patientGender!,
-                                patientAge: bookings.patientAge!,
-                                patientPlace: bookings.patientPlace!,
-                                patientNumber: bookings.patientNumber!,
+                                patientName: bookings.patientName ?? 'Unknown User',
+                                patientGender: bookings.patientGender ??  'Unknown Gender',
+                                patientAge: bookings.patientAge ??  'Unknown Age',
+                                patientPlace: bookings.patientPlace ??  'Unknown Place',
+                                patientNumber: bookings.patientNumber??  'Unknown Number',
                                 onCall: () {
                                   bookingProvider.lauchDialer(
                                       phoneNumber:
@@ -358,7 +358,7 @@ class _NewRequestState extends State<NewRequest> {
                                                     orderId: bookings.id!,
                                                     orderStatus: 1,
                                                     fcmtoken: bookings
-                                                            .hospitalDetails!
+                                                            .userDetails!
                                                             .fcmToken ??
                                                         '',
                                                     hospitalName: bookings

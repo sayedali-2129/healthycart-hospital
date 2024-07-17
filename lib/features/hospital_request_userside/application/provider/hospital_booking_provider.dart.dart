@@ -9,6 +9,7 @@ import 'package:healthycart/core/services/sent_fcm_message.dart';
 import 'package:healthycart/features/hospital_request_userside/domain/i_booking_facade.dart';
 import 'package:healthycart/features/hospital_request_userside/domain/models/booking_model.dart';
 import 'package:healthycart/features/hospital_request_userside/domain/models/day_transaction_model.dart';
+import 'package:healthycart/features/hospital_request_userside/domain/models/hospital_transaction_model.dart';
 import 'package:injectable/injectable.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -107,13 +108,14 @@ class HospitalBookingProvider extends ChangeNotifier {
       String? hospitalName,
       String? hospitalId,
       num? totalAmount,
+      num? commission,
+      num? commissionAmt,
       String? dayTransactionDate,
       String? paymentMode,
       String? rejectReason}) async {
     isLoading = true;
     notifyListeners();
     final networkTime = await getNetworkTime();
-
     final result = await iBookingFacade.updateOrderStatus(
         totalAmount: totalAmount,
         orderId: orderId,
@@ -122,7 +124,10 @@ class HospitalBookingProvider extends ChangeNotifier {
         rejectReason: rejectReason,
         dayTransactionDate: dayTransactionDate,
         paymentMode: paymentMode,
+        commissionAmt: commissionAmt,
+        commission: commission,
         dayTransactionModel: DayTransactionModel(
+          commission: commissionAmt,
           createdAt: Timestamp.fromDate(networkTime),
           totalAmount: totalAmount,
           offlinePayment: paymentMode != 'Online' ? totalAmount : 0,
@@ -156,6 +161,10 @@ class HospitalBookingProvider extends ChangeNotifier {
       isLoading = false;
       notifyListeners();
     });
+  }
+
+  num calculateOrderCommission(num finalAmount) {
+    return (finalAmount * hospitalTransactionModel!.commission!) / 100;
   }
 
   /* ------------------------------ LAUNCH DIALER ----------------------------- */
@@ -258,6 +267,31 @@ class HospitalBookingProvider extends ChangeNotifier {
     }, (success) {
       CustomToast.sucessToast(text: success);
     });
+    notifyListeners();
+  }
+
+  /* -------------------------- GET TRANSACTION DATA -------------------------- */
+  HospitalTransactionModel? hospitalTransactionModel;
+
+  Future<void> getTransactionData({required String hospitalId}) async {
+    isLoading = true;
+    notifyListeners();
+    log('Called transcation fetch');
+    final result =
+        await iBookingFacade.getTransactionData(hospitalId: hospitalId);
+
+    result.fold(
+      (err) {
+        log('error in provider getTransactionData():: ${err.errMsg}');
+      },
+      (success) {
+        // log(success.toString());
+        hospitalTransactionModel = success;
+        // log('transaction ID ::: $labId');
+      },
+    );
+    isLoading = false;
+
     notifyListeners();
   }
 }

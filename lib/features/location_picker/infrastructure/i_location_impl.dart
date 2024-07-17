@@ -37,8 +37,8 @@ class ILocationImpl implements ILocationFacade {
 
   @override
   Future<bool> getLocationPermisson() async {
-    await _locationService.getPermission();
-    return true;
+  return  await _locationService.getPermission();
+
   }
 
   @override

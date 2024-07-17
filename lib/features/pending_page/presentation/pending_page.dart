@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthycart/core/services/easy_navigation.dart';
 import 'package:healthycart/features/authenthication/application/authenication_provider.dart';
+import 'package:healthycart/features/hospital_profile/presentation/widget/contact_us_sheet.dart';
 import 'package:healthycart/features/pending_page/application/pending_provider.dart';
 import 'package:healthycart/features/splash_screen/splash_screen.dart';
 import 'package:healthycart/utils/constants/colors/colors.dart';
@@ -66,9 +67,13 @@ class PendingPageScreen extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton.icon(
                 onPressed: () {
-                  pendingProvider.reDirectToWhatsApp(
-                      message:
-                          'Hi,I like to know the details of the request regarding hospital approval through your application.');
+                  showModalBottomSheet(
+                    backgroundColor: BColors.white,
+                    elevation: 5,
+                    showDragHandle: true,
+                    context: context,        
+                    builder: (context) =>  ContactUsBottomSheet(message:  'Hi, I like to know the details of the request regarding${authProvider.hospitalDataFetched?.hospitalName} approval through your Healthy cart hospital admin.',),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(

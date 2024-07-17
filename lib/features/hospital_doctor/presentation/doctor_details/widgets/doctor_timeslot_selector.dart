@@ -17,6 +17,7 @@ class TimeSlotChooserWidget extends StatelessWidget {
       return Column(
         children: [
           Material(
+            color: BColors.white,
             elevation: 3,
              borderRadius: BorderRadius.circular(16),
             child: SizedBox(

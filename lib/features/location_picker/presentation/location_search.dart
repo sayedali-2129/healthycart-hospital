@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthycart/core/custom/app_bar/sliver_appbar.dart';
 import 'package:healthycart/core/custom/custom_button_n_search/search_field_button.dart';
+import 'package:healthycart/core/custom/lottie/circular_loading.dart';
 import 'package:healthycart/core/custom/lottie/loading_lottie.dart';
 import 'package:healthycart/features/authenthication/application/authenication_provider.dart';
 import 'package:healthycart/features/location_picker/application/location_provider.dart';
@@ -11,9 +12,10 @@ import 'package:provider/provider.dart';
 
 class UserLocationSearchWidget extends StatefulWidget {
   const UserLocationSearchWidget({
-    super.key, this.isHospitaEditProfile,
+    super.key,
+    this.isHospitalEditProfile,
   });
-final bool? isHospitaEditProfile;
+  final bool? isHospitalEditProfile;
 
   @override
   State<UserLocationSearchWidget> createState() =>
@@ -40,8 +42,8 @@ class _UserLocationSearchWidgetState extends State<UserLocationSearchWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body:
-        Consumer2<LocationProvider, AuthenticationProvider>(builder: (context, locationProvider,authProvider ,_) {
+    return Scaffold(body: Consumer2<LocationProvider, AuthenticationProvider>(
+        builder: (context, locationProvider, authProvider, _) {
       return CustomScrollView(slivers: [
         SliverCustomAppbar(
             title: 'Choose Location',
@@ -75,14 +77,18 @@ class _UserLocationSearchWidgetState extends State<UserLocationSearchWidget> {
               if (locationProvider.selectedPlaceMark == null) return;
               LoadingLottie.showLoading(
                   context: context, text: 'Getting Location..');
-              await locationProvider.setLocationByHospital(context: context, isHospitaEditProfile: widget.isHospitaEditProfile ?? false, hospitalModelrequestedCount: authProvider.hospitalDataFetched?.requested);
-              
+              await locationProvider.setLocationByHospital(
+                  context: context,
+                  isHospitalEditProfile: widget.isHospitalEditProfile ?? false,
+                  hospitalModelrequestedCount:
+                      authProvider.hospitalDataFetched?.requested);
             },
             child: Padding(
               padding:
                   const EdgeInsets.only(left: 16, right: 16, bottom: 8, top: 4),
               child: SizedBox(
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       mainAxisSize: MainAxisSize.min,
@@ -143,9 +149,7 @@ class _UserLocationSearchWidgetState extends State<UserLocationSearchWidget> {
           const SliverToBoxAdapter(
               child: Padding(
             padding: EdgeInsets.only(left: 16, right: 16, bottom: 8, top: 4),
-            child: LinearProgressIndicator(
-              color: BColors.darkblue,
-            ),
+            child: LoadingIndicater(),
           )),
         if (locationProvider.searchResults.isEmpty)
           SliverFillRemaining(
@@ -188,7 +192,8 @@ class _UserLocationSearchWidgetState extends State<UserLocationSearchWidget> {
                       size: 20,
                     ),
                     onTap: () {
-                      locationProvider.setSelectedPlaceMark(locationProvider.searchResults[index]);
+                      locationProvider.setSelectedPlaceMark(
+                          locationProvider.searchResults[index]);
                     },
                   ),
                 ),

@@ -27,12 +27,12 @@ class _UserPaymentState extends State<UserPayment> {
         provider
           ..cleatDataCompleted()
           ..getCompletedOrders(
-              hospitalId: authProvider.hospitalDataFetched!.id!, limit: 20);
+              hospitalId: authProvider.hospitalDataFetched!.id!, limit: 20)
+          ..getTransactionData(hospitalId: authProvider.hospitalDataFetched!.id!);
       },
     );
     provider.completeInit(
         scrollController, authProvider.hospitalDataFetched!.id!, 20);
-
     super.initState();
   }
 
@@ -41,104 +41,157 @@ class _UserPaymentState extends State<UserPayment> {
     final ordersProvider = Provider.of<HospitalBookingProvider>(context);
 
     return Scaffold(
-        body: CustomScrollView(
-      controller: scrollController,
-      slivers: [
-        if (ordersProvider.isLoading == true &&
-            ordersProvider.completedList.isEmpty)
-          const SliverFillRemaining(
-            child: Center(
-              child: LoadingIndicater(),
-            ),
-          )
-        else if (ordersProvider.completedList.isEmpty)
-          const SliverFillRemaining(
-            child: NoDataImageWidget(text: 'No Transactiond Found!'),
-          )
-        else
-          SliverPadding(
-            padding:
-                const EdgeInsets.only(left: 16, right: 16, bottom: 16, top: 32),
-            sliver: SliverList.separated(
-              separatorBuilder: (context, index) => const Gap(5),
-              itemCount: ordersProvider.completedList.length,
-              itemBuilder: (context, index) {
-                final orders = ordersProvider.completedList[index];
-                return Container(
-                  height: 65,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all()),
-                  child: Padding(
-                    padding: const EdgeInsets.all(4),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Container(
-                          clipBehavior: Clip.antiAlias,
-                          height: 50,
-                          width: 50,
-                          decoration:
-                              const BoxDecoration(shape: BoxShape.circle),
-                          child: orders.userDetails!.image == null
-                              ? Image.asset(BImage.userAvatar)
-                              : CustomCachedNetworkImage(
-                                  image: orders.userDetails!.image!),
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                      orders.userDetails!.userName ??
-                                          'Not Provided',
-                                      overflow: TextOverflow.ellipsis,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .labelLarge),
-                                ),
-                                Text(
-                                  orders.paymentMethod ?? '',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .labelLarge!
-                                      .copyWith(color: BColors.green),
-                                ),
-                                Expanded(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
+      body: CustomScrollView(
+        controller: scrollController,
+        slivers: [
+          if (ordersProvider.isLoading ||
+              ordersProvider.hospitalTransactionModel == null)
+            const SliverFillRemaining(
+              child: Center(
+                child: LoadingIndicater(),
+              ),
+            )
+          else if (ordersProvider.completedList.isEmpty &&
+              ordersProvider.isLoading == false)
+            const SliverFillRemaining(
+              child: NoDataImageWidget(text: 'No Transactiond Found!'),
+            )
+          else
+            SliverPadding(
+              padding: const EdgeInsets.only(
+                  left: 16, right: 16, bottom: 16, top: 32),
+              sliver: SliverList.separated(
+                separatorBuilder: (context, index) => const Gap(5),
+                itemCount: ordersProvider.completedList.length,
+                itemBuilder: (context, index) {
+                  final orders = ordersProvider.completedList[index];
+                  return Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all()),
+                    child: Padding(
+                      padding: const EdgeInsets.all(4),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Container(
+                            clipBehavior: Clip.antiAlias,
+                            height: 50,
+                            width: 50,
+                            decoration:
+                                const BoxDecoration(shape: BoxShape.circle),
+                            child: orders.userDetails!.image == null
+                                ? Image.asset(BImage.userAvatar)
+                                : CustomCachedNetworkImage(
+                                    image: orders.userDetails!.image!),
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
+                                      Expanded(
+                                        child: Text(
+                                            orders.userDetails!.userName ??
+                                                'Not Provided',
+                                            overflow: TextOverflow.ellipsis,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .labelLarge!
+                                                .copyWith(fontSize: 12)),
+                                      ),
                                       Text(
-                                        '₹${orders.totalAmount ?? 0}',
-                                        overflow: TextOverflow.ellipsis,
+                                        orders.paymentMethod ?? '',
                                         style: Theme.of(context)
                                             .textTheme
-                                            .labelLarge,
+                                            .labelLarge!
+                                            .copyWith(
+                                                color: BColors.green,
+                                                fontSize: 12),
+                                      ),
+                                      Expanded(
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            Text(
+                                              '₹${orders.totalAmount ?? 0}',
+                                              overflow: TextOverflow.ellipsis,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .labelLarge!
+                                                  .copyWith(fontSize: 12),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ],
                                   ),
-                                ),
-                              ],
+                                  const Gap(10),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text('Commission : ${orders.commission}%',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .labelLarge!
+                                              .copyWith(fontSize: 12)),
+                                      Text(
+                                          'Commission Amt : ₹${orders.commissionAmt}',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .labelLarge!
+                                              .copyWith(fontSize: 12)),
+                                    ],
+                                  )
+                                ],
+                              ),
                             ),
-                          ),
-                        )
-                      ],
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
-          ),
-        SliverToBoxAdapter(
-            child: (ordersProvider.isLoading == true &&
-                    ordersProvider.completedList.isNotEmpty)
-                ? const Center(child: LoadingIndicater())
-                : const Gap(0)),
-      ],
-    ));
+          SliverToBoxAdapter(
+              child: (ordersProvider.isLoading == true &&
+                      ordersProvider.completedList.isNotEmpty)
+                  ? const Center(child: LoadingIndicater())
+                  : const Gap(0)),
+        ],
+      ),
+      bottomNavigationBar: ordersProvider.hospitalTransactionModel != null
+          ? Container(
+              height: 52,
+              color: BColors.mainlightColor,
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Total Transaction : ₹${ordersProvider.hospitalTransactionModel!.totalTransactionAmt}',
+                      style: const TextStyle(
+                          color: BColors.darkblue, fontSize: 12),
+                    ),
+                    Text(
+                      'Total Commission : ₹${ordersProvider.hospitalTransactionModel!.totalCommissionPending}',
+                      style: const TextStyle(
+                          color: BColors.darkblue, fontSize: 12),
+                    )
+                  ],
+                ),
+              ),
+            )
+          : null,
+    );
   }
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:healthycart/core/di/injection.dart';
+import 'package:healthycart/core/services/foreground_notification.dart';
 import 'package:healthycart/features/add_hospital_form_page/application/hospital_form_provider.dart';
 import 'package:healthycart/features/authenthication/application/authenication_provider.dart';
 import 'package:healthycart/features/hospital_banner/application/add_banner_provider.dart';
@@ -14,8 +16,26 @@ import 'package:healthycart/main.dart';
 import 'package:healthycart/utils/theme/theme.dart';
 import 'package:provider/provider.dart';
 
-class App extends StatelessWidget {
-  const App({super.key});
+class App extends StatefulWidget {
+  const App(
+      {super.key,
+      required this.androidNotificationChannel,
+      required this.flutterLocalNotificationsPlugin});
+  final AndroidNotificationChannel androidNotificationChannel;
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+  @override
+  State<App> createState() => _AppState();
+}
+
+class _AppState extends State<App> {
+  @override
+  void initState() {
+    ForegroundNotificationService.foregroundNotitficationInit(
+        channel: widget.androidNotificationChannel,
+        flutterLocalNotificationsPlugin:
+            widget.flutterLocalNotificationsPlugin);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +75,15 @@ class App extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
+          builder: (context, child) => Overlay(
+                initialEntries: [
+                  if (child != null) ...[
+                    OverlayEntry(
+                      builder: (context) => child,
+                    ),
+                  ],
+                ],
+              ),
           navigatorKey: navigatorKey,
           debugShowCheckedModeBanner: false,
           themeMode: ThemeMode.light,

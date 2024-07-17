@@ -8,6 +8,7 @@ import 'package:healthycart/core/custom/lottie/loading_lottie.dart';
 import 'package:healthycart/core/custom/text_formfield/textformfield.dart';
 import 'package:healthycart/core/custom/toast/toast.dart';
 import 'package:healthycart/core/general/validator.dart';
+import 'package:healthycart/core/services/easy_navigation.dart';
 import 'package:healthycart/features/add_hospital_form_page/application/hospital_form_provider.dart';
 import 'package:healthycart/features/add_hospital_form_page/domain/model/hospital_model.dart';
 import 'package:healthycart/features/add_hospital_form_page/presentation/widgets/container_image_widget.dart';
@@ -91,16 +92,32 @@ class HospitalFormScreen extends StatelessWidget {
                                             width: 176,
                                             child: GestureDetector(
                                               onTap: () {
+                                                LoadingLottie.showLoading(
+                                                    context: context,
+                                                    text:
+                                                        'Getting Location...');
                                                 context
                                                     .read<LocationProvider>()
-                                                    .getLocationPermisson();
-                                                Navigator.of(context)
-                                                    .push(MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const UserLocationSearchWidget(
-                                                          isHospitaEditProfile:
-                                                              true),
-                                                ));
+                                                    .getLocationPermisson()
+                                                    .then(
+                                                  (value) {
+                                                    if (value == false) {
+                                                      CustomToast.errorToast(
+                                                          text:
+                                                              'Please enable location.');
+                                                      return;
+                                                    } else if (value == true) {
+                                                      EasyNavigation.pop(
+                                                          context: context);
+                                                      EasyNavigation.push(
+                                                        context: context,
+                                                        page: const UserLocationSearchWidget(
+                                                            isHospitalEditProfile:
+                                                                true),
+                                                      );
+                                                    }
+                                                  },
+                                                );
                                               },
                                               child: Text(
                                                 "${authProvider.hospitalDataFetched?.placemark?.localArea},${authProvider.hospitalDataFetched?.placemark?.district},${authProvider.hospitalDataFetched?.placemark?.state}",
@@ -186,7 +203,8 @@ class HospitalFormScreen extends StatelessWidget {
                                 textInputAction: TextInputAction.next,
                                 keyboardType: TextInputType.name,
                                 validator: BValidator.validateEmail,
-                                controller: formProvider.hospitalEmailController,
+                                controller:
+                                    formProvider.hospitalEmailController,
                                 style: Theme.of(context)
                                     .textTheme
                                     .labelLarge!

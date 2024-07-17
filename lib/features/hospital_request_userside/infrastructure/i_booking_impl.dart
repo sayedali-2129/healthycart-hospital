@@ -9,6 +9,7 @@ import 'package:healthycart/core/services/get_network_time.dart';
 import 'package:healthycart/features/hospital_request_userside/domain/i_booking_facade.dart';
 import 'package:healthycart/features/hospital_request_userside/domain/models/booking_model.dart';
 import 'package:healthycart/features/hospital_request_userside/domain/models/day_transaction_model.dart';
+import 'package:healthycart/features/hospital_request_userside/domain/models/hospital_transaction_model.dart';
 import 'package:injectable/injectable.dart';
 
 @LazySingleton(as: IBookingFacade)
@@ -104,7 +105,9 @@ class IBookingImpl implements IBookingFacade {
       num? totalAmount,
       String? paymentMode,
       String? dayTransactionDate,
-      String? rejectReason}) async {
+      String? rejectReason,
+      num? commission,
+      num? commissionAmt}) async {
     try {
       /* ------------------------------- ACCEPT ORDER ------------------------------ */
       if (orderStatus == 1) {
@@ -135,11 +138,14 @@ class IBookingImpl implements IBookingFacade {
         final hospitalDoc = _firestore
             .collection(FirebaseCollections.hospitals)
             .doc(hospitalId);
-
+        
+            
+             
         batch.update(
-            bookingDoc, {'orderStatus': 2, 'completedAt': Timestamp.now()});
+            bookingDoc, {'orderStatus': 2, 'completedAt': Timestamp.now(),'commission':commission ,'commissionAmt': commissionAmt,});
         batch.update(transactionDoc,
-            {'totalTransactionAmt': FieldValue.increment(totalAmount!)});
+            {'totalTransactionAmt': FieldValue.increment(totalAmount!),
+            'totalCommissionPending': FieldValue.increment(commissionAmt!)});
 
         if (paymentMode == 'Online') {
           batch.update(transactionDoc,
@@ -153,6 +159,7 @@ class IBookingImpl implements IBookingFacade {
         if (dayTransactionDate == formattedDate) {
           batch.update(dayTransactionDoc, {
             'totalAmount': FieldValue.increment(totalAmount),
+            'commission': FieldValue.increment(commissionAmt),
             'offlinePayment': paymentMode != 'Online'
                 ? FieldValue.increment(totalAmount)
                 : FieldValue.increment(0),
@@ -281,6 +288,21 @@ class IBookingImpl implements IBookingFacade {
           .doc(orderId)
           .update({'paymentStatus': 1});
       return right('Payment status updated successfully');
+    } catch (e) {
+      return left(MainFailure.generalException(errMsg: e.toString()));
+    }
+  }
+/* ------------------------- GET TRANSACTION DETAIL ------------------------- */
+  @override
+  FutureResult<HospitalTransactionModel> getTransactionData(
+      {required String hospitalId}) async {
+    try {
+      final doc = await _firestore
+          .collection(FirebaseCollections.hospitalTransactions)
+          .where('id', isEqualTo: hospitalId)
+          .get();
+
+      return right(HospitalTransactionModel.fromMap(doc.docs.single.data()));
     } catch (e) {
       return left(MainFailure.generalException(errMsg: e.toString()));
     }

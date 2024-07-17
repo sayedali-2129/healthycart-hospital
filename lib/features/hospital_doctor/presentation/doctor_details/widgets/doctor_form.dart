@@ -131,11 +131,13 @@ class DoctorAddForm extends StatelessWidget {
                                                 use24hFormat: false,
                                                 mode: CupertinoDatePickerMode
                                                     .time,
-                                                initTime: DateTime.now(),
+                                                initTime: value.timeSlot1?? DateTime.now(),
                                                 onChange: (dateTime) {
+                                                  value.timeSlot1 = dateTime;
                                                   value.availableTotalTimeSlot1 =
                                                       DateFormat.jm()
                                                           .format(dateTime);
+
                                                   value.totalAvailableTimeSetter(
                                                       '${value.availableTotalTimeSlot1 ?? '"please add start time"'} - ${value.availableTotalTimeSlot2 ?? '"please add end time"'}');
                                                 },
@@ -160,13 +162,14 @@ class DoctorAddForm extends StatelessWidget {
                                                 use24hFormat: false,
                                                 mode: CupertinoDatePickerMode
                                                     .time,
-                                                initTime: DateTime.now(),
+                                                initTime:value.timeSlot2?? DateTime.now(),
                                                 onChange: (dateTime) {
+                                                  value.timeSlot2 = dateTime;
                                                   value.availableTotalTimeSlot2 =
                                                       DateFormat.jm()
                                                           .format(dateTime);
                                                   value.totalAvailableTimeSetter(
-                                                      '${value.availableTotalTimeSlot1} - ${value.availableTotalTimeSlot2}');
+                                                      '${value.availableTotalTimeSlot1 ?? '"please add start time"'} - ${value.availableTotalTimeSlot2 ?? '"please add end time"'}');
                                                 },
                                               ),
                                             ],

@@ -7,6 +7,7 @@ class TransferTransactionsModel {
   num? commission;
   String? formattedDate;
   List<String>? keywords;
+  String? transctionType;
   TransferTransactionsModel({
     this.transactionId,
     this.dateAndTime,
@@ -14,6 +15,7 @@ class TransferTransactionsModel {
     this.commission,
     this.formattedDate,
     this.keywords,
+    this.transctionType,
   });
 
   Map<String, dynamic> toMap() {
@@ -24,6 +26,7 @@ class TransferTransactionsModel {
       'commission': commission,
       'formattedDate': formattedDate,
       'keywords': keywords,
+      'transctionType': transctionType,
     };
   }
 
@@ -38,6 +41,9 @@ class TransferTransactionsModel {
       commission: map['commission'] != null ? map['commission'] as num : null,
       formattedDate:
           map['formattedDate'] != null ? map['formattedDate'] as String : null,
+      transctionType: map['transctionType'] != null
+          ? map['transctionType'] as String
+          : null,
       keywords: map['keywords'] != null
           ? List<String>.from(map['keywords'] as List<dynamic>)
           : null,
@@ -50,6 +56,7 @@ class TransferTransactionsModel {
     num? transferAmount,
     num? commission,
     String? formattedDate,
+    String? transctionType,
     List<String>? keywords,
   }) {
     return TransferTransactionsModel(
@@ -59,6 +66,8 @@ class TransferTransactionsModel {
       commission: commission ?? this.commission,
       formattedDate: formattedDate ?? this.formattedDate,
       keywords: keywords ?? this.keywords,
+      transctionType: transctionType ?? this.transctionType,
     );
   }
 }
+

@@ -23,6 +23,82 @@
           "other_platform_oauth_client": []
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:263317797819:android:d50c4de93ce4c21cd4229e",
+        "android_client_info": {
+          "package_name": "com.healthy_cart_laboratory"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOjyNpIkNH4KX750pUdAvEPw6XFbA-UGE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:263317797819:android:6f2e2006dc6f2d08d4229e",
+        "android_client_info": {
+          "package_name": "com.healthy_cart_user"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOjyNpIkNH4KX750pUdAvEPw6XFbA-UGE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:263317797819:android:f544b6d1a69146d9d4229e",
+        "android_client_info": {
+          "package_name": "com.healthycart"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOjyNpIkNH4KX750pUdAvEPw6XFbA-UGE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:263317797819:android:e31fbf6d532ef847d4229e",
+        "android_client_info": {
+          "package_name": "com.healthycart_pharmacy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOjyNpIkNH4KX750pUdAvEPw6XFbA-UGE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
     }
   ],
   "configuration_version": "1"

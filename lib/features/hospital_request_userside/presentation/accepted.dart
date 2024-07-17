@@ -30,6 +30,8 @@ class _NewRequestState extends State<Accepted> {
     final authProvider = context.read<AuthenticationProvider>();
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
+        orderProvider.getTransactionData(
+            hospitalId: authProvider.hospitalDataFetched!.id!);
         orderProvider.getAcceptedBookingsStream(
             hospitalId: authProvider.hospitalDataFetched!.id!);
       },
@@ -379,11 +381,11 @@ class _NewRequestState extends State<Accepted> {
                                                 text: 'Please wait...');
                                             bookingProvider
                                                 .updateOrderStatus(
+                                              commission: bookingProvider.hospitalTransactionModel!.commission,
+                                              commissionAmt: bookingProvider.calculateOrderCommission(bookings.totalAmount!),    
                                               orderId: bookings.id!,
                                               orderStatus: 2,
-                                              fcmtoken: bookings
-                                                      .userDetails!.fcmToken ??
-                                                  '',
+                                              fcmtoken: bookings.userDetails!.fcmToken ??'',
                                               hospitalId: bookings.hospitalId,
                                               hospitalName: bookings
                                                   .hospitalDetails!

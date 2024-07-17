@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthycart/core/custom/custom_button_n_search/common_button.dart';
 import 'package:healthycart/core/custom/lottie/loading_lottie.dart';
+import 'package:healthycart/core/services/easy_navigation.dart';
 import 'package:healthycart/features/authenthication/application/authenication_provider.dart';
 import 'package:healthycart/features/authenthication/presentation/widget/pinput.dart';
 import 'package:healthycart/utils/constants/colors/colors.dart';
@@ -55,6 +56,15 @@ class _OTPScreenState extends State<OTPScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: true,
+        appBar: AppBar(
+          surfaceTintColor: BColors.white,
+          backgroundColor: BColors.white,
+          leading: InkWell(
+              onTap: () {
+                EasyNavigation.pop(context: context);
+              },
+              child: const Icon(Icons.arrow_back_ios_new_rounded)),
+        ),
         body: Consumer<AuthenticationProvider>(
             builder: (context, authenticationProvider, _) {
           return GestureDetector(
@@ -69,17 +79,9 @@ class _OTPScreenState extends State<OTPScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Gap(32),
-                      GestureDetector(
-                        // back to previous page
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Align(
-                            alignment: Alignment.bottomLeft,
-                            child: Icon(Icons.arrow_back_ios)),
-                      ),
-                      const Gap(56),
+                    
+                      
+                      const Gap(88),
                       SizedBox(
                         child: Center(
                           child: Image.asset(
@@ -166,6 +168,7 @@ class _OTPScreenState extends State<OTPScreen> {
                                           decoration: TextDecoration.underline,
                                           fontSize: 12,
                                           fontWeight: FontWeight.w700,
+                                          color: BColors.textBlack,
                                         ),
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () {

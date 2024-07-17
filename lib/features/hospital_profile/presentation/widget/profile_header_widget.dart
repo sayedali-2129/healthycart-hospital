@@ -34,7 +34,7 @@ class ProfileHeaderWidget extends StatelessWidget {
             ),
             Positioned.fill(
                 child: Container(
-              color: Colors.white.withOpacity(.4),
+              color: Colors.white.withOpacity(.1),
             )),
             Positioned(
               bottom: 40,
@@ -42,7 +42,7 @@ class ProfileHeaderWidget extends StatelessWidget {
                 width: 280,
                 decoration: BoxDecoration(
                   border: Border.all(color: BColors.darkblue),
-                  color: BColors.lightGrey.withOpacity(.7),
+                  color:  BColors.lightGrey.withOpacity(.8),
                   borderRadius: const BorderRadius.only(
                       topRight: Radius.circular(16),
                       bottomRight: Radius.circular(16)),

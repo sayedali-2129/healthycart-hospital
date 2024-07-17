@@ -24,14 +24,13 @@ class _SplashScreenState extends State<SplashScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       notiprovider.notificationPermission();
-
       if (userId != null) {
         context
             .read<AuthenticationProvider>()
             .hospitalStreamFetchData(userId: userId);
       }
     });
-    Future.delayed(const Duration(seconds: 4)).then((value) {
+    Future.delayed(const Duration(seconds: 5)).then((value) {
       if (userId == null) {
         EasyNavigation.pushReplacement(
             context: context, page: const LoginScreen());

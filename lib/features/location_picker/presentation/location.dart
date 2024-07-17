@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthycart/core/custom/custom_button_n_search/common_button.dart';
+import 'package:healthycart/core/custom/lottie/circular_loading.dart';
+import 'package:healthycart/core/custom/toast/toast.dart';
 import 'package:healthycart/core/services/easy_navigation.dart';
 import 'package:healthycart/features/location_picker/application/location_provider.dart';
 import 'package:healthycart/features/location_picker/presentation/location_search.dart';
@@ -37,10 +39,7 @@ class LocationPage extends StatelessWidget {
                       child: Center(
                         child: Padding(
                           padding: EdgeInsets.all(4.0),
-                          child: CircularProgressIndicator(
-                            strokeWidth: 4,
-                            color: BColors.darkblue,
-                          ),
+                          child: LoadingIndicater(),
                         ),
                       ),
                     )
@@ -53,6 +52,9 @@ class LocationPage extends StatelessWidget {
                             EasyNavigation.push(
                                 context: context,
                                 page: const UserLocationSearchWidget());
+                          }else {
+                            CustomToast.errorToast(
+                                text: 'Please enable location.');
                           }
                         });
                       },

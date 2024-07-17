@@ -142,7 +142,7 @@ class _NewRequestState extends State<NewRequest> {
                                           ? bookings.selectedTimeSlot!
                                           : bookings.newTimeSlot!,
                                       tabWidth: 152,
-                                      gap: 20),
+                                      gap: 10),
                                   Gap(5),
                                   /* --------------------------- TIME SLOT SELECTION -------------------------- */
                                   Expanded(
@@ -184,7 +184,7 @@ class _NewRequestState extends State<NewRequest> {
                                       },
                                       child: const Text(
                                         'Change time slot?',
-                                        maxLines: 1,
+                                        maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
                                             fontSize: 12,
@@ -239,12 +239,12 @@ class _NewRequestState extends State<NewRequest> {
                                               bookings.userDetails!.userName!,
                                               style: TextStyle(
                                                   color: BColors.black,
-                                                  fontSize: 14),
+                                                  fontSize: 12),
                                             ),
                                             const Gap(4),
                                             Text(
                                               bookings.userDetails!.phoneNo!,
-                                              style: TextStyle(fontSize: 13),
+                                              style: TextStyle(fontSize: 12),
                                             ),
                                           ],
                                         ),

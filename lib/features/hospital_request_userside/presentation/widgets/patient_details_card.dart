@@ -128,7 +128,7 @@ class RowTwoTextWidget extends StatelessWidget {
           style: Theme.of(context)
               .textTheme
               .labelMedium!
-              .copyWith(fontWeight: FontWeight.w600),
+              .copyWith(fontWeight: FontWeight.w600, fontSize: 11),
         ),
         Gap(gap),
         Text(
@@ -138,7 +138,7 @@ class RowTwoTextWidget extends StatelessWidget {
           style: Theme.of(context)
               .textTheme
               .labelMedium!
-              .copyWith(fontWeight: FontWeight.w700),
+              .copyWith(fontWeight: FontWeight.w700, fontSize: 11),
         ),
       ],
     );

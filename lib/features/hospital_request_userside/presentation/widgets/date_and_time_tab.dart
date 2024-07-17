@@ -25,7 +25,7 @@ class DateAndTimeTab extends StatelessWidget {
           style: Theme.of(context)
               .textTheme
               .labelLarge!
-              .copyWith(fontWeight: FontWeight.w600),
+              .copyWith(fontWeight: FontWeight.w600, fontSize: 12),
         ),
         Gap(gap),
         Container(

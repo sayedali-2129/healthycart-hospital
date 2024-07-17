@@ -92,22 +92,26 @@ class _NewRequestState extends State<Accepted> {
                                           style: Theme.of(context)
                                               .textTheme
                                               .labelMedium!
-                                              .copyWith(color: Colors.white)),
+                                              .copyWith(
+                                                  color: Colors.white,
+                                                  fontSize: 11)),
                                     ),
                                   ),
                                   Container(
-                                    height: 28,
-                                    width: 128,
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(8),
                                         border: Border.all(),
                                         color: BColors.offWhite),
-                                    child: Center(
-                                      child: Text(
-                                        formattedDate,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .labelMedium,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(5.0),
+                                      child: Center(
+                                        child: Text(
+                                          formattedDate,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .labelMedium!
+                                              .copyWith(fontSize: 11),
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -227,18 +231,23 @@ class _NewRequestState extends State<Accepted> {
                                         /* -------------------------- USER ACCEPTED STATUS -------------------------- */
                                         Row(
                                           children: [
-                                            const Text('User Status : '),
+                                            const Text(
+                                              'User Status : ',
+                                              style: TextStyle(fontSize: 12),
+                                            ),
                                             bookings.isUserAccepted == false
                                                 ? const Text(
                                                     'Pending',
                                                     style: TextStyle(
                                                         color:
-                                                            Color(0xffFFB800)),
+                                                            Color(0xffFFB800),
+                                                        fontSize: 12),
                                                   )
                                                 : const Text(
                                                     'Accepted',
                                                     style: TextStyle(
-                                                        color: Colors.green),
+                                                        color: Colors.green,
+                                                        fontSize: 12),
                                                   ),
                                           ],
                                         ),
@@ -247,9 +256,13 @@ class _NewRequestState extends State<Accepted> {
 
                                         Row(
                                           children: [
-                                            const Text('Consulting Fee : '),
+                                            const Text(
+                                              'Consulting Fee : ',
+                                              style: TextStyle(fontSize: 12),
+                                            ),
                                             Text(
                                               '₹${bookings.totalAmount}',
+                                              style: TextStyle(fontSize: 12),
                                             ),
                                           ],
                                         ),
@@ -257,7 +270,10 @@ class _NewRequestState extends State<Accepted> {
                                         /* -------------------------- USER PAYEMENT STATUS -------------------------- */
                                         Row(
                                           children: [
-                                            const Text('Payment Status : '),
+                                            const Text(
+                                              'Payment Status : ',
+                                              style: TextStyle(fontSize: 12),
+                                            ),
                                             Row(
                                               mainAxisAlignment:
                                                   MainAxisAlignment
@@ -268,13 +284,14 @@ class _NewRequestState extends State<Accepted> {
                                                         'Pending',
                                                         style: TextStyle(
                                                             color: Color(
-                                                                0xffFFB800)),
+                                                                0xffFFB800),
+                                                            fontSize: 12),
                                                       )
                                                     : const Text(
-                                                        'Payment Completed',
+                                                        'Completed',
                                                         style: TextStyle(
-                                                            color:
-                                                                Colors.green),
+                                                            color: Colors.green,
+                                                            fontSize: 12),
                                                       ),
                                                 Gap(10),
                                                 bookings.paymentMethod ==
@@ -303,7 +320,7 @@ class _NewRequestState extends State<Accepted> {
                                                           style: TextStyle(
                                                               color: BColors
                                                                   .darkblue,
-                                                              fontSize: 13,
+                                                              fontSize: 12,
                                                               decoration:
                                                                   TextDecoration
                                                                       .underline),
@@ -321,12 +338,16 @@ class _NewRequestState extends State<Accepted> {
                                             : Row(
                                                 children: [
                                                   const Text(
-                                                      'Payment Method : '),
+                                                    'Payment Method : ',
+                                                    style:
+                                                        TextStyle(fontSize: 12),
+                                                  ),
                                                   Text(
                                                     bookings.paymentMethod ??
                                                         'Not Provided',
                                                     style: const TextStyle(
-                                                        color: Colors.green),
+                                                        color: Colors.green,
+                                                        fontSize: 12),
                                                   )
                                                 ],
                                               ),

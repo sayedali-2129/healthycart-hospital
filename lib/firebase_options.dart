@@ -54,7 +54,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyCOjyNpIkNH4KX750pUdAvEPw6XFbA-UGE',
-    appId: '1:263317797819:android:f544b6d1a69146d9d4229e',
+    appId: '1:263317797819:android:f71355e9eb42ed03d4229e',
     messagingSenderId: '263317797819',
     projectId: 'healthycart-4c697',
     storageBucket: 'healthycart-4c697.appspot.com',

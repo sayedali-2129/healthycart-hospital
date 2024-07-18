@@ -1,9 +1,9 @@
 class AppDetails {
-  static const String appName = 'Healthycart Hospital';
+  static const String appName = 'HC Hospital';
   static const projectId = 'healthycart-4c697';
-  static const String appVersion = "1.0.3";
+  static const String appVersion = "1.0.0";
   static const appstoreId = "000000000";
-  static const bundleId = "com.healthy_cart_pharmacy";
+  static const bundleId = "com.healthycart.hospital";
   static const phoneNumber = "+91 9961368060";
   static const String whatsappNumber = '+91 9961368060';
   static const email = "support@healtycart.in";

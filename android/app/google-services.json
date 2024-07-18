@@ -7,25 +7,6 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:263317797819:android:c69de8b2ee160b49d4229e",
-        "android_client_info": {
-          "package_name": "com.example.healthycart"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCOjyNpIkNH4KX750pUdAvEPw6XFbA-UGE"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:263317797819:android:d50c4de93ce4c21cd4229e",
         "android_client_info": {
           "package_name": "com.healthy_cart_laboratory"
@@ -64,9 +45,9 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:263317797819:android:f544b6d1a69146d9d4229e",
+        "mobilesdk_app_id": "1:263317797819:android:f71355e9eb42ed03d4229e",
         "android_client_info": {
-          "package_name": "com.healthycart"
+          "package_name": "com.healthycart_hospital"
         }
       },
       "oauth_client": [],
